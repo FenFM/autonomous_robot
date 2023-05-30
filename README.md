@@ -1,17 +1,11 @@
 <div align = "center">
   <h1> Autonomous Robot Project </h1>
   <h4> A project for our University about an autonomous robot/car </h4>
-</div>
-
 &nbsp;
 
-<div align = "center">
-
 ![Repository Size][rep-size-img] &nbsp; ![Code Size][code-size-img] &nbsp; ![Code File Size][code-file-img] &nbsp; ![Lines of Code][code-lines-img]
+&nbsp;
 
-</div>
-
-<div align = "center">
 <h2> Concept of the Neuronal Net of the Robot </h2>
 
 ``` mermaid
@@ -56,6 +50,11 @@
         n_21 --> m_r[Motor Right]
 ```
 </div>
+
+$$ \begin{align*}
+\text{IR} \,\, &\dots \,\, \text{Infrared Sensor} \\
+\text{N}  \,\, &\dots \,\, \text{Neuron}
+\end{align*} $$
 
 
 [code-size-img]:    https://img.shields.io/github/languages/code-size/FenFr/autonomous_robot?label=Code%20Size&style=flat-square
