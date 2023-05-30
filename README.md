@@ -1,9 +1,11 @@
 <div align = "center">
   <h1> Autonomous Robot Project </h1>
   <h4> A project for our University about an autonomous robot/car </h4>
+
 &nbsp;
 
 ![Repository Size][rep-size-img] &nbsp; ![Code Size][code-size-img] &nbsp; ![Code File Size][code-file-img] &nbsp; ![Lines of Code][code-lines-img]
+
 &nbsp;
 
 <h2> Concept of the Neuronal Net of the Robot </h2>
@@ -52,8 +54,8 @@
 </div>
 
 $$ \begin{align*}
-\text{IR} \,\, &\dots \,\, \text{Infrared Sensor} \\
-\text{N}  \,\, &\dots \,\, \text{Neuron}
+\text{IR } &\dots \text{ Infrared Sensor} \\
+\text{N }  &\dots \text{ Neuron}
 \end{align*} $$
 
 
