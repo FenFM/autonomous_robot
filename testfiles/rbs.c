@@ -76,7 +76,7 @@ int main(int argc, char**argv){
     CELL neuron[12];
 
     // defining the input-data: the input values of the infrared-sensors
-    double data_feed[6] = {8, 0, 0, 0, 0, 0};
+    double data_feed[6] = {8, 8, 8, 8, 8, 10};
 
     // initializing the neurons
     for(int i=0; i<12; i++){
