@@ -1,0 +1,14 @@
+echo -n "Are you sure you want to clean SIM directory ? "
+read resp
+case $resp in
+ y|Y|yes|YES|Yes) rm -r -f ../../USER/*
+                  rm -f ../../makefile
+                  rm -f ../../OBJ/user.o
+                  rm -f ../../sim
+                  rm -f ../../serial
+                  echo "Example 4 removed from SIM directory."
+                  ;;
+ *)               echo "Nothing done."
+                  ;;
+esac
+

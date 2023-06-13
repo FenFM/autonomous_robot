@@ -1,0 +1,4 @@
+add ICE "" tcp/alto.unice.fr:1436 MIT-MAGIC-COOKIE-1 f94163151dfe480e6af3a9da2dcb8c1e
+add XSMP "" tcp/alto.unice.fr:1436 MIT-MAGIC-COOKIE-1 f94163151dfe480e6af3a9da2dcb8c1e
+add ICE "" local/alto.unice.fr:/tmp/.ICE-unix/10587 MIT-MAGIC-COOKIE-1 19e183b53d9e68ae8a93c97a4d6bacbe
+add XSMP "" local/alto.unice.fr:/tmp/.ICE-unix/10587 MIT-MAGIC-COOKIE-1 19e183b53d9e68ae8a93c97a4d6bacbe

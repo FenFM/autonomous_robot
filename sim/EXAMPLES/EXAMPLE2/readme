@@ -1,0 +1,39 @@
+EXAMPLE 2 - README file
+
+This example shows how it is possible to implement a neural network as a
+controller for the simulated / real Khepera robot. It also features an
+interesting way to display graphs (for example the path of the robot) using
+gnuplot with a pipe from the simulator. Although the program is written in C,
+it may be compiled using g++ to show that C++ programmers will have no problems
+compiling and linking their C++ sources. Don't forget to do a "make clean"
+before recompiling with g++ !
+
+How to run it ?
+
+            do                                                 type
+
+1) run install shell script:                             install_example2
+   this will install the following directories:
+
+   USER
+   GNUPLOT
+   STATS
+   NEURAL
+
+   and files
+
+   makefile
+   ROBOT/big.robot
+   ROBOT/learning.robot
+
+2) go back to SIM directory:                                  cd ../..
+3) run the makefile:                                           make
+4) eventually edit the .simrc file or the makefile
+5) when everything is all right:                               sim &
+6) try some new neural.network
+7) eventually make modifications
+
+8) if you want to remove this example,                 cd EXAMPLES/EXAMPLE2
+   run the remove_example2 shell script:                 remove_example2
+
+

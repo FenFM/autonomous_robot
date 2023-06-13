@@ -1,0 +1,24 @@
+EXAMPLE 0 - README file
+
+This example contains the minimal almost empty user files necessary for
+compiling Khepera simulator. If you want to write your own controller for the
+Khepera robot, you can fill in the empty areas with your own C code. If you
+run example 0 without modifying it, the robot will remain stuck because it has
+no controller ! However, everything else should work...
+
+How to run it ?
+
+            do                                                 type
+
+1) run install shell script:                             install_example0
+   this will install the directory USER
+   and the file makefile.
+
+2) go back to SIM directory:                                  cd ../..
+3) run the makefile:                                           make
+4) eventually edit the .simrc file or the makefile
+5) when everything is all right:                               sim &
+6) eventually make modifications
+
+7) if you want to remove this example,                  cd EXAMPLES/EXAMPLE0
+   run the remove_example0 shell script:                   remove_example0

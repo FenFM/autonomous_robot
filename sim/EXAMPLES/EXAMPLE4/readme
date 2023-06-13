@@ -1,0 +1,79 @@
+EXAMPLE 4 - README file
+
+This example shows how to use Khepera Simulator as if it was a real Khepera
+drive by serial port commands. Two pipes (for input and output) are opened by
+sim to communicate with the user program (which is called serial in this
+example). To run this example, you need to run Khepera Simulator with the -p
+flag (pipe), sim will open the two pipes. Then run serial program and press
+the run button in sim. The two programs are going to synchronize through the
+pipe files. You can now type serial commands in serial, they will be sent to
+sim and the answer of sim will be displayed to serial stdout. The source file
+serial.c will teach you how to drive sim using the standard Khepera serial
+commands. The serial commands implemented in sim are described in the appendix
+of this readme file.
+
+How to run it ?
+
+            do                                                 type
+
+1) run install shell script:                             install_example4
+   this will install the directory USER
+   and the file makefile.
+
+2) go back to SIM directory:                                  cd ../..
+3) run the makefile:                                      make sim serial
+4) eventually edit the .simrc file or the makefile
+5) when everything is all right:                               sim -p&
+6) then run serial                                             serial
+7) Send commands (such as O N or D,-10,10)
+
+8) if you want to remove this example,                  cd EXAMPLES/EXAMPLE4
+   run the remove_example4 shell script:                   remove_example4
+
+
+Appendix: Khepera Serial Commands
+---------
+
+A  Configure (not implemented)
+
+B  Read software version (not implemented)
+
+D  Set speed
+Format of the command:  D, speed_motor_left, speed_motor_right<\n>
+Format of the response: d<\n>
+Effect:                 Set the speed of the two motors. The unit is the
+                        pulse/10 ms that correspond to 8 millimeters per
+                        second on the real robot.
+
+E  Read speed
+Format of the command:  E</n>
+Format of the response: e, speed_motor_left, speed_motor_right<\n>
+Effect:                 Read the instantaneous speed of the two motors. The
+                        unit is the pulse/10 ms that correspond to 8
+                        millimeters per second on the real robot.
+
+G  Set position (not implemented)
+
+H  Read position (not implemented)
+
+N  Read proximity sensors
+Format of the command:  N</n>
+Format of the response: n, val_sens_left_90,val_sens_left_45,val_sens_left_10,
+                        val_sens_right_10,val_sens_right_45,val_sens_right_90,
+                        val_sens_back_right,val_sens_back_left<\n>
+Effect:                 Read the 10 bit values of the 8 proximity sensors, from
+                        the front sensor situated at the left of the robot,
+                        turning clockwise to the back-left sensor.
+
+O  Read ambient light sensors
+Format of the command:  O</n>
+Format of the response: o, val_sens_left_90,val_sens_left_45,val_sens_left_10,
+                        val_sens_right_10,val_sens_right_45,val_sens_right_90,
+                        val_sens_back_right,val_sens_back_left<\n>
+Effect:                 Read the 10 bit values of the 8 ambient light sensors,
+                        from the front sensor situated at the left of the
+                        robot, turning clockwise to the back-left sensor.
+
+
+
+

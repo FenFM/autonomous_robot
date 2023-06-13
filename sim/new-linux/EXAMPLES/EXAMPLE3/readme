@@ -1,0 +1,51 @@
+EXAMPLE 3 - README file
+
+This example shows how it is possible to implement multi-agent simulation with
+the Khepera Simulator.
+It makes use of the source files multirobots.c and multirobots.h. These files
+are placed in the directory CONTRIB.
+You have to define some functions in the same way you do with the simple
+simulator (see the manual for more details). In order to do that, you have to
+implement two specific functions:
+
+	boolean FastStepMultiRobots(struct MultiRobots *multi);
+	boolean StepMultiRobots(struct MultiRobots *multi);
+
+The group of robot is viewed like a single entity: a structure MultiRobots. 
+First, you have to create this entity with the function CreateMultiRobots
+(defined in multirobots.c). This function receives the number of robots of the
+group as a parameter.
+
+The functions MultiRobotRun and MultiRobotRunFast (defined in
+CONTRIB/multirobots.c) make use of the functions StepMultiRobots and
+FastStepMultiRobots to run all the robots of the group. To define the
+behaviors of the robots, you must fill in the functions StepMultiRobots (and /
+or FastStepMultiRobots) in USER/user.c. You can see how I did all this in the
+file EXAMPLES/EXAMPLE3/user.c . The robots are synchonous, that is they move
+one after another. If you need asynchronous motion, you have to implement your
+own functions MultiRobotRun and MultiRobotRunFast.
+
+The functions StepMultiRobots and  FastStepMultiRobots allow you to have
+different behavior for each robots. In order to do this, just implement
+several functions StepRobot-like, and call them according to the current robot
+being moving. See the file multirobots.h for more details on functions.
+The multi-agent package operates only on simulated Khepera robots. Further
+version will provide an extension to operate on real Khepera robots.
+
+How to run it ?
+
+            do                                                 type
+
+1) run install shell script:                             install_example3
+2) go back to SIM directory:                                  cd ../..
+3) run the makefile:                                           make
+4) eventually edit the .simrc file or the makefile
+5) when everything is all right:                               sim &
+6) a. click on the "command" button
+   b. type "test"
+   c. observe the robots moving in the world
+7) eventually make modifications
+
+8) if you want to remove this example,                 cd EXAMPLES/EXAMPLE2
+   run the remove_example2 shell script:                 remove_example2
+

@@ -1,0 +1,1832 @@
+CONTRIB/multirobots.c:/*              for multi-agents simulation                                  */
+CONTRIB/multirobots.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+CONTRIB/multirobots.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+CONTRIB/multirobots.c:#define NormRad(x)    {while(x > M_PI) x-=2*M_PI; while(x < -M_PI) x+=2*M_PI;}
+CONTRIB/multirobots.c:  multirobots->number = number;
+CONTRIB/multirobots.c:  multirobots->current = 0;
+CONTRIB/multirobots.c:  multirobots->robots = (struct Robot **)malloc(sizeof(struct Robot *));
+CONTRIB/multirobots.c:  for(i = 0;i< multirobots->number;i++)
+CONTRIB/multirobots.c:     multirobots->robots[i] = CreateRobot();
+CONTRIB/multirobots.c:  for(i = 0;i< multirobots->number;i++)
+CONTRIB/multirobots.c:     free(multirobots->robots[i]);
+CONTRIB/multirobots.c:  free(multirobots->robots);
+CONTRIB/multirobots.c:  for(j=0;j<multirobots->number;j++)
+CONTRIB/multirobots.c:      if(j==multirobots->current)
+CONTRIB/multirobots.c:	  x1 = (short int)multirobots->robots[j]->X;
+CONTRIB/multirobots.c:	  y1 = (short int)multirobots->robots[j]->Y;
+CONTRIB/multirobots.c:	  d = hypot((xc-x1),(yc-y1)) - (ROBOT_DIAMETER/2.0);
+CONTRIB/multirobots.c:	  alpha2 = atan2((y1-yc),(x1-xc));
+CONTRIB/multirobots.c:	  alpha1 = - alpha - alpha2;
+CONTRIB/multirobots.c:	  if((alpha1 < (M_PI/3.0)) && (alpha1 > (-M_PI/3.0)) && (d < D_MAX)&& (d > 0.0))
+CONTRIB/multirobots.c:                                 (D_MAX-d)*
+CONTRIB/multirobots.c:                                 (IR_MAX - (double)value)
+CONTRIB/multirobots.c:  robot = context->Robot;
+CONTRIB/multirobots.c:  alpha0 = robot->Alpha;
+CONTRIB/multirobots.c:  x0     = robot->X;
+CONTRIB/multirobots.c:  y0     = robot->Y;
+CONTRIB/multirobots.c:    x    = robot->IRSensor[i].X;
+CONTRIB/multirobots.c:    y    = robot->IRSensor[i].Y;
+CONTRIB/multirobots.c:    xc    = (short int)(x0  - y*sin(alpha0) + x*cos(alpha0));
+CONTRIB/multirobots.c:    yc    = (short int)(y0  - y*cos(alpha0) - x*sin(alpha0));
+CONTRIB/multirobots.c:    alpha = alpha0 + robot->IRSensor[i].Alpha;
+CONTRIB/multirobots.c:    robot->IRSensor[i].DistanceValue = 
+CONTRIB/multirobots.c:                            IRSensorDistanceValue(context->World,xc,yc,alpha);
+CONTRIB/multirobots.c:    delta = MutualInfluence(xc,yc,alpha,robot->IRSensor[i].DistanceValue,multirobots);
+CONTRIB/multirobots.c:    robot->IRSensor[i].DistanceValue = robot->IRSensor[i].DistanceValue + delta;
+CONTRIB/multirobots.c:    robot->IRSensor[i].LightValue = 
+CONTRIB/multirobots.c:                            IRSensorLightValue(context->World,xc,yc,alpha);
+CONTRIB/multirobots.c:  c_robot = context->Robot;
+CONTRIB/multirobots.c:  for(i=0;i<multirobots->number;i++)
+CONTRIB/multirobots.c:      multirobots->current = i;
+CONTRIB/multirobots.c:      robot          = multirobots->robots[multirobots->current];
+CONTRIB/multirobots.c:      context->Robot = robot;
+CONTRIB/multirobots.c:      saved_robot.X         = robot->X;
+CONTRIB/multirobots.c:      saved_robot.Y         = robot->Y;
+CONTRIB/multirobots.c:      saved_robot.Alpha     = robot->Alpha;
+CONTRIB/multirobots.c:      DrawLittleRobot(&saved_robot,multirobots->robots[multirobots->current]);  
+CONTRIB/multirobots.c:	robot->State |= BUMP; else robot->State &= ~BUMP;
+CONTRIB/multirobots.c:  context->Robot = c_robot;;
+CONTRIB/multirobots.c:  c_robot = context->Robot;
+CONTRIB/multirobots.c:  for(i=0;i<multirobots->number;i++)
+CONTRIB/multirobots.c:      multirobots->current = i;
+CONTRIB/multirobots.c:      robot          = multirobots->robots[multirobots->current];
+CONTRIB/multirobots.c:      context->Robot = robot;
+CONTRIB/multirobots.c:      saved_robot.X         = robot->X;
+CONTRIB/multirobots.c:      saved_robot.Y         = robot->Y;
+CONTRIB/multirobots.c:      saved_robot.Alpha     = robot->Alpha;
+CONTRIB/multirobots.c:	robot->State |= BUMP; else robot->State &= ~BUMP;
+CONTRIB/multirobots.c:  context->Robot = c_robot;;
+CONTRIB/multirobots.c:  return hypot((rob1->X-rob2->X),(rob1->Y-rob2->Y));
+CONTRIB/multirobots.c:  for(i=0;i<multirobots->number;i++)
+CONTRIB/multirobots.c:	  ChooseRandomPosition(context->World,&(multirobots->robots[i]->X),
+CONTRIB/multirobots.c:                                              &(multirobots->robots[i]->Y),
+CONTRIB/multirobots.c:                                              &(multirobots->robots[i]->Alpha)); 
+CONTRIB/multirobots.c:	  for(j=0;j<multirobots->number;j++)
+CONTRIB/multirobots.c:		if(DistanceBetRobots(multirobots->robots[i],multirobots->robots[j]) < ROBOT_DIAMETER)
+CONTRIB/multirobots.h:/*              for multi-agents simulation                                  */
+CONTRIB/multirobots.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+CONTRIB/multirobots.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+CONTRIB/multirobots.h:  short int     current;  /* Current Robot being treated -- use this carefully */
+CONTRIB/multirobots.h:/* Calculate the value of IR-Distance captors of the Robots in the structure */
+CONTRIB/neural.c:{  1,  -1,   0, 0.9,  0.5,  100,  -50,    51,
+CONTRIB/neural.c: 1.2, -0.8, 0.55, 1.1, 0.45, 10,   -3,    -5,
+CONTRIB/neural.c: 0.3,-0.5, 0.2,  0.4,  0.6, 0.7,  0.8,  -0.7,
+CONTRIB/neural.c:   3,   5, 999, -999,  9.1,-9.1,    2,  -1.5};
+CONTRIB/neural.c:  net->InputNeuron      = NULL;
+CONTRIB/neural.c:  net->HiddenNeuron     = NULL;
+CONTRIB/neural.c:  net->OutputNeuron     = NULL;
+CONTRIB/neural.c:  net->NumberOfNeurons  = 0;
+CONTRIB/neural.c:  net->NumberOfSynapses = 0;
+CONTRIB/neural.c:  neuron->Output = 0;
+CONTRIB/neural.c:  synapse = neuron->Axon;
+CONTRIB/neural.c:    switch ((u_short)synapse->To->Output)
+CONTRIB/neural.c:      case 3:  neuron->Output = 3;
+CONTRIB/neural.c:      case 2:  neuron->Output = 3;
+CONTRIB/neural.c:               synapse->To->Output = 3;
+CONTRIB/neural.c:      case 1:  ReachOutput(synapse->To);
+CONTRIB/neural.c:               if (synapse->To->Output == 3) neuron->Output = 3;
+CONTRIB/neural.c:    synapse = synapse->Next;
+CONTRIB/neural.c:  search = net->InputNeuron;
+CONTRIB/neural.c:    search = search->Next;
+CONTRIB/neural.c:  search = net->HiddenNeuron;
+CONTRIB/neural.c:    search = search->Next;
+CONTRIB/neural.c:  search = net->OutputNeuron;
+CONTRIB/neural.c:    search = search->Next;
+CONTRIB/neural.c:  neuron = net->InputNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      PrintNeuronId(net,synapse->To);
+CONTRIB/neural.c:      printf("(%lg) ",synapse->Weight);
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = net->HiddenNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      PrintNeuronId(net,synapse->To);
+CONTRIB/neural.c:      printf("(%lg) ",synapse->Weight);
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = net->OutputNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      PrintNeuronId(net,synapse->To);
+CONTRIB/neural.c:      printf("(%lg) ",synapse->Weight);
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:    while(n--)
+CONTRIB/neural.c:      neuron->Output = 0.0;
+CONTRIB/neural.c:      neuron->Sum    = 0.0;
+CONTRIB/neural.c:      neuron->Axon   = NULL;
+CONTRIB/neural.c:      neuron->Next   = previous;
+CONTRIB/neural.c:  while(from--) from_n = from_n->Next;
+CONTRIB/neural.c:  while(to--)   to_n   = to_n->Next;
+CONTRIB/neural.c:  synapse = from_n->Axon;
+CONTRIB/neural.c:    while(synapse->Next) synapse = synapse->Next;
+CONTRIB/neural.c:    synapse->Next = (struct Synapse *)malloc(sizeof(struct Synapse));
+CONTRIB/neural.c:    synapse = synapse->Next;
+CONTRIB/neural.c:    from_n->Axon = (struct Synapse *)malloc(sizeof(struct Synapse));
+CONTRIB/neural.c:    synapse = from_n->Axon;
+CONTRIB/neural.c:  synapse->To     = to_n;
+CONTRIB/neural.c:  synapse->Type   = t;
+CONTRIB/neural.c:  synapse->Next   = NULL;
+CONTRIB/neural.c:    next = axon->Next;
+CONTRIB/neural.c:    // axon = axon->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  net->NumberOfSynapses = CountSynapse(net->InputNeuron)
+CONTRIB/neural.c:                        + CountSynapse(net->HiddenNeuron)
+CONTRIB/neural.c:                        + CountSynapse(net->OutputNeuron);
+CONTRIB/neural.c:  net->NumberOfNeurons  = CountNeuron(net->InputNeuron)
+CONTRIB/neural.c:                        + CountNeuron(net->HiddenNeuron)
+CONTRIB/neural.c:                        + CountNeuron(net->OutputNeuron);
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      synapse->Weight = WEIGHT[synapse->Type & WEIGHT_MASK];
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;  
+CONTRIB/neural.c:  neuron = net->InputNeuron; i = 0;
+CONTRIB/neural.c:    neuron->x = (u_short)(INFO_WIDTH/2-(N_INPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:    neuron->y = (u_short)40;
+CONTRIB/neural.c:    neuron = neuron->Next; i++;
+CONTRIB/neural.c:  neuron = net->HiddenNeuron; i = 0;
+CONTRIB/neural.c:    if (i/17 == l-1) m = n % 17; else m = 17;
+CONTRIB/neural.c:    neuron->x = (u_short)(INFO_WIDTH/2-(m-2*j-1)*INFO_WIDTH/(2.2*m));
+CONTRIB/neural.c:    neuron->y = (u_short)(70 + 100/l + (i/17)*(200/l));
+CONTRIB/neural.c:    neuron = neuron->Next; i++;
+CONTRIB/neural.c:  neuron = net->OutputNeuron; i=0;
+CONTRIB/neural.c:    neuron->x = (u_short)(INFO_WIDTH/2-(N_OUTPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:    neuron->y = (u_short)296;
+CONTRIB/neural.c:    neuron = neuron->Next; i++;
+CONTRIB/neural.c:  UpdateWeights(net->InputNeuron);
+CONTRIB/neural.c:  UpdateWeights(net->HiddenNeuron);
+CONTRIB/neural.c:  UpdateWeights(net->OutputNeuron);
+CONTRIB/neural.c:    neuron = net->InputNeuron;
+CONTRIB/neural.c:      FreeAxon(neuron->Axon);
+CONTRIB/neural.c:      next = neuron->Next;
+CONTRIB/neural.c:    neuron = net->HiddenNeuron;
+CONTRIB/neural.c:      FreeAxon(neuron->Axon);
+CONTRIB/neural.c:      next = neuron->Next;
+CONTRIB/neural.c:    neuron = net->OutputNeuron;
+CONTRIB/neural.c:      FreeAxon(neuron->Axon);
+CONTRIB/neural.c:      next = neuron->Next;
+CONTRIB/neural.c:  n_input   = CountNeuron(network->InputNeuron);
+CONTRIB/neural.c:  n_hidden  = CountNeuron(network->HiddenNeuron);
+CONTRIB/neural.c:  n_output  = CountNeuron(network->OutputNeuron);
+CONTRIB/neural.c:  n_synapse = CountSynapse(network->InputNeuron)  + 
+CONTRIB/neural.c:              CountSynapse(network->HiddenNeuron) +
+CONTRIB/neural.c:              CountSynapse(network->OutputNeuron);
+CONTRIB/neural.c:  neuron = network->InputNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->HiddenNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->OutputNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->InputNeuron;
+CONTRIB/neural.c:    s = SynapseId(neuron->Axon,synapse_a);
+CONTRIB/neural.c:    n = NeuronId(neuron->Next,neuron_a);
+CONTRIB/neural.c:    fprintf(file,"%hd,%lf,%ld,%ld\n",neuron->Type,neuron->Output,s,n);
+CONTRIB/neural.c:    neuron=neuron->Next;
+CONTRIB/neural.c:  neuron = network->HiddenNeuron;
+CONTRIB/neural.c:    s = SynapseId(neuron->Axon,synapse_a);
+CONTRIB/neural.c:    n = NeuronId(neuron->Next,neuron_a);
+CONTRIB/neural.c:    fprintf(file,"%hd,%lf,%ld,%ld\n",neuron->Type,neuron->Output,s,n);
+CONTRIB/neural.c:    neuron=neuron->Next;
+CONTRIB/neural.c:  neuron = network->OutputNeuron;
+CONTRIB/neural.c:    s = SynapseId(neuron->Axon,synapse_a);
+CONTRIB/neural.c:    n = NeuronId(neuron->Next,neuron_a);
+CONTRIB/neural.c:    fprintf(file,"%hd,%lf,%ld,%ld\n",neuron->Type,neuron->Output,s,n);
+CONTRIB/neural.c:    neuron=neuron->Next;
+CONTRIB/neural.c:  neuron = network->InputNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      n = NeuronId(synapse->To,neuron_a);
+CONTRIB/neural.c:      s = SynapseId(synapse->Next,synapse_a);
+CONTRIB/neural.c:      fprintf(file,"%hd,%lf,%ld,%ld\n",synapse->Type,synapse->Weight,n,s);
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->HiddenNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      n = NeuronId(synapse->To,neuron_a);
+CONTRIB/neural.c:      s = SynapseId(synapse->Next,synapse_a);
+CONTRIB/neural.c:      fprintf(file,"%hd,%lf,%ld,%ld\n",synapse->Type,synapse->Weight,n,s);
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->OutputNeuron;
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      n = NeuronId(synapse->To,neuron_a);
+CONTRIB/neural.c:      s = SynapseId(synapse->Next,synapse_a);
+CONTRIB/neural.c:      fprintf(file,"%hd,%lf,%ld,%ld\n",synapse->Type,synapse->Weight,n,s);
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  network->NumberOfSynapses = n_synapse;
+CONTRIB/neural.c:  network->NumberOfNeurons  = n_neuron;
+CONTRIB/neural.c:  network->InputNeuron  = CreateNeuron(n_input);
+CONTRIB/neural.c:  network->HiddenNeuron = CreateNeuron(n_hidden);
+CONTRIB/neural.c:  network->OutputNeuron = CreateNeuron(n_output);
+CONTRIB/neural.c:  neuron = network->InputNeuron;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->HiddenNeuron;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->OutputNeuron;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->InputNeuron;
+CONTRIB/neural.c:    neuron->Type = (u_char)type;
+CONTRIB/neural.c:    neuron->Output = fval;
+CONTRIB/neural.c:    if (v) neuron->Axon = synapse_a[v-1]; else neuron->Axon = NULL;
+CONTRIB/neural.c:    if (v0) neuron->Next = neuron_a[v0-1]; else neuron->Next = NULL;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->HiddenNeuron;
+CONTRIB/neural.c:    neuron->Type = (u_char)type;
+CONTRIB/neural.c:    neuron->Output = fval;
+CONTRIB/neural.c:    if (v) neuron->Axon = synapse_a[v-1]; else neuron->Axon = NULL;
+CONTRIB/neural.c:    if (v0) neuron->Next = neuron_a[v0-1]; else neuron->Next = NULL;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->OutputNeuron;
+CONTRIB/neural.c:    neuron->Type = (u_char)type;
+CONTRIB/neural.c:    neuron->Output = fval;
+CONTRIB/neural.c:    if (v) neuron->Axon = synapse_a[v-1]; else neuron->Axon = NULL;
+CONTRIB/neural.c:    if (v0) neuron->Next = neuron_a[v0-1]; else neuron->Next = NULL;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:           &type,&(synapse->Weight),&v,&v0);
+CONTRIB/neural.c:    synapse->Type = (u_char)type;
+CONTRIB/neural.c:    if (v) synapse->To = neuron_a[v-1]; else synapse->To = NULL;
+CONTRIB/neural.c:    if (v0) synapse->Next = synapse_a[v0-1]; else synapse->Next = NULL;
+CONTRIB/neural.c:  input   = &(network->InputNeuron);
+CONTRIB/neural.c:  hidden  = &(network->HiddenNeuron);
+CONTRIB/neural.c:  output  = &(network->OutputNeuron);  
+CONTRIB/neural.c:  network->InputNeuron  = CreateNeuron(9);
+CONTRIB/neural.c:  network->HiddenNeuron = CreateNeuron(3);
+CONTRIB/neural.c:  network->OutputNeuron = CreateNeuron(2);
+CONTRIB/neural.c:    input   = &(network->InputNeuron);
+CONTRIB/neural.c:    hidden  = &(network->HiddenNeuron);
+CONTRIB/neural.c:    output  = &(network->OutputNeuron);  
+CONTRIB/neural.c:    network->InputNeuron  = CreateNeuron(n_input);
+CONTRIB/neural.c:    network->HiddenNeuron = CreateNeuron(n_hidden);
+CONTRIB/neural.c:    network->OutputNeuron = CreateNeuron(n_output);
+CONTRIB/neural.c:          CreateSynapse(input,j-1,hidden,k-1,WeightNb(weight));
+CONTRIB/neural.c:          CreateSynapse(input,j-1,output,k-1,WeightNb(weight));
+CONTRIB/neural.c:          CreateSynapse(hidden,j-1,hidden,k-1,WeightNb(weight));
+CONTRIB/neural.c:          CreateSynapse(hidden,j-1,output,k-1,WeightNb(weight));
+CONTRIB/neural.c:          CreateSynapse(output,j-1,hidden,k-1,WeightNb(weight));
+CONTRIB/neural.c:          CreateSynapse(output,j-1,output,k-1,WeightNb(weight));
+CONTRIB/neural.c:  neuron = net->InputNeuron;
+CONTRIB/neural.c:    neuron->Output = INHIBITED;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = net->HiddenNeuron;
+CONTRIB/neural.c:    neuron->Output = INHIBITED;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = net->OutputNeuron;
+CONTRIB/neural.c:    neuron->Output = INHIBITED;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  neuron = network->InputNeuron;
+CONTRIB/neural.c:  {neuron->Output = EXCITED;
+CONTRIB/neural.c:   neuron = neuron->Next;
+CONTRIB/neural.c:   {neuron->Output = (double)robot->IRSensor[0].DistanceValue / 1023;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:    {neuron->Output = (double)robot->IRSensor[1].DistanceValue / 1023;
+CONTRIB/neural.c:     neuron = neuron->Next;
+CONTRIB/neural.c:     {neuron->Output = (double)robot->IRSensor[2].DistanceValue / 1023;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:      {neuron->Output = (double)robot->IRSensor[3].DistanceValue / 1023;
+CONTRIB/neural.c:       neuron = neuron->Next;
+CONTRIB/neural.c:       {neuron->Output = (double)robot->IRSensor[4].DistanceValue / 1023;
+CONTRIB/neural.c:        neuron = neuron->Next;
+CONTRIB/neural.c:        {neuron->Output = (double)robot->IRSensor[5].DistanceValue / 1023;
+CONTRIB/neural.c:         neuron = neuron->Next;
+CONTRIB/neural.c:         {neuron->Output = (double)robot->IRSensor[6].DistanceValue / 1023;
+CONTRIB/neural.c:          neuron = neuron->Next;
+CONTRIB/neural.c:          {neuron->Output = (double)robot->IRSensor[7].DistanceValue / 1023;
+CONTRIB/neural.c:           neuron = neuron->Next;
+CONTRIB/neural.c:           {neuron->Output = EXCITED 
+CONTRIB/neural.c:                           - (double)robot->IRSensor[0].LightValue / 525;
+CONTRIB/neural.c:            neuron = neuron->Next;
+CONTRIB/neural.c:            {neuron->Output = EXCITED
+CONTRIB/neural.c:                            - (double)robot->IRSensor[1].LightValue / 525;
+CONTRIB/neural.c:             neuron = neuron->Next;
+CONTRIB/neural.c:             {neuron->Output = EXCITED
+CONTRIB/neural.c:                             - (double)robot->IRSensor[2].LightValue / 525;
+CONTRIB/neural.c:              neuron = neuron->Next;
+CONTRIB/neural.c:              {neuron->Output = EXCITED
+CONTRIB/neural.c:                              - (double)robot->IRSensor[3].LightValue / 525;
+CONTRIB/neural.c:               neuron = neuron->Next;
+CONTRIB/neural.c:               {neuron->Output = EXCITED
+CONTRIB/neural.c:                               - (double)robot->IRSensor[4].LightValue / 525;
+CONTRIB/neural.c:                neuron = neuron->Next;
+CONTRIB/neural.c:                {neuron->Output = EXCITED
+CONTRIB/neural.c:                                - (double)robot->IRSensor[5].LightValue / 525;
+CONTRIB/neural.c:                 neuron = neuron->Next;
+CONTRIB/neural.c:                 {neuron->Output = EXCITED
+CONTRIB/neural.c:                                 - (double)robot->IRSensor[6].LightValue / 525;
+CONTRIB/neural.c:                  neuron = neuron->Next;
+CONTRIB/neural.c:                  {neuron->Output = EXCITED
+CONTRIB/neural.c:                                  -(double)robot->IRSensor[7].LightValue / 525;
+CONTRIB/neural.c:                   neuron = neuron->Next;
+CONTRIB/neural.c:  neuron            = network->OutputNeuron;
+CONTRIB/neural.c:    robot->Motor[1].Value = (short int)floor(0.5 + neuron->Output * 10.0);
+CONTRIB/neural.c:    neuron                = neuron->Next;
+CONTRIB/neural.c:      robot->Motor[0].Value  = (short int)floor(0.5 + neuron->Output * 10.0);
+CONTRIB/neural.c:      neuron                 = neuron->Next;
+CONTRIB/neural.c:        robot->Motor[1].Value -= (short int)floor(0.5 + neuron->Output * 10.0);
+CONTRIB/neural.c:        neuron                 = neuron->Next;
+CONTRIB/neural.c:          robot->Motor[0].Value -= (short int)floor(0.5+neuron->Output * 10.0);
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      switch(synapse->Type & WEIGHT_MASK)
+CONTRIB/neural.c:        case 2:  synapse->Weight  += 0.05 * 
+CONTRIB/neural.c:                                     synapse->To->Output * 
+CONTRIB/neural.c:                                     (neuron->Output - synapse->Weight);
+CONTRIB/neural.c:        default: synapse->To->Sum += synapse->Weight * neuron->Output;
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;    
+CONTRIB/neural.c:    if (neuron->Sum > EXCITED) neuron->Sum = EXCITED;
+CONTRIB/neural.c:    else if (neuron->Sum < 0.0) neuron->Sum = 0.0;
+CONTRIB/neural.c:    neuron->Output = neuron->Sum;
+CONTRIB/neural.c:    neuron->Sum = 0.0;
+CONTRIB/neural.c:    neuron      = neuron->Next;
+CONTRIB/neural.c:  Propagate(net->InputNeuron);
+CONTRIB/neural.c:  Propagate(net->HiddenNeuron);
+CONTRIB/neural.c:  Propagate(net->OutputNeuron);
+CONTRIB/neural.c:  CalculateOutput(net->HiddenNeuron);
+CONTRIB/neural.c:  CalculateOutput(net->OutputNeuron);
+CONTRIB/neural.c:  if ((net->InputNeuron)&&(net->OutputNeuron))
+CONTRIB/neural.c:    neuron = net->InputNeuron;
+CONTRIB/neural.c:      neuron->Output = 0;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    neuron = net->HiddenNeuron;
+CONTRIB/neural.c:      neuron->Output = 1;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    neuron = net->OutputNeuron;
+CONTRIB/neural.c:      neuron->Output = 2;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    neuron = net->InputNeuron;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    neuron = net->InputNeuron;
+CONTRIB/neural.c:      next = neuron->Next;
+CONTRIB/neural.c:      if (neuron->Output == 3) u_i++;
+CONTRIB/neural.c:    neuron = net->HiddenNeuron;
+CONTRIB/neural.c:      if (neuron->Output == 3) u_h++;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    neuron = net->OutputNeuron;
+CONTRIB/neural.c:      if (neuron->Output == 3) u_o++;
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:      Color(BLUE + (char)floor(neuron->Output * 8.99999999));
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    FillArc((int)(INFO_WIDTH/2-(N_INPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:            (2.2*N_INPUT_NEURON)-5),35,11,11,0,360*64);
+CONTRIB/neural.c:    Color(BLUE + (char)floor(neuron->Output * 8.99999999));
+CONTRIB/neural.c:    FillArc(neuron->x-5,neuron->y-5,11,11,0,360*64);
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:      Color(BLUE + (char)floor(neuron->Output * 8.99999999));
+CONTRIB/neural.c:      neuron = neuron->Next;
+CONTRIB/neural.c:    FillArc((int)(INFO_WIDTH/2-(N_OUTPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:            (2.2*N_OUTPUT_NEURON)-5),291,11,11,0,360*64);
+CONTRIB/neural.c:   FillArc((int)(INFO_WIDTH/2-(N_INPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:           (2.2*N_INPUT_NEURON)-6),34,13,13,40*64,220*64);
+CONTRIB/neural.c:    FillArc((int)(INFO_WIDTH/2-(N_INPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:            (2.2*N_INPUT_NEURON)-6),34,13,13,0,40*64);
+CONTRIB/neural.c:    FillArc((int)(INFO_WIDTH/2-(N_INPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:            (2.2*N_INPUT_NEURON)-6),34,13,13,0,-140*64);
+CONTRIB/neural.c:    FillArc(neuron->x-6,neuron->y-6,13,13,40*64,220*64);
+CONTRIB/neural.c:    FillArc(neuron->x-6,neuron->y-6,13,13,0,40*64);
+CONTRIB/neural.c:    FillArc(neuron->x-6,neuron->y-6,13,13,0,-140*64);
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:   FillArc((int)(INFO_WIDTH/2-(N_OUTPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:           (2.2*N_OUTPUT_NEURON)-6),290,13,13,40*64,220*64);
+CONTRIB/neural.c:    FillArc((int)(INFO_WIDTH/2-(N_OUTPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:            (2.2*N_OUTPUT_NEURON)-6),290,13,13,0,40*64);
+CONTRIB/neural.c:    FillArc((int)(INFO_WIDTH/2-(N_OUTPUT_NEURON-2*i-1)*INFO_WIDTH/
+CONTRIB/neural.c:            (2.2*N_OUTPUT_NEURON)-6),290,13,13,0,-140*64);
+CONTRIB/neural.c:    synapse = neuron->Axon;
+CONTRIB/neural.c:      Color(BLUE + synapse->Type & WEIGHT_MASK);
+CONTRIB/neural.c:      if (neuron == synapse->To)
+CONTRIB/neural.c:       DrawArc(neuron->x,neuron->y,13,13,0,360*64);
+CONTRIB/neural.c:        x1 = neuron->x;
+CONTRIB/neural.c:        y1 = neuron->y;
+CONTRIB/neural.c:        x2 = synapse->To->x;
+CONTRIB/neural.c:        y2 = synapse->To->y;
+CONTRIB/neural.c:        dx = x2 - x1;
+CONTRIB/neural.c:        dy = y2 - y1;
+CONTRIB/neural.c:        polygon[1].x = polygon[0].x - (dx * 10 + dy * 5)/d;
+CONTRIB/neural.c:        polygon[1].y = polygon[0].y - (dy * 10 - dx * 5)/d;
+CONTRIB/neural.c:        polygon[2].x = polygon[0].x - (dx * 10 - dy * 5)/d;
+CONTRIB/neural.c:        polygon[2].y = polygon[0].y - (dy * 10 + dx * 5)/d;
+CONTRIB/neural.c:      synapse = synapse->Next;
+CONTRIB/neural.c:    neuron = neuron->Next;
+CONTRIB/neural.c:  DrawText(INFO_WIDTH/2-44,26,"input layer");
+CONTRIB/neural.c:  DrawText(INFO_WIDTH/2-48,324,"output layer");
+CONTRIB/neural.c:  DrawNeuralStructure(net->InputNeuron);
+CONTRIB/neural.c:  DrawNeuralStructure(net->HiddenNeuron);
+CONTRIB/neural.c:  DrawNeuralStructure(net->OutputNeuron);
+CONTRIB/neural.c:  DrawHiddenLayer(net->HiddenNeuron);
+CONTRIB/neural.c:  DrawInputActivities(net->InputNeuron);
+CONTRIB/neural.c:  DrawHiddenActivities(net->HiddenNeuron);
+CONTRIB/neural.c:  DrawOutputActivities(net->OutputNeuron);
+CONTRIB/neural.c:  DrawText(INFO_WIDTH/2-80,20,"Synaptic Connections");
+CONTRIB/neural.c:    dx = x2 - x1;
+CONTRIB/neural.c:    dy = y2 - y1;
+CONTRIB/neural.c:    polygon[1].x = polygon[0].x - (dx * 10 + dy * 5)/d;
+CONTRIB/neural.c:    polygon[1].y = polygon[0].y - (dy * 10 - dx * 5)/d;
+CONTRIB/neural.c:    polygon[2].x = polygon[0].x - (dx * 10 - dy * 5)/d;
+CONTRIB/neural.c:    polygon[2].y = polygon[0].y - (dy * 10 + dx * 5)/d;
+CONTRIB/neural.c:    DrawText(x2+24-strlen(text)*4,y2+4,text);
+DOCS/manual.ps:%!PS-Adobe-2.0
+DOCS/manual.ps:mul N /landplus90{false}def /@rigin{isls{[0 landplus90{1 -1}{-1 1}
+DOCS/manual.ps:isls{landplus90{VResolution 72 div vsize mul 0 exch}{Resolution -72 div
+DOCS/manual.ps:hsize mul 0}ifelse TR}if Resolution VResolution vsize -72 div 1 add mul
+DOCS/manual.ps:/FMat[1 0 0 -1 0 0]N /FBB[0 0 0 0]N /nn 0 N /IE 0 N /ctr 0 N /df-tail{
+DOCS/manual.ps:/sf 1 N /fntrx FMat N df-tail}B /dfs{div /sf X /fntrx[sf 0 0 sf neg 0 0]
+DOCS/manual.ps:N df-tail}B /E{pop nn dup definefont setfont}B /ch-width{ch-data dup
+DOCS/manual.ps:length 5 sub get}B /ch-height{ch-data dup length 4 sub get}B /ch-xoff{
+DOCS/manual.ps:128 ch-data dup length 3 sub get sub}B /ch-yoff{ch-data dup length 2 sub
+DOCS/manual.ps:get 127 sub}B /ch-dx{ch-data dup length 1 sub get}B /ch-image{ch-data
+DOCS/manual.ps:/base get 2 index get S /BitMaps get S get /ch-data X pop /ctr 0 N ch-dx
+DOCS/manual.ps:0 ch-xoff ch-yoff ch-height sub ch-xoff ch-width add ch-yoff
+DOCS/manual.ps:setcachedevice ch-width ch-height true[1 0 0 -1 -.1 ch-xoff sub ch-yoff
+DOCS/manual.ps:.1 sub]/id ch-image N /rw ch-width 7 add 8 idiv string N /rc 0 N /gp 0 N
+DOCS/manual.ps:cc 1 add D}B /bop{userdict /bop-hook known{bop-hook}if /SI save N @rigin
+DOCS/manual.ps:/eop-hook known{eop-hook}if showpage}N /@start{userdict /start-hook
+DOCS/manual.ps:known{start-hook}if pop /VResolution X /Resolution X 1000 div /DVImag X
+DOCS/manual.ps:65781.76 div /vsize X 65781.76 div /hsize X}N /p{show}N /RMat[1 0 0 -1 0
+DOCS/manual.ps:ifelse}{false}ifelse end{{gsave TR -.1 .1 TR 1 1 scale rulex ruley false
+DOCS/manual.ps:RMat{BDot}imagemask grestore}}{{gsave TR -.1 .1 TR rulex ruley scale 1 1
+DOCS/manual.ps:{dup /delta X 0 rmoveto}B /M{S p delta add tail}B /b{S p tail}B /c{-4 M}
+DOCS/manual.ps:B /d{-3 M}B /e{-2 M}B /f{-1 M}B /g{0 M}B /h{1 M}B /i{2 M}B /j{3 M}B /k{
+DOCS/manual.ps:4 M}B /w{0 rmoveto}B /l{p -4 w}B /m{p -3 w}B /n{p -2 w}B /o{p -1 w}B /q{
+DOCS/manual.ps:}{6 -2 roll transform 6 -2 roll transform 6 -2 roll transform{
+DOCS/manual.ps:/txpose{pxs pys scale ppr aload pop por{noflips{pop S neg S TR pop 1 -1
+DOCS/manual.ps:scale}if xflip yflip and{pop S neg S TR 180 rotate 1 -1 scale ppr 3 get
+DOCS/manual.ps:pop pop 270 rotate 1 -1 scale}if xflip yflip and{TR pop pop 90 rotate 1
+DOCS/manual.ps:-1 scale ppr 3 get ppr 1 get neg sub neg ppr 2 get ppr 0 get neg sub neg
+DOCS/manual.ps:0 get neg sub neg 0 S TR}if}ifelse scaleby96{ppr aload pop 4 -1 roll add
+DOCS/manual.ps:roll moveto 6 -1 roll S lineto S lineto S lineto closepath clip newpath
+DOCS/manual.ps:648 y(E-mail:)20 b Fl(om@alto.un)o(ice)o(.f)o(r)p Fm(,)13
+DOCS/manual.ps:765 y(b^)-24 b(at.)22 b(4,)16 b(250,)h(a)o(v.)k(A.)15
+DOCS/manual.ps:Fh(http://wwwi3s.unice)o(.fr/)p Fi(~)m Fh(om/khep-sim.html)72
+DOCS/manual.ps:/col-1 {0 setgray} bind def
+DOCS/manual.ps:1 -1 scale
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add srgb}
+DOCS/manual.ps:/shd {dup dup currentrgbcolor 4 -2 roll mul 4 -2 roll mul
+DOCS/manual.ps:  4 -2 roll mul srgb} bind def
+DOCS/manual.ps:% Begin Imported GIF File: /mimosa-0/delta/om/OLIVIER/SIM/DOCS/sim.gif
+DOCS/manual.ps:8.593750 -8.501661 sc
+DOCS/manual.ps:0 -602 tr
+DOCS/manual.ps:%* Object: Image decoding PS-routine                    Date: 01.02.93 *
+DOCS/manual.ps:%* Function: Display a run-length encoded color image.                 *
+DOCS/manual.ps:/DisplayImage            % Display run-length encoded color image      *
+DOCS/manual.ps:% End Imported PIC File: /mimosa-0/delta/om/OLIVIER/SIM/DOCS/sim.gif
+DOCS/manual.ps:/col-1 {} def
+DOCS/manual.ps:-3.0 242.0 translate
+DOCS/manual.ps:1 -1 scale
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add srgb}
+DOCS/manual.ps:/shd {dup dup currentrgbcolor 4 -2 roll mul 4 -2 roll mul
+DOCS/manual.ps:  4 -2 roll mul srgb} bind def
+DOCS/manual.ps:% Begin Imported GIF File: /alto-2/delta/om/PubHTML/GIF/alife_chao.gif
+DOCS/manual.ps:7.318637 -7.613682 sc
+DOCS/manual.ps:0 -497 tr
+DOCS/manual.ps:%* Object: Image decoding PS-routine                    Date: 01.02.93 *
+DOCS/manual.ps:%* Function: Display a run-length encoded color image.                 *
+DOCS/manual.ps:/DisplayImage            % Display run-length encoded color image      *
+DOCS/manual.ps:% End Imported PIC File: /alto-2/delta/om/PubHTML/GIF/alife_chao.gif
+DOCS/manual.ps:% Begin Imported GIF File: /alto-2/delta/om/PubHTML/GIF/alife_lab.gif
+DOCS/manual.ps:7.404000 -7.581489 sc
+DOCS/manual.ps:0 -497 tr
+DOCS/manual.ps:%* Object: Image decoding PS-routine                    Date: 01.02.93 *
+DOCS/manual.ps:%* Function: Display a run-length encoded color image.                 *
+DOCS/manual.ps:/DisplayImage            % Display run-length encoded color image      *
+DOCS/manual.ps:% End Imported PIC File: /alto-2/delta/om/PubHTML/GIF/alife_lab.gif
+DOCS/manual.ps:Fh(-)p Fi(")g(buttons.)23 b(If)15 b(y)o(ou)g(w)o(an)o(t)g(to)g(turn)h
+DOCS/manual.ps:/col-1 {0 setgray} bind def
+DOCS/manual.ps:-3.0 222.0 translate
+DOCS/manual.ps:1 -1 scale
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add srgb}
+DOCS/manual.ps:/shd {dup dup currentrgbcolor 4 -2 roll mul 4 -2 roll mul
+DOCS/manual.ps:  4 -2 roll mul srgb} bind def
+DOCS/manual.ps:% Begin Imported GIF File: /alto-2/delta/om/PubHTML/GIF/sim-robot2.gif
+DOCS/manual.ps:29.203540 -27.868421 sc
+DOCS/manual.ps:0 -114 tr
+DOCS/manual.ps:%* Object: Image decoding PS-routine                    Date: 01.02.93 *
+DOCS/manual.ps:%* Function: Display a run-length encoded color image.                 *
+DOCS/manual.ps:/DisplayImage            % Display run-length encoded color image      *
+DOCS/manual.ps:% End Imported PIC File: /alto-2/delta/om/PubHTML/GIF/sim-robot2.gif
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (0) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (1) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (2) col-1 sh gr
+DOCS/manual.ps:% Begin Imported GIF File: /alto-2/delta/om/PubHTML/GIF/Khepera.gif
+DOCS/manual.ps:12.903226 -12.456747 sc
+DOCS/manual.ps:0 -289 tr
+DOCS/manual.ps:%* Object: Image decoding PS-routine                    Date: 01.02.93 *
+DOCS/manual.ps:%* Function: Display a run-length encoded color image.                 *
+DOCS/manual.ps:/DisplayImage            % Display run-length encoded color image      *
+DOCS/manual.ps:% End Imported PIC File: /alto-2/delta/om/PubHTML/GIF/Khepera.gif
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (3) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (6) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (4) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (5) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (7) col-1 sh gr
+DOCS/manual.ps:Fh(gcc)21 b(-c)p Fi(\),)14 b(and)g(if)f(y)o(ou)75 1278
+DOCS/manual.ps:(with)f(a)g(C++)g(compiler)f(\(replace)i Fh(gcc)21 b(-c)13
+DOCS/manual.ps:b Fi(b)o(y)g Fh(g++)21 b(-c)75 1328 y Fi(in)13 b(the)i(\014le)f
+DOCS/manual.ps:Fh(ls)21 b(-a)13 b Fi(to)h(see)h(it.)j(It)c(con)o(tains)g(3)f(imp)q
+DOCS/manual.ps:Fh(-s)g Fi(allo)o(ws)f(to)h(run)h Fj(Khep)n(er)n(a)g(Simulator)e
+DOCS/manual.ps:Fh(-)p Fi(")g(next)h(to)f(the)h(\\)p Fh(info)p Fi(")e(button.)75
+DOCS/manual.ps:(Simulator)f Fi(m)o(ulti-agen)o(ts)e(mo)q(dule)h(dev)o(elop)q(ed)i(b)o
+DOCS/manual.ps:(Braiten-)75 322 y(b)q(erg)j([1)o(].)i(The)e(source)g(\014les)f(are)g
+DOCS/manual.ps:Fh(robot->IRSensor[2)o(].Dis)o(tance)o(Value)10 b Fi(\(t)o(yp)q(e)15
+DOCS/manual.ps:(written)75 1300 y(in)12 b Fh(robot->Motor[LE)o(FT].V)o(alue)d
+DOCS/manual.ps:Fi(and)j Fh(robot->Motor[RI)o(GHT].)o(Value)o Fi(.)j(They)d(range)g(b)q
+DOCS/manual.ps:1889 y({)119 1939 y(if)g(\(\(robot->IRSensor)o([0].D)o(istan)o(ceVal)o
+DOCS/manual.ps:1988 y(\(robot->IRSensor)o([1].D)o(istan)o(ceVal)o(ue)f(>)i
+DOCS/manual.ps:2038 y(\(robot->IRSensor)o([2].D)o(istan)o(ceVal)o(ue)19
+DOCS/manual.ps:119 2188 y({)162 2237 y(robot->Motor[LEFT])o(.Valu)o(e)41
+DOCS/manual.ps:b(=)i(TURN_SPEED;)162 2287 y(robot->Motor[RIGHT)o(].Val)o(ue)19
+DOCS/manual.ps:b(=)i(-TURN_SPEED;)216 b(/*)21 b(turn)g(right)g(*/)119
+DOCS/manual.ps:2337 y(})119 2387 y(else)g(if)g(\(\(robot->IRSensor)o([3].D)o(istan)o
+DOCS/manual.ps:(ceVal)o(ue)e(>)i(COLLISION_TH\))e(||)315 2437 y(\(robot->IRSensor)o
+DOCS/manual.ps:2487 y(\(robot->IRSensor)o([5].D)o(istan)o(ceVal)o(ue)g(>)i
+DOCS/manual.ps:2636 y({)162 2686 y(robot->Motor[LEFT])o(.Valu)o(e)41
+DOCS/manual.ps:b(=)21 b(-TURN_SPEED;)162 2736 y(robot->Motor[RIGHT)o(].Val)o(ue)e(=)43
+DOCS/manual.ps:7 6 bop 119 195 a Fh({)162 245 y(robot->Motor[LEFT])o(.Valu)o(e)41
+DOCS/manual.ps:b(=)21 b(FORWARD_SPEED;)162 295 y(robot->Motor[RIGHT)o(].Val)o(ue)e(=)i
+DOCS/manual.ps:345 y(})119 444 y(if)h(\(\(robot->IRSensor)o([6].D)o(istan)o(ceVal)o
+DOCS/manual.ps:494 y(\(robot->IRSensor)o([7].D)o(istan)o(ceVal)o(ue)e(>)i
+DOCS/manual.ps:Fi(-lik)o(e)d(function)j(on)g(the)g(curren)o(t)i(rob)q(ot.)j(T)m(o)13
+DOCS/manual.ps:Fi(-lik)o(e)d(functions)i(and)g(call)g(them)f(according)i(to)75
+DOCS/manual.ps:b(v)o(er-)75 1347 y(sions)f(of)f(the)i(sim)o(ulator)c(should)j(allo)o
+DOCS/manual.ps:b(dev)o(elop)q(ed)h(this)g(soft)o(w)o(are)f(during)g(m)o(y)f(Ph-D)h(at)
+DOCS/manual.ps:h(i3S)e(lab)q(oratory)h(with)g(professor)h(Jo)o(\177)-20
+DOCS/manual.ps:(e)e(Collard)f(as)i(Ph-D)g(directors)h(\(Mage)e(T)m(eam\).)28
+DOCS/manual.ps:b(Man)o(uel)18 b(Clergue,)g(a)g(Ph-D)75 2311 y(studen)o(t)d(studying)g
+DOCS/manual.ps:2361 y(\014rst)g(user)h(and)f(b)q(eta-tester)h(of)e(this)h(soft)o(w)o
+DOCS/manual.ps:(are.)k(He)c(also)f(dev)o(elop)q(ed)h(the)h(m)o(ulti-agen)o(ts)c(mo)q
+DOCS/manual.ps:(\023)-20 b(e)15 b(Guignard)e(and)h(F)m(rancesco)h(Mondada)e(\(K-T)m
+DOCS/manual.ps:-20 b(elle)11 b(Biondi.)h(Morphogenesis)g(of)e(neural)h(net)o(w)o
+DOCS/manual.ps:(-10)g(and)g(+10)g(*/)162 894 y(};)162 994 y(struct)g(IRSensor)162
+DOCS/manual.ps:(*/)162 1741 y(};)75 1863 y Fg(A.2)56 b(Fill-in)17 b(functions)75
+DOCS/manual.ps:(UserCommand\(\))e(function)i(or)g(sub-functions.)119
+DOCS/manual.ps:/col-1 {0 setgray} bind def
+DOCS/manual.ps:-3.0 736.0 translate
+DOCS/manual.ps:1 -1 scale
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+DOCS/manual.ps:  4 -2 roll dup 1 exch sub 3 -1 roll mul add srgb}
+DOCS/manual.ps:/shd {dup dup currentrgbcolor 4 -2 roll mul 4 -2 roll mul
+DOCS/manual.ps:  4 -2 roll mul srgb} bind def
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 300 1575 m 300 2041 l 600 2041 l gs col-1 s gr 
+DOCS/manual.ps:n 1125 2199 m 1125 2514 l 1425 2514 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1950 2672 m 1950 3450 l 2250 3450 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 2925 3438 m 3375 3438 l gs col-1 s gr 
+DOCS/manual.ps:n 3375 3438 m 3150 3438 l 3150 3675 l 3375 3675 l gs col-1 s gr 
+DOCS/manual.ps:n 3375 3225 m 3150 3225 l 3150 3438 l 3375 3438 l gs col-1 s gr 
+DOCS/manual.ps:n 2850 2325 m 2850 2625 l 3150 2625 l gs col-1 s gr 
+DOCS/manual.ps:n 2850 2550 m 2850 2850 l 3150 2850 l gs col-1 s gr 
+DOCS/manual.ps:n 2550 2550 m 2850 2550 l gs col-1 s gr 
+DOCS/manual.ps:n 2850 2400 m 3150 2400 l gs col-1 s gr 
+DOCS/manual.ps:n 2850 2325 m 2850 2175 l 3150 2175 l gs col-1 s gr 
+DOCS/manual.ps:n 1425 3975 m 1125 3975 l 1125 2550 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1950 4125 m 1950 4275 l 2100 4275 l gs col-1 s gr 
+DOCS/manual.ps:n 2550 3975 m 2700 3975 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1125 6075 m 1425 6075 l gs col-1 s gr 
+DOCS/manual.ps:n 1425 5850 m 1275 5850 l 1275 6300 l 1425 6300 l gs col-1 s gr 
+DOCS/manual.ps:n 1275 6300 m 1275 6525 l 1425 6525 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 300 6075 m 300 7050 l 600 7050 l gs col-1 s gr 
+DOCS/manual.ps:n 1425 7050 m 1800 7050 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 300 7050 m 300 7875 l 600 7875 l gs col-1 s gr 
+DOCS/manual.ps:n 1125 7875 m 1575 7875 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 7800 m 3075 7800 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 8025 m 3075 8025 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 8250 m 3075 8250 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 8475 m 3075 8475 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 8700 m 3075 8700 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 8925 m 3075 8925 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 9150 m 3075 9150 l gs col-1 s gr 
+DOCS/manual.ps:n 1350 9375 m 3075 9375 l gs col-1 s gr 
+DOCS/manual.ps:n 1800 6825 m 1575 6825 l 1575 7275 l 1800 7275 l 1575 7275 l gs col-1 s gr 
+DOCS/manual.ps: 1575 9450 l 1350 9450 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1275 9750 m 1650 9750 l gs col-1 s gr 
+DOCS/manual.ps:n 1425 9750 m 1425 9975 l 1650 9975 l gs col-1 s gr 
+DOCS/manual.ps:n 1425 9975 m 1425 10200 l 1650 10200 l gs col-1 s gr 
+DOCS/manual.ps:n 1425 10200 m 1425 10425 l 1650 10425 l gs col-1 s gr 
+DOCS/manual.ps:n 300 7875 m 300 9750 l 600 9750 l gs col-1 s gr 
+DOCS/manual.ps:n 300 9750 m 300 10725 l 600 10725 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1500 10725 m 1875 10725 l 1650 10725 l 1650 10950 l 1875 10950 l gs col-1 s gr 
+DOCS/manual.ps:n 1650 10950 m 1650 11175 l 1875 11175 l gs col-1 s gr 
+DOCS/manual.ps:n 1650 11175 m 1650 11400 l 1875 11400 l gs col-1 s gr 
+DOCS/manual.ps:n 300 10725 m 300 11550 l 600 11550 l gs col-1 s gr 
+DOCS/manual.ps:n 300 11550 m 300 11850 l 600 11850 l gs col-1 s gr 
+DOCS/manual.ps:n 300 11850 m 300 12150 l 600 12150 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 300 2025 m 300 6075 l 600 6075 l gs col-1 s gr 
+DOCS/manual.ps:n 2025 4800 m 2025 4950 l 2175 4950 l gs col-1 s gr 
+DOCS/manual.ps:n 2550 4650 m 2775 4650 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1125 3975 m 1125 4650 l 1425 4650 l gs col-1 s gr 
+DOCS/manual.ps:n 300 600 m 300 1575 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1575 600 m 1725 600 l 1725 375 l 1950 375 l gs col-1 s gr 
+DOCS/manual.ps:n 1950 600 m 1725 600 l 1725 1050 l 1950 1050 l gs col-1 s gr 
+DOCS/manual.ps:n 1725 825 m 1950 825 l gs col-1 s gr 
+DOCS/manual.ps:n 300 1425 m 675 1425 l gs col-1 s gr 
+DOCS/manual.ps:n 1125 4650 m 1125 5100 l gs col-1 s gr 
+DOCS/manual.ps: cp gs col-1 s gr 
+DOCS/manual.ps:n 1575 1425 m 1350 1425 l gs col-1 s gr 
+DOCS/manual.ps:n 1800 1350 m 1575 1350 l 1575 1575 l 1800 1575 l gs col-1 s gr 
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (SIM/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (EXAMPLE0/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (USER/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user_info.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (makefile) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (readme) col-1 sh gr
+DOCS/manual.ps:n 300 300 m 300 600 l 600 600 l gs col-1 s gr 
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (remove_example0) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (... \(other object files produced during compilation\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (EXAMPLE1/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (Example 0: empty user files.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (Example 1: a very simple controller.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (OBJ/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (sim.o) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (world.o) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user.o) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (ROBOT/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (SRC/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (colors.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (context.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (gen_types.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (graphics.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (graphics.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (header.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (include.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (khep_serial.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (khep-serial.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (... \(robot files\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (world.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (world.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user_info.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (types.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (sim.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (sim.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (robot.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (robot.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (USER/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (user_info.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (... \(other user source files\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (WORLD/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (these sources files must not be modifyed !) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (these are your own sources files) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (you can modify them as you want.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (\(see example 2 for the use of this directory\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (the C/C++ compiler write its object files here.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (home.world) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (maze.world) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (chaos.world) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (... \(world files\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (sim saves and loads world to and from this directory.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (sim saves and loads robots to and from this directory.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (The main readme file.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (.simrc is the configuration file \(especially for hardware configurations\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (your makefile \(you can modify it as you need\).) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (EXAMPLES/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (install_example0) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc ( ...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (EXAMPLE2/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (Example 2: a neural controller.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (.simrc) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (makefile) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (readme) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (CONTRIB/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (multirobots.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (neural.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (neural.h) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (multirobots.c) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (Contribution sources files \(do not modify\)) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (Example 3: a multi-agent module.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (Example 4: a simulated serial device module) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (DOCS/) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (This manual.) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (manual.ps) col-1 sh gr
+DOCS/manual.ps:/Times-Roman ff 180.00 scf sf
+DOCS/manual.ps:gs 1 -1 sc (...\(manual sources files and other goodies\)) col-1 sh gr
+DOCS/manual.ps:(robot,)598 1731 y(turning)f(clockwise)g(to)i(the)f(back-left)f
+DOCS/manual.ps:(the)598 2179 y(robot,)f(turning)f(clockwise)g(to)h(the)g(back-left)f
+DOCS/manual.ps:(Simulator)604 b(*/)75 552 y(/*)274 b(for)18 b(multi-agen)o(ts)e
+DOCS/manual.ps:735 y(/*)19 b(CNRS,)f(Universi)o(ty)e(of)j(Nice)f(-)h(Sophia)f
+DOCS/manual.ps:(of)j(Nice)f(-)h(Sophia)f(Antipolis)o(,)e(FRANCE)449
+DOCS/manual.ps:(treated)f(--)i(use)f(this)g(carefully)e(*/)114 2424
+DOCS/manual.ps:378 y(/*)j(Calculate)d(the)i(value)g(of)h(IR-Distan)o(ce)d(captors)h
+DOCS/manual.ps:userdict /end-hook known{end-hook}if
+DOCS/manual.tex:        E-mail: {\tt om@alto.unice.fr},
+DOCS/manual.tex:        University of Nice -- Sophia Antipolis,
+DOCS/manual.tex:robot simulator written at the University of Nice Sophia--Antipolis by Olivier
+DOCS/manual.tex:{\tt http://wwwi3s.unice.fr/$\tilde{\ }$om/khep-sim.html}
+DOCS/manual.tex:\hspace{-0.1cm}
+DOCS/manual.tex:To add an object, select it using the ``{\tt +}'' and ``{\tt -}'' buttons. If
+DOCS/manual.tex:value ranging between $-10$ and $+10$. Red arrows on the motors indicate this
+DOCS/manual.tex:Appendix \ref{dir-structure} contains the directory structure of the package.
+DOCS/manual.tex:compile these sources with a C compiler ({\tt gcc -c}), and if you prefer C++,
+DOCS/manual.tex:you can also compile these sources with a C++ compiler (replace {\tt gcc -c} by
+DOCS/manual.tex:{\tt g++ -c} in the file {\tt makefile}), so that it will be easier to link
+DOCS/manual.tex:ls -a} to see it. It contains 3 important parameters which you may edit:
+DOCS/manual.tex:When calling {\tt sim}, the option flag {\tt -s} allows to run {\em Khepera
+DOCS/manual.tex:pressing the buttons ``{\tt +}'' or ``{\tt -}'' next to the ``{\tt info}''
+DOCS/manual.tex:\item {\em Example 3}: {\em Khepera Simulator} multi-agents module developed
+DOCS/manual.tex:{\tt robot->IRSensor[2].DistanceValue} (type int). Values range between $0$
+DOCS/manual.tex:apply. These two integers will be written in {\tt robot->Motor[LEFT].Value}
+DOCS/manual.tex:and {\tt robot->Motor[RIGHT].Value}. They range between $-10$ and $+10$. We
+DOCS/manual.tex:  if ((robot->IRSensor[0].DistanceValue > COLLISION_TH) ||   /* front left */
+DOCS/manual.tex:      (robot->IRSensor[1].DistanceValue > COLLISION_TH) ||   /*  sensors   */
+DOCS/manual.tex:      (robot->IRSensor[2].DistanceValue > COLLISION_TH))
+DOCS/manual.tex:    robot->Motor[LEFT].Value  =  TURN_SPEED;
+DOCS/manual.tex:    robot->Motor[RIGHT].Value = -TURN_SPEED;          /* turn right */
+DOCS/manual.tex:  else if ((robot->IRSensor[3].DistanceValue > COLLISION_TH) ||
+DOCS/manual.tex:           (robot->IRSensor[4].DistanceValue > COLLISION_TH) ||
+DOCS/manual.tex:           (robot->IRSensor[5].DistanceValue > COLLISION_TH))
+DOCS/manual.tex:    robot->Motor[LEFT].Value  = -TURN_SPEED;
+DOCS/manual.tex:    robot->Motor[RIGHT].Value =  TURN_SPEED;          /* turn left */
+DOCS/manual.tex:    robot->Motor[LEFT].Value  = FORWARD_SPEED;
+DOCS/manual.tex:    robot->Motor[RIGHT].Value = FORWARD_SPEED;  /* else go forward (default) */
+DOCS/manual.tex:  if ((robot->IRSensor[6].DistanceValue > COLLISION_TH)||  /* collision in */
+DOCS/manual.tex:      (robot->IRSensor[7].DistanceValue > COLLISION_TH))   /*   the back   */
+DOCS/manual.tex:{\tt StepRobot}-like function on the current robot. To have robots with
+DOCS/manual.tex:different behaviors, just write several {\tt StepRobot}-like functions and
+DOCS/manual.tex:I developed this software during my Ph-D at i3S laboratory with professor
+DOCS/manual.tex:Jo\"elle Biondi and assistant professor Philippe Collard as Ph-D directors (Mage
+DOCS/manual.tex:Team). Manuel Clergue, a Ph-D student studying genetic algorithms and
+DOCS/manual.tex:beta-tester of this software. He also developed the multi-agents module
+DOCS/manual.tex:Franzi, Andr\'e Guignard and  Francesco Mondada (K-Team SA, Preverenges, CH) for
+DOCS/manual.tex:      short int Value;         /* motor speed between -10 and +10 */
+DOCS/manual.tex:\subsection{Fill-in functions}
+DOCS/manual.tex:sub-functions.
+DOCS/manual.tex:\section{Directory structure \label{dir-structure}}
+DOCS/manual.tex:                        turning clockwise to the back-left sensor.
+DOCS/manual.tex:                        robot, turning clockwise to the back-left sensor.
+DOCS/manual.tex:/*              for multi-agents simulation                                  */
+DOCS/manual.tex:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+DOCS/manual.tex:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+DOCS/manual.tex:  short int     current;  /* Current Robot being treated -- use this carefully */
+DOCS/manual.tex:/* Calculate the value of IR-Distance captors of the Robots in the structure */
+Binary file DOCS/sim.gif matches
+NEURAL/neural.network:I2: O2(-0.5)
+NEURAL/neural.network:I3: O2(-0.5)
+NEURAL/neural.network:I4: O2(-0.5)
+NEURAL/neural.network:I5: O1(-0.6)
+NEURAL/neural.network:I6: O1(-0.5)
+NEURAL/neural.network:I7: O1(-0.5)
+NEURAL/neural.network~:H1: O2(-1) O4(1)
+NEURAL/neural.network~:H2: O1(-1) O3(1)
+NEURAL/neural_org.network:I2: O2(-1)
+NEURAL/neural_org.network:I7: O1(-50) H1(1)
+NEURAL/neural_org.network:I10: O4(-0.8)
+Binary file OBJ/graphics.o matches
+Binary file OBJ/khep_serial.o matches
+Binary file OBJ/neural.o matches
+Binary file OBJ/robot.o matches
+Binary file OBJ/sim.o matches
+Binary file OBJ/user.o matches
+Binary file OBJ/world.o matches
+ROBOT/big.robot:458.000000,484.000000,-1.986244,0.000000,20
+ROBOT/big.robot:0.000000,-25.000000,0.000000,10
+ROBOT/big.robot:24.500000,-5.500000,0.000000,0
+ROBOT/big.robot:18.000000,-17.500000,-0.785398,4
+ROBOT/big.robot:9.500000,-23.000000,-1.570796,3
+ROBOT/big.robot:-23.000000,-9.500000,3.141593,2
+ROBOT/big.robot:-23.000000,9.500000,3.141593,2
+ROBOT/big.robot:6,-50.000000,19,4
+ROBOT/big.robot:1,-1.000000,47,6
+ROBOT/big.robot:1,-1.000000,47,8
+ROBOT/big.robot:1,-1.000000,47,10
+ROBOT/big.robot:1,-1.000000,46,12
+ROBOT/big.robot:1,-1.000000,46,14
+ROBOT/big.robot:1,-1.000000,46,16
+ROBOT/big.robot:6,-50.000000,21,0
+ROBOT/learning.robot:0.000000,-25.000000,0.000000,0
+ROBOT/learning.robot:24.500000,-5.500000,0.000000,4
+ROBOT/learning.robot:18.000000,-17.500000,-0.785398,3
+ROBOT/learning.robot:9.500000,-23.000000,-1.570796,0
+ROBOT/learning.robot:-23.000000,-9.500000,3.141593,1
+ROBOT/learning.robot:-23.000000,9.500000,3.141593,6
+ROBOT/learning.robot:1,-1.000000,15,22
+ROBOT/learning.robot:1,-1.000000,13,0
+ROBOT/learning.robot:1,-1.000000,14,25
+ROBOT/learning.robot:1,-1.000000,12,0
+ROBOT/rob1.robot:846.000000,904.000000,-2.767616,0.000000,1
+ROBOT/rob1.robot:0.000000,-25.000000,0.000000,0
+ROBOT/rob1.robot:24.000000,-5.500000,0.000000,0
+ROBOT/rob1.robot:18.000000,-17.000000,-0.785398,0
+ROBOT/rob1.robot:9.500000,-23.000000,-1.570796,0
+ROBOT/rob1.robot:-23.000000,-9.500000,3.141593,0
+ROBOT/rob1.robot:-23.000000,9.500000,3.141593,0
+ROBOT/rob2.robot:292.000000,882.000000,-3.137710,0.000000,0
+ROBOT/rob2.robot:0.000000,-25.000000,0.000000,0
+ROBOT/rob2.robot:24.000000,-5.500000,0.000000,0
+ROBOT/rob2.robot:18.000000,-17.000000,-0.785398,0
+ROBOT/rob2.robot:9.500000,-23.000000,-1.570796,0
+ROBOT/rob2.robot:-23.000000,-9.500000,3.141593,0
+ROBOT/rob2.robot:-23.000000,9.500000,3.141593,0
+ROBOT/rob3.robot:502.000000,414.000000,-2.782759,0.000000,0
+ROBOT/rob3.robot:0.000000,-25.000000,0.000000,0
+ROBOT/rob3.robot:24.000000,-5.500000,0.000000,689
+ROBOT/rob3.robot:18.000000,-17.000000,-0.785398,590
+ROBOT/rob3.robot:9.500000,-23.000000,-1.570796,105
+ROBOT/rob3.robot:-23.000000,-9.500000,3.141593,700
+ROBOT/rob3.robot:-23.000000,9.500000,3.141593,687
+ROBOT/test.robot:402.000000,470.000000,-2.117978,0.000000,20
+ROBOT/test.robot:0.000000,-25.000000,0.000000,0
+ROBOT/test.robot:24.500000,-5.500000,0.000000,1
+ROBOT/test.robot:18.000000,-17.500000,-0.785398,5
+ROBOT/test.robot:9.500000,-23.000000,-1.570796,3
+ROBOT/test.robot:-23.000000,-9.500000,3.141593,5
+ROBOT/test.robot:-23.000000,9.500000,3.141593,3
+ROBOT/test.robot:1,-1.000000,21,10
+ROBOT/test.robot:1,-1.000000,20,12
+SRC/graphics.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/graphics.c:  h--; w--;
+SRC/graphics.c:  FillRectangle(x+1,y+1,w-1,h-1);
+SRC/graphics.c:  DrawLine(x,y,x,y+h-1);
+SRC/graphics.c:  DrawLine(x,y,x+w-1,y);
+SRC/graphics.c:  switch(object->Type)
+SRC/graphics.c:                   x = XCOORD(object->X);
+SRC/graphics.c:                   y = YCOORD(object->Y);
+SRC/graphics.c:                   FillRectangle(x-1,y-1,3,3);
+SRC/graphics.c:                   DrawLine(x-4,y,x-8,y);
+SRC/graphics.c:                   DrawLine(x,y-4,x,y-8);
+SRC/graphics.c:                   DrawLine(x-4,y-4,x-6,y-6);
+SRC/graphics.c:                   DrawLine(x+4,y-4,x+6,y-6);
+SRC/graphics.c:                   DrawLine(x-4,y+4,x-6,y+6);
+SRC/graphics.c:                   x = XCOORD(object->X);
+SRC/graphics.c:                   y = YCOORD(object->Y);
+SRC/graphics.c:                   FillRectangle(x-1,y-1,3,3);
+SRC/graphics.c:                   DrawLine(x-4,y,x-8,y);
+SRC/graphics.c:                   DrawLine(x,y-4,x,y-8);
+SRC/graphics.c:                   DrawLine(x-4,y-4,x-6,y-6);
+SRC/graphics.c:                   DrawLine(x+4,y-4,x+6,y-6);
+SRC/graphics.c:                   DrawLine(x-4,y+4,x-6,y+6);
+SRC/graphics.c:    case BRICK: x     = XCOORD(object->X);
+SRC/graphics.c:                y     = YCOORD(object->Y);
+SRC/graphics.c:                alpha = object->Alpha;
+SRC/graphics.c:                                 - (int)floor(0.5+dw*sin(alpha));
+SRC/graphics.c:                polygon[1].x = x - (int)floor(0.5+dh*cos(alpha))
+SRC/graphics.c:                                 - (int)floor(0.5+dw*sin(alpha));
+SRC/graphics.c:                                 - (int)floor(0.5+dh*sin(alpha));
+SRC/graphics.c:                polygon[2].x = x - (int)floor(0.5+dh*cos(alpha))
+SRC/graphics.c:                polygon[2].y = y - (int)floor(0.5+dw*cos(alpha))
+SRC/graphics.c:                                 - (int)floor(0.5+dh*sin(alpha));
+SRC/graphics.c:                polygon[3].y = y - (int)floor(0.5+dw*cos(alpha))
+SRC/graphics.c:    case CORK:  x     = XCOORD(object->X);
+SRC/graphics.c:                y     = YCOORD(object->Y);
+SRC/graphics.c:                x    -= w/2;
+SRC/graphics.c:                y    -= h/2;
+SRC/graphics.c:  if (value==-1) sprintf(t,"?"); else sprintf(t,"%d",value);
+SRC/graphics.c:  if (value==-1.0) sprintf(t,"?"); else sprintf(t,"%lg%%",value*100);
+SRC/graphics.c:  if (value==-1.0) sprintf(t,"?"); else sprintf(t,"%lg",value);
+SRC/graphics.c:  if (value==-1) sprintf(t,"?"); else sprintf(t,"%d",value);
+SRC/graphics.c:  DrawText(x-4*strlen(t),y,t);
+SRC/graphics.c:  if (value==-1.0) sprintf(t,"?"); else sprintf(t,"%lg",value);
+SRC/graphics.c:  DrawText(x-4*strlen(t),y,t);
+SRC/graphics.c:  if (world->BehindObject)
+SRC/graphics.c:    XPutImage(display,window,gc,world->BehindObject,0,0,
+SRC/graphics.c:              world->BehindX,world->BehindY,40,40);
+SRC/graphics.c:    XDestroyImage(world->BehindObject);
+SRC/graphics.c:  world->BehindX = object->X - 20;
+SRC/graphics.c:  world->BehindY = object->Y - 20;
+SRC/graphics.c:  world->BehindObject = XGetImage(display,window,
+SRC/graphics.c:                                  world->BehindX,world->BehindY,
+SRC/graphics.c:  FillRectangle(500,WINDOW_W/2-41,36,36);
+SRC/graphics.c:  object = CreateObject(world->ObjectType,965,1049,
+SRC/graphics.c:                   M_PI*(double)world->ObjectAlpha[world->ObjectType]/180.0);
+SRC/graphics.c:  x = XCOORD(old_r->X) - 15;
+SRC/graphics.c:  y = YCOORD(old_r->Y) - 15;
+SRC/graphics.c:  x = XCOORD(new_r->X) - 15;
+SRC/graphics.c:  y = YCOORD(new_r->Y) - 15;
+SRC/graphics.c:  x = XCOORD(new_r->X);
+SRC/graphics.c:  y = YCOORD(new_r->Y);
+SRC/graphics.c:  cosa = cos(new_r->Alpha);
+SRC/graphics.c:  sina = sin(new_r->Alpha);
+SRC/graphics.c:  XFillArc(display,window,gc,x-14,y-14,28,28,0,360*64);
+SRC/graphics.c:  XDrawArc(display,window,gc,x-14,y-14,28,28,40*64,220*64);
+SRC/graphics.c:  XDrawArc(display,window,gc,x-14,y-14,28,28,0,40*64);
+SRC/graphics.c:  XDrawArc(display,window,gc,x-14,y-14,28,28,0,-140*64);
+SRC/graphics.c:  DrawLine(x+(short int)(dy-dx/3.2),y+(short int)(dx+dy/3.2),
+SRC/graphics.c:           x+(short int)(dy+dx/3.2),y+(short int)(dx-dy/3.2));
+SRC/graphics.c:  DrawLine(x-(short int)(dy+dx/3.2),y-(short int)(dx-dy/3.2),
+SRC/graphics.c:           x-(short int)(dy-dx/3.2),y-(short int)(dx+dy/3.2));
+SRC/graphics.c:  DrawLine(x+(short int)(dy-dx/3.2),y+(short int)(dx+dy/3.2),
+SRC/graphics.c:           x+(short int)(dy+dx/3.2),y+(short int)(dx-dy/3.2));
+SRC/graphics.c:  DrawLine(x-(short int)(dy+dx/3.2),y-(short int)(dx-dy/3.2),
+SRC/graphics.c:           x-(short int)(dy-dx/3.2),y-(short int)(dx+dy/3.2));
+SRC/graphics.c:  FillRectangle(x+(short int)(cosa*10-sina),y-(short int)(sina*10+cosa),
+SRC/graphics.c: *   dx = new_r->IRSensor[i].X/WORLD_INV_SCALE;
+SRC/graphics.c: *   dy = new_r->IRSensor[i].Y/WORLD_INV_SCALE;
+SRC/graphics.c: *   DrawPoint(x+(short int)(dx*cosa-dy*sina),y+(short int)(dy*cosa-dx*sina));
+SRC/graphics.c:  FillRectangle(WINDOW_W/2+32,166,WINDOW_W/2-64,16);
+SRC/graphics.c:  DrawText(WINDOW_W*3/4 - 4 * strlen(text),178,text);
+SRC/graphics.c:  strcpy(context->Comment,text);
+SRC/graphics.c:  DrawComment(context->Comment);
+SRC/graphics.c:  strcpy(context->Comment,"");
+SRC/graphics.c:  switch(context->Info)
+SRC/graphics.c:    case INFO_USER0: DrawComment(context->UserInfo->Title[0]);
+SRC/graphics.c:    case INFO_USER1: DrawComment(context->UserInfo->Title[1]);
+SRC/graphics.c:    case INFO_USER2: DrawComment(context->UserInfo->Title[2]);
+SRC/graphics.c:    case INFO_USER3: DrawComment(context->UserInfo->Title[3]);
+SRC/graphics.c:  object = world->Objects;
+SRC/graphics.c:    object = object->Next;
+SRC/graphics.c:  world = context->World;
+SRC/graphics.c:  robot = context->Robot;
+SRC/graphics.c:  strcpy(text,world->Name);
+SRC/graphics.c:  DrawText(WINDOW_W/4-4*strlen(text),14,text);
+SRC/graphics.c:  DrawPlate(499,WINDOW_W/2-42,38,38,GREY_69,PLATE_DOWN);
+SRC/graphics.c:  world = context->World;
+SRC/graphics.c:   if (world->Image[i/32][j] & (1 << (i%32)))
+SRC/graphics.c:  world = context->World;
+SRC/graphics.c:  for(i=0;i<16;i++) for(j=0;j<500;j++) world->Image[i][j] = (u_long)0;
+SRC/graphics.c:    if (XGetPixel(image,i,j) != world->BackgroundPixel)
+SRC/graphics.c:      world->Image[i/32][j] |= (1 << (i%32));
+SRC/graphics.c:  if (but->State == PLATE_UP) {x = but->X + 4; y = but->Y + 13; c = GREY;}
+SRC/graphics.c:            else              {x = but->X + 5; y = but->Y + 14; c = GREY_69;}
+SRC/graphics.c:  DrawPlate(but->X,but->Y,but->Width,but->Height,c,but->State);
+SRC/graphics.c:  DrawText(x,y,but->Text);
+SRC/graphics.c:    xc    = (double)ROBOT_BASE_X - robot->IRSensor[i].Y * ROBOT_SCALE;
+SRC/graphics.c:    yc    = (double)ROBOT_BASE_Y - robot->IRSensor[i].X * ROBOT_SCALE;
+SRC/graphics.c:    alpha = robot->IRSensor[i].Alpha + M_PI/2.0;
+SRC/graphics.c:    polygon[0].x = (short int)(xc - (cos(alpha) - 2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[1].x = (short int)(xc - (-cos(alpha) -2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[1].y = (short int)(yc + (2.0*cos(alpha) - sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[2].x = (short int)(xc - (-cos(alpha) +2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[2].y = (short int)(yc + (-2.0*cos(alpha) -sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[3].x = (short int)(xc - (cos(alpha) + 2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[3].y = (short int)(yc + (-2.0*cos(alpha) +sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    Color(BLUE + robot->IRSensor[i].DistanceValue/114);
+SRC/graphics.c:    polygon[0].x=(short int)(xc-(2.0*cos(alpha)-2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[1].x=(short int)(xc-(2.0*cos(alpha)+2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[1].y=(short int)(yc-(2.0*cos(alpha)-2.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[2].x=(short int)(xc-(4.0*cos(alpha)-0.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    polygon[2].y=(short int)(yc-(0.0*cos(alpha)-4.0*sin(alpha))*ROBOT_SCALE);
+SRC/graphics.c:    Color(RED - robot->IRSensor[i].LightValue/59);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X-18,ROBOT_BASE_Y-58);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X+18,ROBOT_BASE_Y-58);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X-51,ROBOT_BASE_Y-44);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X+51,ROBOT_BASE_Y-44);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X+70,ROBOT_BASE_Y-15);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X-70,ROBOT_BASE_Y-15);
+SRC/graphics.c:  ClearValC(4,ROBOT_BASE_X-20,ROBOT_BASE_Y+66);
+SRC/graphics.c:  if (robot->State & DISTANCE_SENSOR_FLAG)
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[2].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X-18,ROBOT_BASE_Y-58);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[3].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X+18,ROBOT_BASE_Y-58);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[1].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X-51,ROBOT_BASE_Y-44);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[4].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X+51,ROBOT_BASE_Y-44);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[5].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X+70,ROBOT_BASE_Y-15);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[0].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X-70,ROBOT_BASE_Y-15);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[7].DistanceValue,
+SRC/graphics.c:                ROBOT_BASE_X-20,ROBOT_BASE_Y+66);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[6].DistanceValue,
+SRC/graphics.c:  else if (robot->State & LIGHT_SENSOR_FLAG)
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[2].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X-18,ROBOT_BASE_Y-58);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[3].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X+18,ROBOT_BASE_Y-58);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[1].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X-51,ROBOT_BASE_Y-44);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[4].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X+51,ROBOT_BASE_Y-44);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[5].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X+70,ROBOT_BASE_Y-15);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[0].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X-70,ROBOT_BASE_Y-15);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[7].LightValue,
+SRC/graphics.c:                ROBOT_BASE_X-20,ROBOT_BASE_Y+66);
+SRC/graphics.c:    DrawIntValC(robot->IRSensor[6].LightValue,
+SRC/graphics.c:           ROBOT_BASE_X-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_Y-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_X-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_Y-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_X-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_Y-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_X-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           ROBOT_BASE_Y-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:           (short int)(ROBOT_SCALE*ROBOT_DIAMETER),0,-140*64);
+SRC/graphics.c:  FillRectangle(x-3,ROBOT_BASE_Y-10,7,21);
+SRC/graphics.c:    DrawLine(x,ROBOT_BASE_Y - activity,
+SRC/graphics.c:      DrawLine(x,ROBOT_BASE_Y - activity,x+3, ROBOT_BASE_Y+4 - activity);
+SRC/graphics.c:      DrawLine(x,ROBOT_BASE_Y - activity,x-3, ROBOT_BASE_Y+4 - activity);
+SRC/graphics.c:      DrawLine(x,ROBOT_BASE_Y - activity,x+3,ROBOT_BASE_Y-4 - activity);
+SRC/graphics.c:      DrawLine(x,ROBOT_BASE_Y - activity,x-3,ROBOT_BASE_Y-4 - activity);
+SRC/graphics.c:                    robot->Motor[0].Value);
+SRC/graphics.c:  DrawMotorActivity((short int)(ROBOT_BASE_X-ROBOT_DIAMETER*ROBOT_SCALE/3.6),
+SRC/graphics.c:                    robot->Motor[1].Value);
+SRC/graphics.c:  ClearValC(3,ROBOT_BASE_X-30,ROBOT_BASE_Y+24);
+SRC/graphics.c:  if (robot->State & MOTOR_VALUES_FLAG)
+SRC/graphics.c:    sprintf(t,"%d",robot->Motor[0].Value);
+SRC/graphics.c:    DrawText(ROBOT_BASE_X+30-4*strlen(t),ROBOT_BASE_Y+24,t);
+SRC/graphics.c:    sprintf(t,"%d",robot->Motor[1].Value);
+SRC/graphics.c:    DrawText(ROBOT_BASE_X-30-4*strlen(t),ROBOT_BASE_Y+24,t);
+SRC/graphics.c:  DrawLine(ROBOT_BASE_X-(short int)(ROBOT_SCALE*(ROBOT_WHEEL_BASE/2-15)),
+SRC/graphics.c:           ROBOT_BASE_X-(short int)(ROBOT_SCALE*ROBOT_WHEEL_BASE/2),
+SRC/graphics.c:  DrawLine(ROBOT_BASE_X+(short int)(ROBOT_SCALE*(ROBOT_WHEEL_BASE/2-15)),
+SRC/graphics.c:  FillRectangle(ROBOT_BASE_X-((short int)(ROBOT_SCALE*(ROBOT_WHEEL_BASE/2+1))),
+SRC/graphics.c:                ROBOT_BASE_Y-(short int)(ROBOT_SCALE*WHEEL_DIAMETER/2),
+SRC/graphics.c:  FillRectangle(ROBOT_BASE_X+((short int)(ROBOT_SCALE*(ROBOT_WHEEL_BASE/2-1))),
+SRC/graphics.c:                ROBOT_BASE_Y-(short int)(ROBOT_SCALE*WHEEL_DIAMETER/2),
+SRC/graphics.c:  DrawPlate(ROBOT_BASE_X-(short int)(ROBOT_SCALE*ROBOT_WHEEL_BASE*7/16),
+SRC/graphics.c:            ROBOT_BASE_Y-(short int)(ROBOT_SCALE*ROBOT_WHEEL_BASE/8),
+SRC/graphics.c:            ROBOT_BASE_Y-(short int)(ROBOT_SCALE*ROBOT_WHEEL_BASE/8),
+SRC/graphics.c:           ROBOT_BASE_X-(short int)(0.047*ROBOT_DIAMETER*ROBOT_SCALE),
+SRC/graphics.c:           ROBOT_BASE_Y-(short int)(0.41*ROBOT_DIAMETER*ROBOT_SCALE),
+SRC/graphics.c:  FillRectangle(x-(short int)(ROBOT_SCALE*35),y-(short int)(ROBOT_SCALE*60),
+SRC/graphics.c:  coef  = (double)cos((double)robot->Gripper.Position*M_PI/180.0);
+SRC/graphics.c:  space = (double)robot->Gripper.ObjectSize/20.0;
+SRC/graphics.c:  DrawPlate(x-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2),
+SRC/graphics.c:            y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2-16)),
+SRC/graphics.c:  polygon[0].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 10 + 6*coef));
+SRC/graphics.c:  polygon[1].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 10 + 6*coef));
+SRC/graphics.c:  polygon[2].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -53*coef));
+SRC/graphics.c:  polygon[3].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -53*coef));
+SRC/graphics.c:  polygon[4].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -73*coef));
+SRC/graphics.c:  polygon[5].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -73*coef));
+SRC/graphics.c:  polygon[6].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -53*coef));
+SRC/graphics.c:  polygon[7].x = x - (short int)(ROBOT_SCALE*space);
+SRC/graphics.c:  polygon[7].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -53*coef));
+SRC/graphics.c:  polygon[8].x = x - (short int)(ROBOT_SCALE*space);
+SRC/graphics.c:  polygon[8].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -73*coef));
+SRC/graphics.c:  polygon[9].x = x - (short int)(ROBOT_SCALE*(space+2));
+SRC/graphics.c:  polygon[9].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -73*coef));
+SRC/graphics.c:  polygon[10].x = x - (short int)(ROBOT_SCALE*(space+2));
+SRC/graphics.c:  polygon[10].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -53*coef));
+SRC/graphics.c:  polygon[11].x = x - (short int)(ROBOT_SCALE*(7 + ROBOT_DIAMETER/2));
+SRC/graphics.c:  polygon[11].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -53*coef));
+SRC/graphics.c:  polygon[12].x = x - (short int)(ROBOT_SCALE*(7 + ROBOT_DIAMETER/2));
+SRC/graphics.c:  polygon[12].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 10 +6*coef));
+SRC/graphics.c:  polygon[13].x = x - (short int)(ROBOT_SCALE*(1 + ROBOT_DIAMETER/2));
+SRC/graphics.c:  polygon[13].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 10 +6*coef));
+SRC/graphics.c:  polygon[14].x = x - (short int)(ROBOT_SCALE*(1 + ROBOT_DIAMETER/2));
+SRC/graphics.c:  polygon[14].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -39*coef));
+SRC/graphics.c:  polygon[15].x = x - (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 7));
+SRC/graphics.c:  polygon[15].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -47*coef));
+SRC/graphics.c:  polygon[16].x = x + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 7));
+SRC/graphics.c:  polygon[16].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -47*coef));
+SRC/graphics.c:  polygon[17].y = y + (short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -10 -39*coef));
+SRC/graphics.c:  DrawBox(x-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2.1),
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 15)),BLUE);
+SRC/graphics.c:  DrawBox(x-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/2.1),
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 10)),BLUE);
+SRC/graphics.c:  DrawSensor(x-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/3),
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -9)),BLUE);
+SRC/graphics.c:  DrawBox(x-4,
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 15)),BLUE);
+SRC/graphics.c:  DrawBox(x-4,
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 - 10)),BLUE);
+SRC/graphics.c:  DrawSensor(x-(short int)(ROBOT_SCALE*ROBOT_DIAMETER/6),
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -9)),BLUE);
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -9)),BLUE);
+SRC/graphics.c:             y+(short int)(ROBOT_SCALE*(ROBOT_DIAMETER/2 -9)),BLUE);
+SRC/graphics.c:  DrawText(x-52,y+4,"VISION MODULE");
+SRC/graphics.c:  if (robot->State & REAL_ROBOT_FLAG)
+SRC/graphics.c:  if (robot->State & DISTANCE_SENSOR_FLAG)
+SRC/graphics.c:  else if (robot->State & LIGHT_SENSOR_FLAG)
+SRC/graphics.c:  if (robot->State & MOTOR_VALUES_FLAG)
+SRC/graphics.c:  robot = context->Robot;
+SRC/graphics.c:  FillRectangle(WINDOW_W/2+2,2,WINDOW_W/2-4,16);
+SRC/graphics.c:  strcpy(title,robot->Name);
+SRC/graphics.c:  DrawText(WINDOW_W*3/4-4*strlen(title),14,title);
+SRC/graphics.c:  but = context->Buttons;
+SRC/graphics.c:    if (but->Text[0]=='>') DrawButton(but);
+SRC/graphics.c:    but = but->Next;
+SRC/graphics.c:  switch(context->InfoAbout)
+SRC/graphics.c:            DrawText(WINDOW_W*3/4-4*17,210,"Khepera Simluator");
+SRC/graphics.c:            DrawText(630,290,"- A simulated Khepera robot");
+SRC/graphics.c:            DrawText(630,305,"- A world editor");
+SRC/graphics.c:            DrawText(630,320,"- A graphical user interface");
+SRC/graphics.c:            DrawText(630,335,"- C programming facilities");
+SRC/graphics.c:            DrawText(630,425,"http://alto.unice.fr/~om/khep-contest.html");
+SRC/graphics.c:            "CNRS, University of Nice - Sophia Antipolis, FRANCE");
+SRC/graphics.c:            DrawText(855-4*21,210,"Khepera: presentation");
+SRC/graphics.c:            "(K-Team).  It has eight  infra-red  proximity");
+SRC/graphics.c:            DrawText(855-4*18,210,"Khepera: simulator");
+SRC/graphics.c:            "http://alto.unice.fr/~om/khep-contest.html");
+SRC/graphics.c:  DrawText(1104-strlen(text)*8,520,text);
+SRC/graphics.c:  if (context->Comment[0]) DrawComment(context->Comment);
+SRC/graphics.c:  switch(context->Info)
+SRC/graphics.c:    case INFO_ABOUT:     DrawPageNumber(context->InfoAbout + 1,3);
+SRC/graphics.c:    case INFO_USER0:     DrawPageNumber(context->InfoUser[0] + 1,
+SRC/graphics.c:                                        context->UserInfo->Pages[0]);
+SRC/graphics.c:                         DrawUserInfo(context->Robot,1,context->InfoUser[0]+1);
+SRC/graphics.c:    case INFO_USER1:     DrawPageNumber(context->InfoUser[1] + 1,
+SRC/graphics.c:                                        context->UserInfo->Pages[1]);
+SRC/graphics.c:                         DrawUserInfo(context->Robot,2,context->InfoUser[1]+1);
+SRC/graphics.c:    case INFO_USER2:     DrawPageNumber(context->InfoUser[2] + 1,
+SRC/graphics.c:                                        context->UserInfo->Pages[2]);
+SRC/graphics.c:                         DrawUserInfo(context->Robot,3,context->InfoUser[2]+1);
+SRC/graphics.c:    case INFO_USER3:     DrawPageNumber(context->InfoUser[3] + 1,
+SRC/graphics.c:                                        context->UserInfo->Pages[3]);
+SRC/graphics.c:                         DrawUserInfo(context->Robot,4,context->InfoUser[3]+1);
+SRC/graphics.c:  robot = context->Robot;
+SRC/graphics.c:  but = context->Buttons;;
+SRC/graphics.c:    but = but->Next;
+SRC/graphics.c:  if ((context->UserInfo->Info >= info) && (info >= 1))
+SRC/graphics.c:  if ((context->UserInfo->Pages[info-1] >= page) && (page >= 1))
+SRC/graphics.c:    context->Info = info;
+SRC/graphics.c:    context->InfoUser[info - 1] = page - 1;
+SRC/graphics.c:  world = context->World;
+SRC/graphics.c:  obj.Type  = world->ObjectType;
+SRC/graphics.c:  obj.Alpha = (M_PI*(double)(world->ObjectAlpha[world->ObjectType]))/180.0;
+SRC/graphics.c:           if ((mouse_x >= cancelbutton->X)&&
+SRC/graphics.c:               (mouse_x <  cancelbutton->X + cancelbutton->Width)&&
+SRC/graphics.c:               (mouse_y >= cancelbutton->Y)&&
+SRC/graphics.c:               (mouse_y <  cancelbutton->Y + cancelbutton->Height))
+SRC/graphics.c:        obj.X -= WORLD_OFFSET_X;
+SRC/graphics.c:        obj.Y -= WORLD_OFFSET_Y;
+SRC/graphics.c:  if (world->BehindObject)
+SRC/graphics.c:    XPutImage(display,window,gc,world->BehindObject,0,0,
+SRC/graphics.c:              world->BehindX,world->BehindY,40,40);
+SRC/graphics.c:    XDestroyImage(world->BehindObject);
+SRC/graphics.c:    world->BehindObject = NULL;
+SRC/graphics.c:           if ((mouse_x >= cancelbutton->X)&&
+SRC/graphics.c:               (mouse_x <  cancelbutton->X + cancelbutton->Width)&&
+SRC/graphics.c:               (mouse_y >= cancelbutton->Y)&&
+SRC/graphics.c:               (mouse_y <  cancelbutton->Y + cancelbutton->Height))
+SRC/graphics.c:             ret.x = -1;
+SRC/graphics.c:        ret.x = mouse_x - WORLD_OFFSET_X;
+SRC/graphics.c:        ret.y = mouse_y - WORLD_OFFSET_Y;
+SRC/graphics.c:  ret.x = -2;
+SRC/graphics.c:  while(ret.x == -2)
+SRC/graphics.c:           if ((mouse_x >= cancelbutton->X)&&
+SRC/graphics.c:               (mouse_x <  cancelbutton->X + cancelbutton->Width)&&
+SRC/graphics.c:               (mouse_y >= cancelbutton->Y)&&
+SRC/graphics.c:               (mouse_y <  cancelbutton->Y + cancelbutton->Height)) ret.x = -1;
+SRC/graphics.c:         but = context->Buttons;
+SRC/graphics.c:           if ((mouse_x >= but->X)&&(mouse_x < but->X + but->Width)&&
+SRC/graphics.c:               (mouse_y >= but->Y)&&(mouse_y < but->Y + but->Height))
+SRC/graphics.c:             but->State = PLATE_DOWN;
+SRC/graphics.c:           but = but->Next;
+SRC/graphics.c:         if (but->State == PLATE_DOWN)
+SRC/graphics.c:          if ((mouse_x >= but->X)&&(mouse_x < but->X + but->Width)&&
+SRC/graphics.c:              (mouse_y >= but->Y)&&(mouse_y < but->Y + but->Height)) ret = but;
+SRC/graphics.c:            but->State = PLATE_UP;
+SRC/graphics.c:         if (but->State == PLATE_DOWN)
+SRC/graphics.c:           if (!((mouse_x >= but->X)&&(mouse_x < but->X + but->Width)&&
+SRC/graphics.c:                 (mouse_y >= but->Y)&&(mouse_y < but->Y + but->Height)))
+SRC/graphics.c:             but->State = PLATE_UP;
+SRC/graphics.c:           if ((mouse_x >= but->X)&&(mouse_x < but->X + but->Width)&&
+SRC/graphics.c:                (mouse_y >= but->Y)&&(mouse_y < but->Y + but->Height))
+SRC/graphics.c:             but->State = PLATE_DOWN;
+SRC/graphics.c:         if ((mouse_x >= cancelbutton->X)&&
+SRC/graphics.c:             (mouse_x <  cancelbutton->X + cancelbutton->Width)&&
+SRC/graphics.c:             (mouse_y >= cancelbutton->Y)&&
+SRC/graphics.c:             (mouse_y <  cancelbutton->Y + cancelbutton->Height)) ret = TRUE;
+SRC/graphics.c:  strcpy(context->TextInput,"_");
+SRC/graphics.c:  DrawTextInput(context->TextInput);
+SRC/graphics.c:           if ((mouse_x >= cancelbutton->X)&&
+SRC/graphics.c:               (mouse_x <  cancelbutton->X + cancelbutton->Width)&&
+SRC/graphics.c:               (mouse_y >= cancelbutton->Y)&&
+SRC/graphics.c:               (mouse_y <  cancelbutton->Y + cancelbutton->Height))
+SRC/graphics.c:             context->TextInput[0]='\0';
+SRC/graphics.c:             DrawTextInput(context->TextInput);
+SRC/graphics.c:         context->TextInput[strlen(context->TextInput)-1]='\0';
+SRC/graphics.c:           strcpy(answer,context->TextInput);
+SRC/graphics.c:           context->TextInput[0]='\0';
+SRC/graphics.c:           DrawTextInput(context->TextInput);
+SRC/graphics.c:            if ((strlen(context->TextInput)+strlen(buffer))>=39)
+SRC/graphics.c:              context->TextInput[strlen(context->TextInput)+1] = '\0';
+SRC/graphics.c:              context->TextInput[strlen(context->TextInput)]=buffer[0];
+SRC/graphics.c:            if (strlen(context->TextInput)>0)
+SRC/graphics.c:             context->TextInput[strlen(context->TextInput)-1]=0;
+SRC/graphics.c:           strcat(context->TextInput,"_");
+SRC/graphics.c:           DrawTextInput(context->TextInput);
+SRC/graphics.c:      DrawTextInput(context->TextInput);
+SRC/graphics.c:  but = context->Buttons;
+SRC/graphics.c:  for(i=0;i<number;i++) but=but->Next;
+SRC/graphics.c:  but = context->Buttons;
+SRC/graphics.c:    next = but->Next;
+SRC/graphics.c:    free(but->Text);
+SRC/graphics.c:  but->Value  = value;
+SRC/graphics.c:  but->X      = x - 4 - strlen(text)*4;
+SRC/graphics.c:  but->Y      = y;
+SRC/graphics.c:  but->Text   = (char *)malloc(TEXT_BUF_SIZE);
+SRC/graphics.c:  but->Width  = strlen(text)*8 + 8;
+SRC/graphics.c:  but->Height = 18;
+SRC/graphics.c:  but->State  = FALSE;
+SRC/graphics.c:  but->Next   = NULL;
+SRC/graphics.c:  strcpy(but->Text,text);
+SRC/graphics.c:    exit(-1);
+SRC/graphics.c:  if (context->MonoDisplay)
+SRC/graphics.c:    context->World->BackgroundPixel = exact.pixel;
+SRC/graphics.c:    context->World->BackgroundPixel = exact.pixel;
+SRC/graphics.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/graphics.h:#define ClearValC(size,x,y)    FillRectangle((x)-(size)*4,(y)-10,(size)*8,12)
+SRC/header.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/include.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/include.h:#define UndrawText(x,y,t);     {Color(GREY_69); XFillRectangle(display,window,gc,x+X_O-1,y+Y_O-10,2+strlen(t)*8,14);}
+SRC/include.h:#define StopCommand()          UnpressButton(context,context->Buttons)
+SRC/include.h:#define GetUserInfo()          (context->Info)
+SRC/include.h:#define GetUserInfoPage()      ((context->Info==0) ? context->InfoAbout + 1 : context->InfoUser[context->Info-1] + 1)
+SRC/khep_serial.c:/*-----------------------------------------------------------------------------
+SRC/khep_serial.c:Releaser        :       J.-Y. Tigli, O. Michel
+SRC/khep_serial.c:-----------------------------------------------------------------------------*/
+SRC/khep_serial.c:        if (receive[rsize-1] == '\n') receive[rsize-1] = '\0';
+SRC/khep_serial.c:        if (receive[rsize-2] == '\r') receive[rsize-2] = '\0';
+SRC/khep_serial.h:/*-----------------------------------------------------------------------------
+SRC/khep_serial.h:Releaser        :       J.-Y. Tigli, O.Michel
+SRC/khep_serial.h:-----------------------------------------------------------------------------*/
+SRC/khep_serial.h:/*---------------------------------------------------------------------------*/
+SRC/khep_serial.h:/*---------------------------------------------------------------------------*/
+SRC/khep_serial.h:/*---------------------------------------------------------------------------*/
+SRC/khep_serial.h:/*---------------------------------------------------------------------------*/
+SRC/khep_serial.h:/*---------------------------------------------------------------------------*/
+SRC/khep_serial.h:/*---------------------------------------------------------------------------*/
+SRC/robot.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/robot.c:  strcpy(robot->Name,"default");
+SRC/robot.c:  robot->X          = 500;
+SRC/robot.c:  robot->Y          = 500;
+SRC/robot.c:  robot->Alpha      = M_PI/2.0;
+SRC/robot.c:  robot->State      = (u_char)0;
+SRC/robot.c:  robot->Motor[0].X     = 0.0;
+SRC/robot.c:  robot->Motor[0].Y     = 25.0;
+SRC/robot.c:  robot->Motor[0].Alpha = 0.0;
+SRC/robot.c:  robot->Motor[0].Value = 0;
+SRC/robot.c:  robot->Motor[1].X     = 0.0;
+SRC/robot.c:  robot->Motor[1].Y     = -25.0;
+SRC/robot.c:  robot->Motor[1].Alpha = 0.0;
+SRC/robot.c:  robot->Motor[1].Value = 0;
+SRC/robot.c:  robot->IRSensor[0].X     = 9.5;
+SRC/robot.c:  robot->IRSensor[0].Y     = 23.0;
+SRC/robot.c:  robot->IRSensor[0].Alpha = M_PI/2.0;
+SRC/robot.c:  robot->IRSensor[0].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[0].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[1].X     = 18.0;
+SRC/robot.c:  robot->IRSensor[1].Y     = 17.5;
+SRC/robot.c:  robot->IRSensor[1].Alpha = M_PI/4.0;
+SRC/robot.c:  robot->IRSensor[1].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[1].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[2].X     = 24.5;
+SRC/robot.c:  robot->IRSensor[2].Y     = 5.5;
+SRC/robot.c:  robot->IRSensor[2].Alpha = 0.0;
+SRC/robot.c:  robot->IRSensor[2].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[2].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[3].X     = 24.5;
+SRC/robot.c:  robot->IRSensor[3].Y     = -5.5;
+SRC/robot.c:  robot->IRSensor[3].Alpha = 0.0;
+SRC/robot.c:  robot->IRSensor[3].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[3].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[4].X     = 18.0;
+SRC/robot.c:  robot->IRSensor[4].Y     = -17.5;
+SRC/robot.c:  robot->IRSensor[4].Alpha = -M_PI/4.0;
+SRC/robot.c:  robot->IRSensor[4].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[4].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[5].X     = 9.5;
+SRC/robot.c:  robot->IRSensor[5].Y     = -23.0;
+SRC/robot.c:  robot->IRSensor[5].Alpha = -M_PI/2.0;
+SRC/robot.c:  robot->IRSensor[5].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[5].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[6].X     = -23.0;
+SRC/robot.c:  robot->IRSensor[6].Y     = -9.5;
+SRC/robot.c:  robot->IRSensor[6].Alpha = M_PI;
+SRC/robot.c:  robot->IRSensor[6].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[6].LightValue    = 500;
+SRC/robot.c:  robot->IRSensor[7].X     = -23.0;
+SRC/robot.c:  robot->IRSensor[7].Y     = 9.5;
+SRC/robot.c:  robot->IRSensor[7].Alpha = M_PI;
+SRC/robot.c:  robot->IRSensor[7].DistanceValue = 0;
+SRC/robot.c:  robot->IRSensor[7].LightValue    = 500;
+SRC/robot.c:  context->Robot = CreateRobot();
+SRC/robot.c:  context->Robot->State |= DISTANCE_SENSOR_FLAG | MOTOR_VALUES_FLAG;
+SRC/robot.c:  if (context->Robot)
+SRC/robot.c:    free(context->Robot);
+SRC/robot.c:          robot->X,robot->Y,robot->Alpha,robot->Diameter,robot->State);
+SRC/robot.c:           robot->Motor[i].X,robot->Motor[i].Y,robot->Motor[i].Alpha,
+SRC/robot.c:           robot->Motor[i].Value);
+SRC/robot.c:           robot->IRSensor[i].X,robot->IRSensor[i].Y,robot->IRSensor[i].Alpha,
+SRC/robot.c:           robot->IRSensor[i].DistanceValue);
+SRC/robot.c:         &(robot->X),&(robot->Y),&(robot->Alpha),&(robot->Diameter),&i);
+SRC/robot.c:  robot->State = (unsigned short)i;
+SRC/robot.c:          &(robot->Motor[i].X),&(robot->Motor[i].Y),&(robot->Motor[i].Alpha),
+SRC/robot.c:          &(robot->Motor[i].Value));
+SRC/robot.c:          &(robot->IRSensor[i].X),&(robot->IRSensor[i].Y),
+SRC/robot.c:          &(robot->IRSensor[i].Alpha),&(robot->IRSensor[i].DistanceValue));
+SRC/robot.c:  static short int sx[15]={-2,-4,-5,-7,-9,0, 0, 0, 0, 0, 2,4,5,7,9},
+SRC/robot.c:      ey = y + (short int)(sx[k] * cosa - sy[k] * sina);
+SRC/robot.c:      if (world->Image[ex/32][ey] & (1 << (ex%32)))
+SRC/robot.c:  obj = world->Objects;
+SRC/robot.c:  while((obj->Type == LAMP_ON)||(obj->Type == LAMP_OFF))
+SRC/robot.c:    if (obj->Type == LAMP_ON)
+SRC/robot.c:      dx = obj->X - x;
+SRC/robot.c:      dy = obj->Y - y;
+SRC/robot.c:      d = (250 - sqrt(dx*dx + dy*dy))/250.0;
+SRC/robot.c:        angle = atan2(-dy,dx) - alpha;
+SRC/robot.c:        if ((angle > -M_PI/3)&&(angle < M_PI/3))
+SRC/robot.c:          value -= (int)(cos(angle * 1.5)*d*450); /* 50 = maximal lightning */
+SRC/robot.c:    obj = obj->Next;
+SRC/robot.c:  value -= (value*(Rnd(200)-100))/2000; /* noise = +-5% */
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  alpha0 = robot->Alpha;
+SRC/robot.c:    x    = robot->IRSensor[i].X;
+SRC/robot.c:    y    = robot->IRSensor[i].Y;
+SRC/robot.c:    xc    = (short int)(robot->X - y*sin(alpha0) + x*cos(alpha0));
+SRC/robot.c:    yc    = (short int)(robot->Y - y*cos(alpha0) - x*sin(alpha0));
+SRC/robot.c:    alpha = alpha0 + robot->IRSensor[i].Alpha;
+SRC/robot.c:    robot->IRSensor[i].DistanceValue = 
+SRC/robot.c:                            IRSensorDistanceValue(context->World,xc,yc,alpha);
+SRC/robot.c:    robot->IRSensor[i].LightValue = 
+SRC/robot.c:                            IRSensorLightValue(context->World,xc,yc,alpha);
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  delta_direction = (double)(robot->Motor[0].Value - robot->Motor[1].Value);
+SRC/robot.c:  robot->Alpha += delta_direction;
+SRC/robot.c:  NormRad(robot->Alpha);
+SRC/robot.c:  robot->X+=(double)(robot->Motor[0].Value + robot->Motor[1].Value)*noise1
+SRC/robot.c:                     *cos(robot->Alpha)/4;
+SRC/robot.c:  robot->Y-=(double)(robot->Motor[0].Value + robot->Motor[1].Value)*noise2
+SRC/robot.c:                     *sin(robot->Alpha)/4;
+SRC/robot.c:  robot->Alpha += delta_direction;
+SRC/robot.c:  NormRad(robot->Alpha);
+SRC/robot.c:  static short int offset[16]={-15,0,-11,-11,0,-15,11,-11,15,0,11,11,0,15,
+SRC/robot.c:                               -11,11};
+SRC/robot.c:  world = context->World;
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  x  = (short int)(robot->X/ROBOT_SCALE);
+SRC/robot.c:  y  = (short int)(robot->Y/ROBOT_SCALE);
+SRC/robot.c:  front = (short int)(0.5 + (4*robot->Alpha) / M_PI);
+SRC/robot.c:  while (front > 7) front -= 8;
+SRC/robot.c:  while (back > 15) back -= 16;
+SRC/robot.c:    if (world->Image[xw/32][yw] & (1 << (xw%32)))
+SRC/robot.c:        robot->X = ox;            /* and won't turn                         */
+SRC/robot.c:        robot->Y = oy;
+SRC/robot.c:        robot->Alpha = oalpha;
+SRC/robot.c:        robot->X     = ox - offset[i-2]/11;
+SRC/robot.c:        robot->Y     = oy - offset[i-1]/11;
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  saved_robot.X         = robot->X;
+SRC/robot.c:  saved_robot.Y         = robot->Y;
+SRC/robot.c:  saved_robot.Alpha     = robot->Alpha;
+SRC/robot.c:    robot->State |= BUMP;
+SRC/robot.c:  else robot->State &= ~BUMP;
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  saved_robot.X         = robot->X;
+SRC/robot.c:  saved_robot.Y         = robot->Y;
+SRC/robot.c:  saved_robot.Alpha     = robot->Alpha;
+SRC/robot.c:  robot->State |= BUMP; else robot->State &= ~BUMP;
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  saved_robot.X         = robot->X;
+SRC/robot.c:  saved_robot.Y         = robot->Y;
+SRC/robot.c:  saved_robot.Alpha     = robot->Alpha;
+SRC/robot.c:                robot->Motor[1].Value=lm;
+SRC/robot.c:                robot->Motor[0].Value=rm;
+SRC/robot.c:    case 'E': sprintf(a,"e,%d,%d\n",robot->Motor[1].Value,
+SRC/robot.c:                         robot->Motor[0].Value);
+SRC/robot.c:              robot->IRSensor[0].DistanceValue,
+SRC/robot.c:              robot->IRSensor[1].DistanceValue,
+SRC/robot.c:              robot->IRSensor[2].DistanceValue,
+SRC/robot.c:              robot->IRSensor[3].DistanceValue,
+SRC/robot.c:              robot->IRSensor[4].DistanceValue,
+SRC/robot.c:              robot->IRSensor[5].DistanceValue,
+SRC/robot.c:              robot->IRSensor[6].DistanceValue,
+SRC/robot.c:              robot->IRSensor[7].DistanceValue);
+SRC/robot.c:              robot->IRSensor[0].LightValue,
+SRC/robot.c:              robot->IRSensor[1].LightValue,
+SRC/robot.c:              robot->IRSensor[2].LightValue,
+SRC/robot.c:              robot->IRSensor[3].LightValue,
+SRC/robot.c:              robot->IRSensor[4].LightValue,
+SRC/robot.c:              robot->IRSensor[5].LightValue,
+SRC/robot.c:              robot->IRSensor[6].LightValue,
+SRC/robot.c:              robot->IRSensor[7].LightValue);
+SRC/robot.c:    robot->State |= BUMP;
+SRC/robot.c:  else robot->State &= ~BUMP;
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  if (khep_talk(khepera_fd,"N\n",answer,TEXT_BUF_SIZE-1))
+SRC/robot.c:                 &robot->IRSensor[0].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[1].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[2].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[3].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[4].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[5].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[6].DistanceValue,
+SRC/robot.c:                 &robot->IRSensor[7].DistanceValue);
+SRC/robot.c:  if (khep_talk(khepera_fd,"O\n",answer,TEXT_BUF_SIZE-1))
+SRC/robot.c:                 &robot->IRSensor[0].LightValue,
+SRC/robot.c:                 &robot->IRSensor[1].LightValue,
+SRC/robot.c:                 &robot->IRSensor[2].LightValue,
+SRC/robot.c:                 &robot->IRSensor[3].LightValue,
+SRC/robot.c:                 &robot->IRSensor[4].LightValue,
+SRC/robot.c:                 &robot->IRSensor[5].LightValue,
+SRC/robot.c:                 &robot->IRSensor[6].LightValue,
+SRC/robot.c:                 &robot->IRSensor[7].LightValue);
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  if (robot->Motor[0].Value >  10) robot->Motor[0].Value =  10;
+SRC/robot.c:  if (robot->Motor[0].Value < -10) robot->Motor[0].Value = -10;
+SRC/robot.c:  if (robot->Motor[1].Value >  10) robot->Motor[1].Value =  10;
+SRC/robot.c:  if (robot->Motor[1].Value < -10) robot->Motor[1].Value = -10;
+SRC/robot.c:  sprintf(message,"D,%d,%d\n",robot->Motor[1].Value,robot->Motor[0].Value);
+SRC/robot.c:  if (khep_talk(khepera_fd,message,answer,TEXT_BUF_SIZE-1)==FALSE)
+SRC/robot.c:    context->Robot->State |= REAL_ROBOT_FLAG;
+SRC/robot.c:    if (khep_talk(khepera_fd,"A,3800,800,100\n",answer,TEXT_BUF_SIZE-1))
+SRC/robot.c:    DrawRobotIRSensors(context->Robot);
+SRC/robot.c:    context->Robot->State &= ~REAL_ROBOT_FLAG;
+SRC/robot.c:  context->Robot->State &= ~REAL_ROBOT_FLAG;
+SRC/robot.c:  DrawRobotIRSensors(context->Robot);
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  robot = context->Robot;
+SRC/robot.c:  robot->Motor[0].Value = 0;
+SRC/robot.c:  robot->Motor[1].Value = 0;
+SRC/robot.c:  if (robot->State & REAL_ROBOT_FLAG) InitKheperaSensors(context);
+SRC/robot.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/robot.h:#define NormRad(x) {while(x > M_PI) x-=2*M_PI; while(x < -M_PI) x+=2*M_PI;}
+SRC/sim.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/sim.c:/* this function returns a random value between 0 and x-1 */
+SRC/sim.c:    context->World = (struct World *)malloc(sizeof(struct World));
+SRC/sim.c:    context->World->Objects = NULL;
+SRC/sim.c:    ReadWorldFromFile(context->World,file);
+SRC/sim.c:    strcpy(context->World->Name,"home");
+SRC/sim.c:  strcpy(context->TextInput,"");
+SRC/sim.c:  context->Info           = INFO_ABOUT;
+SRC/sim.c:  but= context->Buttons= CreateButton(COMMAND,"command",
+SRC/sim.c:                               WINDOW_W/2+344,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(KHEPERA_BUTTON,">",WINDOW_W/2+220,40);
+SRC/sim.c:  but= but->Next=CreateButton(SENSORS_BUTTON,">",WINDOW_W/2+220,60);
+SRC/sim.c:  but= but->Next=CreateButton(MOTORS_BUTTON,">",WINDOW_W/2+220,80);
+SRC/sim.c:  but= but->Next=CreateButton(NEW_WORLD,"new",48,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(LOAD_WORLD,"load",92,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(SAVE_WORLD,"save",140,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(SET_ROBOT,"set robot",208,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(REDRAW_WORLD,"!",264,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(SCAN_WORLD,"scan",300,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(REMOVE_OBJECT,"remove",356,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(ADD_OBJECT,"add",408,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(TURN_OBJECT,"turn",452,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(OBJECT_PLUS,"+",488,WINDOW_W/2-41);
+SRC/sim.c:  but= but->Next=CreateButton(OBJECT_MINUS,"-",488,WINDOW_W/2-23);
+SRC/sim.c:  but= but->Next=CreateButton(NEW_ROBOT,"new",WINDOW_W/2+48,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(LOAD_ROBOT,"load",WINDOW_W/2+92,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(SAVE_ROBOT,"save",WINDOW_W/2+140,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(STEP_ROBOT,"step",WINDOW_W/2+188,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(RUN_ROBOT,"run",WINDOW_W/2+232,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(RESET_ROBOT,"reset",
+SRC/sim.c:                               WINDOW_W/2+280,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(HELP,"?",
+SRC/sim.c:                               WINDOW_W/2+392,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(INFO_NEXT,"info",
+SRC/sim.c:                              WINDOW_W/2+428,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(PAGE_PLUS,"+",WINDOW_W-106,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(PAGE_MINUS,"-",WINDOW_W-90,WINDOW_W/2-34);
+SRC/sim.c:  but= but->Next=CreateButton(QUIT,"quit",WINDOW_W-54,WINDOW_W/2-34);
+SRC/sim.c:  context->UserInfo = SetUserInfo();
+SRC/sim.c:  UserClose(context->Robot);
+SRC/sim.c:  for(i=1;i<argc;i++) if (argv[i][0]=='-')
+SRC/sim.c:        if (strcmp(text,"TRUE")==0) context->MonoDisplay = TRUE;
+SRC/sim.c:        else context->MonoDisplay = FALSE;  
+SRC/sim.c:        if (strcmp(text,"TRUE")==0) context->KheperaAvailable = TRUE;
+SRC/sim.c:        else context->KheperaAvailable = FALSE;
+SRC/sim.c:  if (ExistOption("s",argc,argv)) context->KheperaAvailable = FALSE;
+SRC/sim.c:    context->Pipe = TRUE;
+SRC/sim.c:    context->KheperaAvailable = FALSE;
+SRC/sim.c:  else context->Pipe=FALSE; 
+SRC/sim.c:  world = context->World;
+SRC/sim.c:  robot = context->Robot;
+SRC/sim.c:    switch(button->Value)
+SRC/sim.c:       strcpy(world->Name,"new");
+SRC/sim.c:           strcpy(world->Name,text);
+SRC/sim.c:           if (!(robot->State & REAL_ROBOT_FLAG)) InitSensors(context);
+SRC/sim.c:         strcpy(world->Name,name);
+SRC/sim.c:          if (point->x != -1)
+SRC/sim.c:            robot->X = point->x;
+SRC/sim.c:            robot->Y = point->y;
+SRC/sim.c:            if (!(robot->State & REAL_ROBOT_FLAG)) InitSensors(context);
+SRC/sim.c:       if (!(robot->State & REAL_ROBOT_FLAG)) InitSensors(context);
+SRC/sim.c:         if (point->x != -1)
+SRC/sim.c:           object = FindObject(world,point->x,point->y);
+SRC/sim.c:                     world->ObjectName[object->Type],object->X,object->Y);
+SRC/sim.c:           object = CreateObject(obj->Type,obj->X,obj->Y,obj->Alpha);
+SRC/sim.c:                   world->ObjectName[obj->Type],obj->X,obj->Y);
+SRC/sim.c:        world->ObjectAlpha[world->ObjectType] += 15;
+SRC/sim.c:        if (world->ObjectAlpha[world->ObjectType] >= 360) 
+SRC/sim.c:         world->ObjectAlpha[world->ObjectType] -= 360;
+SRC/sim.c:                world->ObjectName[world->ObjectType]);
+SRC/sim.c:        if (world->ObjectType == N_OBJECTS-1) 
+SRC/sim.c:         world->ObjectType= 0;
+SRC/sim.c:        else world->ObjectType++;
+SRC/sim.c:                world->ObjectName[world->ObjectType]);
+SRC/sim.c:        if (world->ObjectType == 0) 
+SRC/sim.c:         world->ObjectType = N_OBJECTS-1;
+SRC/sim.c:        else world->ObjectType--;
+SRC/sim.c:                world->ObjectName[world->ObjectType]);
+SRC/sim.c:           saved_robot.X = robot->X;
+SRC/sim.c:           saved_robot.Y = robot->Y;
+SRC/sim.c:           strcpy(robot->Name,text);
+SRC/sim.c:           if (!(robot->State & REAL_ROBOT_FLAG)) InitSensors(context);
+SRC/sim.c:         strcpy(robot->Name,name);
+SRC/sim.c:       if (robot->State & REAL_ROBOT_FLAG)
+SRC/sim.c:         i = robot->Motor[0].Value;
+SRC/sim.c:         j = robot->Motor[1].Value;
+SRC/sim.c:         robot->Motor[0].Value = 0;
+SRC/sim.c:         robot->Motor[1].Value = 0;
+SRC/sim.c:         robot->Motor[0].Value = i;
+SRC/sim.c:         robot->Motor[1].Value = j;
+SRC/sim.c:         if (robot->State & BUMP) sprintf(name,"BUMP");
+SRC/sim.c:                 floor(robot->X+0.5),floor(robot->Y+0.5),
+SRC/sim.c:                 floor(robot->Alpha*180/M_PI+0.5),name);
+SRC/sim.c:       if (context->Pipe)
+SRC/sim.c:         sim_serial_in  = -1;
+SRC/sim.c:         sim_serial_out = -1;
+SRC/sim.c:         while((sim_serial_in == -1)||(sim_serial_out == -1))
+SRC/sim.c:           if (sim_serial_in  == -1) 
+SRC/sim.c:           if (sim_serial_out == -1) 
+SRC/sim.c:         if ((sim_serial_in != -1)&&(sim_serial_out != -1))
+SRC/sim.c:           robot->Motor[0].Value = 0;
+SRC/sim.c:           robot->Motor[1].Value = 0;
+SRC/sim.c:         if (robot->State & REAL_ROBOT_FLAG)
+SRC/sim.c:           robot->Motor[0].Value = 0;
+SRC/sim.c:           robot->Motor[1].Value = 0;
+SRC/sim.c:           robot->Motor[0].Value = 0;
+SRC/sim.c:           robot->Motor[1].Value = 0;
+SRC/sim.c:           robot->Alpha = (angle*M_PI)/180.0;
+SRC/sim.c:       if (robot->State & REAL_ROBOT_FLAG)
+SRC/sim.c:       switch(context->Info)
+SRC/sim.c:         case INFO_ABOUT:      if (context->UserInfo->Info >= 1)
+SRC/sim.c:                                context->Info = INFO_USER0;
+SRC/sim.c:         case INFO_USER0:      if (context->UserInfo->Info >= 2)
+SRC/sim.c:                                context->Info = INFO_USER1;
+SRC/sim.c:                               else context->Info = INFO_ABOUT;
+SRC/sim.c:         case INFO_USER1:      if (context->UserInfo->Info >= 3)
+SRC/sim.c:                                context->Info = INFO_USER2;
+SRC/sim.c:                               else context->Info = INFO_ABOUT;
+SRC/sim.c:         case INFO_USER2:      if (context->UserInfo->Info >= 4)
+SRC/sim.c:                                context->Info = INFO_USER3;
+SRC/sim.c:                               else context->Info = INFO_ABOUT;
+SRC/sim.c:         case INFO_USER3:      context->Info = INFO_ABOUT;
+SRC/sim.c:       strcpy(context->Comment,"");
+SRC/sim.c:       switch(context->Info)
+SRC/sim.c:         case INFO_ABOUT: context->InfoAbout++;
+SRC/sim.c:                          if (context->InfoAbout >= 3)
+SRC/sim.c:                           context->InfoAbout = 0;
+SRC/sim.c:         case INFO_USER0: context->InfoUser[0]++;
+SRC/sim.c:                          if (context->InfoUser[0] >=
+SRC/sim.c:                              context->UserInfo->Pages[0])
+SRC/sim.c:                           context->InfoUser[0] = 0;
+SRC/sim.c:         case INFO_USER1: context->InfoUser[1]++;
+SRC/sim.c:                          if (context->InfoUser[1] >=
+SRC/sim.c:                              context->UserInfo->Pages[1])
+SRC/sim.c:                           context->InfoUser[1] = 0;
+SRC/sim.c:         case INFO_USER2: context->InfoUser[2]++;
+SRC/sim.c:                          if (context->InfoUser[2] >=
+SRC/sim.c:                              context->UserInfo->Pages[2])
+SRC/sim.c:                           context->InfoUser[2] = 0;
+SRC/sim.c:         case INFO_USER3: context->InfoUser[3]++;
+SRC/sim.c:                          if (context->InfoUser[3] >=
+SRC/sim.c:                              context->UserInfo->Pages[3])
+SRC/sim.c:                           context->InfoUser[3] = 0;
+SRC/sim.c:       strcpy(context->Comment,"");
+SRC/sim.c:       switch(context->Info)
+SRC/sim.c:         case INFO_ABOUT:      context->InfoAbout--;
+SRC/sim.c:                               if (context->InfoAbout < 0)
+SRC/sim.c:                                context->InfoAbout = 2;
+SRC/sim.c:         case INFO_USER0:      context->InfoUser[0]--;
+SRC/sim.c:                               if (context->InfoUser[0] < 0)
+SRC/sim.c:                                context->InfoUser[0] =
+SRC/sim.c:                                 context->UserInfo->Pages[0] - 1;
+SRC/sim.c:         case INFO_USER1:      context->InfoUser[1]--;
+SRC/sim.c:                               if (context->InfoUser[1] < 0)
+SRC/sim.c:                                context->InfoUser[1] =
+SRC/sim.c:                                 context->UserInfo->Pages[1] - 1;
+SRC/sim.c:         case INFO_USER2:      context->InfoUser[2]--;
+SRC/sim.c:                               if (context->InfoUser[2] < 0)
+SRC/sim.c:                                context->InfoUser[2] =
+SRC/sim.c:                                 context->UserInfo->Pages[2] - 1;
+SRC/sim.c:         case INFO_USER3:      context->InfoUser[3]--;
+SRC/sim.c:                               if (context->InfoUser[3] < 0)
+SRC/sim.c:                                context->InfoUser[3] =
+SRC/sim.c:                                 context->UserInfo->Pages[3] - 1;
+SRC/sim.c:       strcpy(context->Comment,"");
+SRC/sim.c:       case KHEPERA_BUTTON:    if (context->KheperaAvailable)
+SRC/sim.c:                                 if (robot->State & REAL_ROBOT_FLAG)
+SRC/sim.c:       case SENSORS_BUTTON:    if (robot->State & DISTANCE_SENSOR_FLAG)
+SRC/sim.c:                                 robot->State ^= DISTANCE_SENSOR_FLAG;
+SRC/sim.c:                                 robot->State ^= LIGHT_SENSOR_FLAG;
+SRC/sim.c:                               else if (robot->State & LIGHT_SENSOR_FLAG)
+SRC/sim.c:                                robot->State ^= LIGHT_SENSOR_FLAG;
+SRC/sim.c:                               else robot->State ^= DISTANCE_SENSOR_FLAG;
+SRC/sim.c:       case MOTORS_BUTTON:     robot->State ^= MOTOR_VALUES_FLAG;
+SRC/sim.c:    button->State = PLATE_UP;
+SRC/sim.c:  if (context->Pipe)
+SRC/sim.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/types.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/user_info.c:  user_info->Info     = NUMBER_OF_INFO;
+SRC/user_info.c:  user_info->Pages[0] = PAGES_INFO_1;
+SRC/user_info.c:  user_info->Pages[1] = PAGES_INFO_2;
+SRC/user_info.c:  user_info->Pages[2] = PAGES_INFO_3;
+SRC/user_info.c:  user_info->Pages[3] = PAGES_INFO_4;
+SRC/user_info.c:  strcpy(user_info->Title[0],TITLE_INFO_1);
+SRC/user_info.c:  strcpy(user_info->Title[1],TITLE_INFO_2);
+SRC/user_info.c:  strcpy(user_info->Title[2],TITLE_INFO_3);
+SRC/user_info.c:  strcpy(user_info->Title[3],TITLE_INFO_4);
+SRC/world.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+SRC/world.c:  if (object->Type == LAMP)
+SRC/world.c:    object->Next = world->Objects;
+SRC/world.c:    world->Objects = object;
+SRC/world.c:    obj = &(world->Objects);
+SRC/world.c:    while(*obj) obj = &((*obj)->Next);
+SRC/world.c:  object->Type        = type;
+SRC/world.c:  object->X           = x;
+SRC/world.c:  object->Y           = y;
+SRC/world.c:  object->Alpha       = alpha;
+SRC/world.c:  object->Next        = NULL;
+SRC/world.c:    FreeObjects(object->Next);
+SRC/world.c:  world = context->World;
+SRC/world.c:  FreeObjects(world->Objects);
+SRC/world.c:  strcpy(world->Name,"new");
+SRC/world.c:  world->Objects = (struct Object *)NULL;
+SRC/world.c:  world->ObjectType = BRICK;
+SRC/world.c:  world->BehindObject = NULL;
+SRC/world.c:  world->BehindX = 0;
+SRC/world.c:  world->BehindY = 0;
+SRC/world.c:  for(i=0;i<N_OBJECTS;i++) world->ObjectAlpha[i]=0;
+SRC/world.c:  strcpy(world->ObjectName[BRICK],"brick");
+SRC/world.c:  strcpy(world->ObjectName[CORK],"cork");
+SRC/world.c:  strcpy(world->ObjectName[LAMP],"lamp");
+SRC/world.c:  world = context->World;
+SRC/world.c:  strcpy(world->Name,"default");
+SRC/world.c:  for(i=0;i<16;i++) for(j=0;j<13;j++) world->Image[i][j] = (u_long)0xffffffff;
+SRC/world.c:    world->Image[0][j] = (u_long)0x00007ff;
+SRC/world.c:    for(i=1;i<15;i++) world->Image[i][j] = (u_long)0x00000000;
+SRC/world.c:    world->Image[15][j] = (u_long)0x00ffe00;
+SRC/world.c:  for(i=0;i<16;i++) for(j=488;j<500;j++) world->Image[i][j]=(u_long)0xffffffff;
+SRC/world.c:  world = context->World;
+SRC/world.c:  strcpy(world->Name,"chao");
+SRC/world.c:  world = context->World;
+SRC/world.c:  FreeObjects(world->Objects);
+SRC/world.c:    search = &(world->Objects);
+SRC/world.c:        *search = object->Next;
+SRC/world.c:      else search = &((*search)->Next);
+SRC/world.c:  search = world->Objects;
+SRC/world.c:    if ((search->X - x < 7)&&(search->X - x > -7)&&
+SRC/world.c:        (search->Y - y < 7)&&(search->Y - y > -7))
+SRC/world.c:    else search = search->Next;
+SRC/world.c:  if (world->Objects) obj = 1; else obj = 0;
+SRC/world.c:  fprintf(file,"%d,%d\n",obj,world->ObjectType);
+SRC/world.c:   fprintf(file,"%s\n%d\n",world->ObjectName[i],world->ObjectAlpha[i]);
+SRC/world.c:  for(i=0;i<16;i++)for(j=0;j<500;j++) fprintf(file,"%lx,",world->Image[i][j]);
+SRC/world.c:  object = world->Objects;
+SRC/world.c:    if (object->Next) obj = 1; else obj = 0;
+SRC/world.c:    fprintf(file,"%d,%d,%d,%d,%d\n",object->Type,object->X,object->Y,
+SRC/world.c:                                     (int)(object->Alpha*180/M_PI),obj);
+SRC/world.c:    object = object->Next;
+SRC/world.c:  world->ObjectType = (u_char)type;
+SRC/world.c:  if (obj) world->Objects = (struct Object *)1; else world->Objects = NULL;
+SRC/world.c:   fscanf(file,"%s\n%hd\n",world->ObjectName[i],&(world->ObjectAlpha[i]));
+SRC/world.c:   fscanf(file,"%lx,",&(world->Image[i][j]));
+SRC/world.c:  world->BehindX = 0;
+SRC/world.c:  world->BehindY = 0;
+SRC/world.c:  world->BehindObject = NULL;
+SRC/world.c:  object = &(world->Objects);
+SRC/world.c:    fscanf(file,"%hd,%hd,%hd,%lf,%hd\n",&type,&((*object)->X),
+SRC/world.c:                                   &((*object)->Y),&((*object)->Alpha),&obj);
+SRC/world.c:    (*object)->Type = (u_char)type;
+SRC/world.c:    (*object)->Alpha *= M_PI/180.0;
+SRC/world.c:    if (obj) (*object)->Next = (struct Object *)1;
+SRC/world.c:    else (*object)->Next = NULL;
+SRC/world.c:    object = &((*object)->Next);
+SRC/world.c:    if ((world->Image[ix/32][iy]         & (1 << (ix%32)))||
+SRC/world.c:        (world->Image[(ix+15)/32][iy]    & (1 << ((ix+15)%32)))||
+SRC/world.c:        (world->Image[(ix-15)/32][iy]    & (1 << ((ix-15)%32)))||
+SRC/world.c:        (world->Image[ix/32][iy+15]      & (1 << (ix%32)))||
+SRC/world.c:        (world->Image[ix/32][iy-15]      & (1 << (ix%32)))||
+SRC/world.c:        (world->Image[(ix+11)/32][iy+11] & (1 << ((ix+11)%32)))||
+SRC/world.c:        (world->Image[(ix+11)/32][iy-11] & (1 << ((ix+11)%32)))||
+SRC/world.c:        (world->Image[(ix-11)/32][iy+11] & (1 << ((ix-11)%32)))||
+SRC/world.c:        (world->Image[(ix-11)/32][iy-11] & (1 << ((ix-11)%32))))
+SRC/world.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+USER/user.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+USER/user.c:  fprintf(path_file,"%lg, %lg\n",robot->X,1000.0-robot->Y);
+USER/user.c:  while( (time2 - time1) < waiting )
+USER/user.c:              "- plot: plot the path of the robot");
+USER/user.c:              "- print network: print the structure on the neural network.  ");
+USER/user.c:              "- set angle x: x represents the orientation of the robot.");
+USER/user.c~:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+USER/user.c~:  fprintf(path_file,"%lg, %lg\n",robot->X,1000.0-robot->Y);
+USER/user.c~:  while( (time2 - time1) < waiting )
+USER/user.c~:              "- plot: plot the path of the robot");
+USER/user.c~:              "- print network: print the structure on the neural network.  ");
+USER/user.c~:              "- set angle x: x represents the orientation of the robot.");
+USER/user.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+USER/user_info.h:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+USER/user_old.c:/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+USER/user_old.c:  fprintf(path_file,"%lg, %lg\n",robot->X,1000.0-robot->Y);
+USER/user_old.c:              "- plot: plot the path of the robot");
+USER/user_old.c:              "- print network: print the structure on the neural network.  ");
+USER/user_old.c:              "- set angle x: x represents the orientation of the robot.");

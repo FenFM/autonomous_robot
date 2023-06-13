@@ -1,0 +1,25 @@
+EXAMPLE 1 - README file
+
+This example shows a very simple way of using Khepera simulator. It makes use
+of a simple control algorithm and exhibits some graphic capabilities. This
+might be a good starting point if you want to develop your own Khepera
+controller because you will understand how to read the inputs and write the
+outputs to the robot.
+
+How to run it ?
+
+            do                                                 type
+
+1) run install shell script:                             install_example1
+   this will install the directory USER
+   and the file makefile.
+
+2) go back to SIM directory:                                  cd ../..
+3) run the makefile:                                           make
+4) eventually edit the .simrc file or the makefile
+5) when everything is all right:                               sim &
+6) eventually make modifications
+
+7) if you want to remove this example,                  cd EXAMPLES/EXAMPLE1
+   run the remove_example1 shell script:                   remove_example1
+

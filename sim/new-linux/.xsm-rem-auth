@@ -1,0 +1,4 @@
+remove protoname=ICE protodata="" netid=tcp/alto.unice.fr:1436 authname=MIT-MAGIC-COOKIE-1
+remove protoname=XSMP protodata="" netid=tcp/alto.unice.fr:1436 authname=MIT-MAGIC-COOKIE-1
+remove protoname=ICE protodata="" netid=local/alto.unice.fr:/tmp/.ICE-unix/10587 authname=MIT-MAGIC-COOKIE-1
+remove protoname=XSMP protodata="" netid=local/alto.unice.fr:/tmp/.ICE-unix/10587 authname=MIT-MAGIC-COOKIE-1

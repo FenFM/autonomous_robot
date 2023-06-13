@@ -1,0 +1,4 @@
+KHEPERA_AVAILABLE:  FALSE        ; no real Khepera robot is connected
+SERIAL_PORT:        /dev/ttya    ; serial port device to which the robot is
+                                 ; connected (if available)
+MONODISPLAY:        FALSE        ; the simulator runs on a colorful screen

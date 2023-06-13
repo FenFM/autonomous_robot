@@ -1,0 +1,772 @@
+\documentclass[a4paper,twoside]{article}
+
+\usepackage{epsfig}
+\usepackage{a4wide}
+
+\begin{document}
+
+\title{Khepera Simulator version 2.0 \\ User Manual}
+
+\author{Olivier MICHEL \\
+        E-mail: {\tt om@alto.unice.fr},
+        Web: {\tt { http://wwwi3s.unice.fr/$\tilde{\ }$om/}} \\
+        University of Nice -- Sophia Antipolis,
+        Laboratoire I3S, CNRS \\
+        b\^at. 4, 250, av. A. Einstein 06560 Valbonne, France
+       }
+\date{March 1, 1996}
+
+\maketitle
+
+\bibliographystyle{plain}
+
+\section{License Agreement}
+
+{\em Khepera Simulator} is a freeware public domain software written by
+Olivier MICHEL. The author cannot be held responsible for any software or
+hardware damage caused by the use of {\em Khepera Simulator}: Use this
+software at your own risks. Permission is hereby granted to copy this package
+for free distribution. The author's name and this copyright notice must be
+included in any copy. Commercial use is forbidden. If you publish any academic
+paper, book, treatise or other work based upon experiments  conducted using
+{\em Khepera Simulator}, you must cite {\em Khepera Simulator} and include the
+following reference mentioning the {\em Khepera Simulator}'s World Wide Web
+address:
+
+\vspace{2mm}
+
+\noindent
+Olivier Michel. {\em Khepera Simulator} Package version 2.0: Freeware mobile
+robot simulator written at the University of Nice Sophia--Antipolis by Olivier
+Michel. Downloadable from the World Wide Web at
+{\tt http://wwwi3s.unice.fr/$\tilde{\ }$om/khep-sim.html}
+
+\begin{figure}[hpt]
+\hspace{-0.1cm}
+\psfig{file=EPS/sim.eps,width=15.0cm}
+\caption{{\em Khepera Simulator}}
+\label{sim}
+\end{figure}
+
+\section{Introduction}
+
+This package allows to write control algorithms (neural networks, classifier
+system, or anything else you may imagine) using C or C++ languages. A library
+of functions is provided that permits to drive the robot and display results.
+The simulator runs on Unix workstations and features a nice X11 colorful
+graphical interface. Some examples of controllers are given within the
+package, including a neural network controller. The simulator also features
+the ability to drive a real {\em Khepera} robot, so you can very easily
+transfer your simulation results to the real robot by clicking on a button.
+
+The screen of the {\em Khepera Simulator} is divided into two parts: the
+``world'' part stands on the left while the ``robot'' part stands on the right
+(see figure \ref{sim}). In the world part, one can observe the behavior of the
+robot in its environment whereas in the robot part, one can observe what is
+going on inside the robot (sensors, motors and controller).
+
+\subsection{Description of the world}
+
+\begin{figure}[hbt]
+\hspace{1.2cm}
+\psfig{file=EPS/2worlds.eps,width=12.0cm}
+\begin{verbatim}                  chaos.world                      maze.world\end{verbatim}
+\caption{Two examples of simulated worlds}
+\label{worlds}
+\end{figure}
+
+Various worlds for the robot are available in the {\tt SIM/WORLD/} directory.
+Press the ``{\tt load}'' button and type the world file name (without the {\tt
+.world} extension) to load one of them. Moreover, it is possible to edit them
+or to design a new world from scratch by pressing the ``{\tt new}'' button.
+Resulting worlds can be saved using the ``{\tt save}'' button. Bricks, corks
+or lamps are laid in the environment resulting in more or less complex mazes
+(see for example figure \ref{worlds}). The real dimensions of this simulated
+environment (comparing to the real robot {\em Khepera}) are $1m \times 1m$.
+
+To add an object, select it using the ``{\tt +}'' and ``{\tt -}'' buttons. If
+you want to turn an object on itself (for a brick for example), then press the
+``{\tt turn}'' button as many times as it is necessary. Then, to set the object
+at a location in the world, press the ``{\tt add}'' button and drop the object
+in the world, then unpress the ``{\tt add}'' button.. If you want to remove
+objects, press the ``{\tt remove}'' button and click on the objects you want
+to remove. To get out of the remove mode, unpress the ``{\tt remove}''
+button. Once the bricks and corks have been laid, it is necessary to press the
+``{\tt scan}'' button before the robot could perceive them. It is possible to
+check what the robot can perceive by pressing the ``{\tt !}'' button.
+
+\subsection{Description of the robot}
+
+\begin{figure}[hpt]
+\hspace{1.6cm}
+\psfig{file=EPS/Khepera_2robots.eps,width=12.0cm}
+\caption{{\em Khepera} (5 cm diameter) and its simulated counterpart}
+\label{robots}
+\end{figure}
+
+\subsubsection{Presentation}
+
+Dedicated to {\em Khepera} \cite{MONDADA93}, the simulated mobile robot
+includes 8 infrared sensors allowing it to detect by reflexion (small
+rectangles) the proximity of objects in front of it, behind it, and to the
+right and the left sides of it. Each sensor returns a value ranging between
+$0$ and $1023$ represented in color levels. $0$ means that no object is
+perceived while $1023$ means that an object is very close to the sensor
+(almost touching the sensor). Intermediate values may give an approximate idea
+of the distance between the sensor and the object. These sensors can also
+measure the level of ambient light (small triangles) all around the
+robot. They return a value displayed in color levels close to $500$ in the
+dark and close to $50$ in front of a light source. Each motor can take a speed
+value ranging between $-10$ and $+10$. Red arrows on the motors indicate this
+speed.
+
+\subsubsection{Motor Model}
+
+The model of the simulated motors are straight forward: the robot moves
+accordingly to the speed set by the the user. A random noise of $\pm 10\% $ is
+added to the amplitude of the motor speed while a random noise of $\pm 5\% $
+is added to the direction resulting from the difference of the speeds of the
+motors (see function {\tt SolveEffectors(...)} in source code file {\tt
+robot.h} for more details).
+
+\subsubsection{Sensor Model}
+
+To calculate its distance value output, a simulated sensor explores a set of
+15 points in a triangle in front of it. An output value is computed as a
+function of the presence (or the absence) of obstacles at these points. A
+random noise corresponding to $\pm 10\% $ of its amplitude is added to the
+distance value output (see function {\tt IRSensorDistanceValue(...)} in source
+code file {\tt robot.h} for more details).
+
+The light value output is computed accordingly to the distance and the angle
+between the sensor and the light source. A $\pm 5\% $ noise is added to this
+value (see function {\tt IRSensorLightValue(...)} in source code file {\tt
+robot.h} for more details).
+
+\subsubsection{Operating the Robot}
+
+To set the robot at a given location in the world, press the button
+``{\tt set robot}'' (in the world part) and click somewhere in the world
+(possibly not on an object). The robot may also be oriented in the direction
+you like. To do this, press the ``{\tt command}'' button and type for example
+{\tt set angle 45}, you will see the robot turn to reach the 45 degrees
+position. Figure \ref{robots} shows the simulated robot at 90 degrees
+position. If it was looking to the right (resp. to the left), it would have
+been at 0 degrees (resp. 180 degrees). If you press the ``{\tt run}'' button,
+{\tt sim} will call continuously the user control function {\tt
+RobotStep(robot)} (written in C in {\tt user.c} source file) until the ``{\tt
+run}'' is unpressed. If you want to observe a step by step run of the robot,
+then press the ``{\tt step}'' button and the function {\tt RobotStep(robot)}
+will be executed once. The ``{\tt ?}'' button allows to test the sensors of
+the robot (especially useful for the real robot).
+
+\section{Programming}
+
+\subsection{Introduction}
+
+This section explains how to program your own {\em Khepera} controller. It
+describes the different files you need to know and starts up with a tutorial
+example. You will find in the appendix \ref{functions_lib} a complete list of
+the C structures and functions necessary to program {\em Khepera Simulator}.
+Appendix \ref{dir-structure} contains the directory structure of the package.
+
+\subsection{Simulator source files: do not modify them}
+
+The simulator source files are in the directory {\tt SIM/SRC}. They must not
+be modified. This is very important for further updates of the software. These
+sources are written in ANSI C. So, if you want to write your controller in C,
+compile these sources with a C compiler ({\tt gcc -c}), and if you prefer C++,
+you can also compile these sources with a C++ compiler (replace {\tt gcc -c} by
+{\tt g++ -c} in the file {\tt makefile}), so that it will be easier to link
+them together ({\tt gcc}) with your controller.
+
+\subsection{User files}
+
+\subsubsection{Preferences: the .simrc file}
+
+The file {\tt .simrc} is a preference file concerning hardware configurations.
+It is read by {\em Khepera Simulator} each time {\tt sim} is executed. It's a
+hidden file in {\tt /SIM} directory, so you need to type something like {\tt
+ls -a} to see it. It contains 3 important parameters which you may edit:
+
+\begin{itemize}
+
+\item {\tt KHEPERA\_AVAILABLE:} may be {\tt TRUE} or {\tt FALSE}, depending if
+a real {\em Khepera} robot is connected or not.
+
+\item {\tt SERIAL\_PORT:} is serial port device to which the robot is connected
+(if available). It could be {\tt /dev/ttya} standing for serial port A on a
+Sun workstation, but it generally depends on the kind of computer you use. This
+value is used only when {\tt KHEPERA\_AVAILABLE} is {\tt TRUE}.
+
+\item {\tt MONODISPLAY:} may be {\tt TRUE} or {\tt FALSE} according to the
+type of screen used. Setting it to {\tt TRUE} allows to run {\em Khepera
+Simulator} on a monochrome display.
+
+\end{itemize}
+
+When calling {\tt sim}, the option flag {\tt -s} allows to run {\em Khepera
+Simulator} in ``simulation only'' mode (do not make use of the serial link for
+the real {\em Khepera}) even if {\tt KHEPERA\_AVAILABLE} is {\tt TRUE}.
+
+\subsubsection{Controller source files}
+
+These files are yours. You can modify them the way you want. You can also
+add new files (and consequently modify the associated {\tt makefile}). They
+are in {\tt SIM/USER} directory. A version of the basic empty controller files
+is available in {\tt SIM/EXAMPLES/EXAMPLE0} directory. But if you want to build
+your own controller, you should start up with example 1 which is the default
+controller of the package (also available in {\tt SIM/EXAMPLES/EXAMPLE1}
+directory). This example shows how to read the inputs and how to write to the
+outputs of the robot. It implements a very simple control algorithm. It will
+be more detailed in the following tutorial section.
+
+\subsubsection{User info setup}
+
+As a user programmer of {\em Khepera Simulator}, you will need an area to
+display some of your variables, results, graphs, explanations, etc. This area
+exists and allow you to write numerical values, text, drawings, etc. into {\em
+Khepera Simulator} main window. All the information you can write is divided
+into directories which contain pages. A default directory of three pages
+contains a description of {\em Khepera Simulator}. You can switch between
+directory by pressing the button ``{\tt info}''. You can turn the pages by
+pressing the buttons ``{\tt +}'' or ``{\tt -}'' next to the ``{\tt info}''
+button. You can create up to 4 user directories, each one containing up to 255
+pages ! In order to define this, you must edit the file {\tt user\_info.h}
+which is in {\tt USER} directory. After that, you will have to fill in the
+function {\tt DrawUserInfo(struct Robot *robot,char info,char page)} where
+{\tt info} is the info directory and {\tt page} is the current page of this
+directory. Here are the constants to be edited in {\tt user\_info.h} header
+file:
+
+\begin{itemize}
+
+\item {\tt NUMBER\_OF\_INFO} is the number of user information directories your
+want. This value must be between 0 and 4.
+
+\item {\tt PAGES\_INFO\_x} is the number of pages for the directory number
+{\tt x} ({\tt x} ranging from 1 to 4). These values must be between 0 and 255.
+
+\item {\tt TITLE\_INFO\_x} is the title of the directory {\tt x} ({\tt x}
+ranging from 1 to 4).
+
+\end{itemize}
+
+\subsection{A tutorial example}
+
+\subsubsection{Foreword}
+
+Four examples are given within {\em Khepera Simulator} package. The are
+located in the directory {\tt SIM/EXAMPLES/EXAMPLEx} where {\tt x} ranging from
+0 to 3 is the number of the example. Example 0 is not really an example of a
+controller since it contains all the necessary functions for {\em Khepera
+Simulator} to run, but these functions are empty, resulting in an ``empty''
+controller. Only example 1 will be explained in this tutorial. For all the
+examples, read the {\tt readme} files that are in the directories {\tt
+EXAMPLES/EXAMPLEx}. They contain indications about the installation and the
+compilation of the examples. Here is a short description of the examples:
+
+\begin{itemize}
+
+\item {\em Example 0}: the ``empty'' controller example.
+
+\item {\em Example 1}: an example of simple control algorithm.
+
+\item {\em Example 2}: artificial neural networks and gnuplot. This example
+shows how to implement artificial neural networks to drive the robot. It also
+features a pipe to gnuplot utility in order to display graphs (here the path
+of the robot). The neural networks shown here are resulting from an
+evolutionary process using genetic algorithms, morphogenesis, and artificial
+metabolism described in \cite{MICHEL95}.
+
+\item {\em Example 3}: {\em Khepera Simulator} multi-agents module developed
+by Manuel Clergue allows to control several simulated {\em Khepera} robots.
+
+\item {\em Example 4}: {\em Khepera Simulator} simulated serial device
+module. This module is especially useful if you already developed a program
+sending serial commands to a real Khepera through the serial link of your
+computer. You will just need to redirect the input and output serial streams to
+{\em Khepera Simulator} pipes files and you will be able to observe the
+simulated {\em Khepera} driven by your serial commands. A list of the commands
+supported by {\em Khepera Simulator} is available in appendix
+\ref{khep_serial}.
+
+\end{itemize}
+
+\subsubsection{Let's program a {\em Khepera} robot controller !}
+
+This tutorial shows the implementation of a very simple control algorithm
+inspired from Braitenberg \cite{BRAITENBERG84}. The source files are in
+{\tt EXAMPLES/EXAMPLE1/USER/} directory.
+
+First of all, let's define our algorithm:
+
+\begin{verbatim}
+repeat
+  o If the robot perceive no obstacle, then move forwards.
+  o If an obstacle is perceived on the left hand side of the robot, then turn
+    to the right.
+  o If an obstacle is perceived on the right hand side of the robot, then turn
+    to the left. 
+until something is detected in the back of the robot.
+\end{verbatim}
+
+To program this into {\em Khepera Simulator}, we need to translate ``perceive
+no obstacle'' into something dealing with the sensors of the robots. The
+sensors of the robot are readable through the variable {\tt robot} (type {\tt
+struct Robot}). The value corresponding to the distance measurement of the
+front sensor 2 (see figure \ref{robots}) is stored in:
+{\tt robot->IRSensor[2].DistanceValue} (type int). Values range between $0$
+and $1023$. So if this value exceeds a given threshold, say $900$ (which will
+be defined in {\tt COLLISION\_TH} constant), one can consider that an obstacle
+has been detected by this sensor.
+
+In order to drive the motors of the robot, one must write in the variable {\tt
+robot} the values corresponding to the speed of each motor we want to
+apply. These two integers will be written in {\tt robot->Motor[LEFT].Value}
+and {\tt robot->Motor[RIGHT].Value}. They range between $-10$ and $+10$. We
+will define as constants in this range a {\tt TURN\_SPEED} and a {\tt FORWARD\_SPEED}.
+
+All the input and output operations must occur within the boolean function
+{\tt StepRobot(struct Robot *robot)}. This function returns {\tt FALSE} to
+stop the run of the robot and {\tt TRUE} otherwise:
+
+\begin{verbatim}
+
+#define FORWARD_SPEED   5                    /* normal (slow) forward speed */
+#define TURN_SPEED      4                    /* normal (slow) turn speed    */
+#define COLLISION_TH    900                  /* value of IR sensors to be   */
+                                             /*   considered as collision   */
+
+boolean StepRobot(struct Robot *robot)
+{
+  if ((robot->IRSensor[0].DistanceValue > COLLISION_TH) ||   /* front left */
+      (robot->IRSensor[1].DistanceValue > COLLISION_TH) ||   /*  sensors   */
+      (robot->IRSensor[2].DistanceValue > COLLISION_TH))
+                                              /* if there is a collision on the
+                                                   left side of the robot */
+  {
+    robot->Motor[LEFT].Value  =  TURN_SPEED;
+    robot->Motor[RIGHT].Value = -TURN_SPEED;          /* turn right */
+  }
+  else if ((robot->IRSensor[3].DistanceValue > COLLISION_TH) ||
+           (robot->IRSensor[4].DistanceValue > COLLISION_TH) ||
+           (robot->IRSensor[5].DistanceValue > COLLISION_TH))
+                                              /* if there is a collision on the
+                                                   right side of the robot */
+  {
+    robot->Motor[LEFT].Value  = -TURN_SPEED;
+    robot->Motor[RIGHT].Value =  TURN_SPEED;          /* turn left */
+  }
+  else 
+  {
+    robot->Motor[LEFT].Value  = FORWARD_SPEED;
+    robot->Motor[RIGHT].Value = FORWARD_SPEED;  /* else go forward (default) */
+  }
+
+  if ((robot->IRSensor[6].DistanceValue > COLLISION_TH)||  /* collision in */
+      (robot->IRSensor[7].DistanceValue > COLLISION_TH))   /*   the back   */
+   return(FALSE);  /* stop */
+  else
+   return(TRUE);   /* continue */
+}
+\end{verbatim}
+
+With this simple code, we have defined a complete robot controller. It will
+run in a loop when pressing the ``{\tt run}'' button or run once when pressing
+the ``{\tt step}'' button. You can now compile example 1 on your computer.
+Normally, it is the default example installed within the package, so you just
+need to type {\tt make}. This will create the object files in {\tt SIM/OBJ/}
+directory and produce the executable file: {\tt sim}. Type {\tt sim} to run
+{\em Khepera Simulator}.
+
+In order to display some text, numerical values, or drawings in the user info
+area, have a look at the function {\tt DrawUserInfo(...)} in the source file
+{\tt user.c} which is in {\tt SIM/EXAMPLE1/USER/} directory. It seems so
+simple that I wouldn't describe it here. A lot of graphical functions are
+available to let your imagination as free as possible (see appendix
+\ref{graphics_functions} for more information).
+
+\subsection{Multi Agent Package}
+\subsubsection{Overview}
+The purpose of this extension of the {\it Khepera Simulator} is to operate a group of robots instead of a single robot. This group of robots is viewed by the simulator like a single entity, a ``C'' structure ({\tt Multirobots}). Each robots of the entity react according to a user specified behavior. All robots may have the same behavior or some robots may have a specific behavior, as you need. The actions of the robots at a defined time are calculated in a synchonous way, that is robots move one after another.\\
+This package works only with simulated robots.
+\subsubsection{Implementation}
+The ``C'' code concerning Multi Agent can be found in the files multirobots.c and multirobots.h, placed in the directory CONTRIB.
+These files define the structure {\tt Multirobots} and some useful functions. You may see the file multirobots.h for description of these functions (see appendix \ref{multi_h} for a paper version). \\
+The structure is composed of three fields. A field for storing the number of robots of the group. This number is fixed at the creation of the structure and should not change until the structure is destroyed. Another field is an array of pointers on robots. These pointers, given by a malloc operation, should not change. On the contrary, structures pointed by the pointers may change in the way you want, if they remain {\tt Robot} structures. The third field is a marker which indicate the number of the current robot.\\
+The most important functions are {\tt MultiRobotRun} and {\tt MultiRobotRunFast}, which execute a cycle of robots move. When you call these functions with a structure {\tt Multirobots}, they  call {\tt StepMultiRobots} and  {\tt FastStepMultiRobots} for each robots, each time changing the number of the current robot.\\
+The functions {\tt StepMultiRobots} and  {\tt FastStepMultiRobots} receive a
+structure {\tt MultiRobots} as a parameter. They should apply a
+{\tt StepRobot}-like function on the current robot. To have robots with
+different behaviors, just write several {\tt StepRobot}-like functions and
+call them according to the current robot.\\
+Two versions are provided to allow a run with graphical display ({\tt MultiRobotRun}) and a faster run without such display ({\tt MultiRobotRunFast}).
+\subsubsection{How to use it?}
+In the same way you do for the simple simulator, you have to write a file user.c, in which you define some functions. In addition of the general ones (i.e. those of the simple simulator), you have to implement two specific functions:\\
+\begin{verbatim}
+        boolean FastStepMultiRobots(struct MultiRobots *multi);
+        boolean StepMultiRobots(struct MultiRobots *multi);
+\end{verbatim}
+To use a structure {\tt MultiRobots}, you have to create it using the function
+{\tt CreateMultiRobots}. This function has the number of robots you want in
+the group as a parameter.\\
+Then, you  may run the robots using the functions {\tt MultiRobotRun}
+and {\tt MultiRobotRunFast}. These functions, which are defined in
+multirobots.c, make use of the functions {\tt StepMultiRobots} and
+{\tt FastStepMultiRobots} to determinate the behavior of the current robot of
+the group.\\
+After use, you have to call {\tt FreeMultiRobots} in order to free memory.\\
+You are greatly encouraged to have a look at the example 3, before coding your own multi agent simulation.
+\subsubsection{future works}
+The major lack of this package is the impossibility to command several real robots. Further versions of the simulator should allow this feature.\\ 
+
+\subsection{Author's Notes}
+
+I am are aware that the models for the sensors and for the motors are very
+simple. I choose computer efficiency instead of precision, making this
+simulator suitable for computer expensive algorithms, especially genetic
+algorithms.
+
+I do not handle real time problems in the tutorial example presented here
+because the controller is very simple and doesn't need any synchronization.
+Anyway, it is interesting to know that at a speed of $10$ (on both motors),
+the simulated robot covers exactly $5$ millimeters for one simulation step,
+while the real robot cover an unknown distance (depending on many factors
+including computer speed, the control algorithm complexity, the serial link,
+etc.). This may give ideas to build a system taking care of real time problems.
+
+\section{Acknowledgments}
+
+I developed this software during my Ph-D at i3S laboratory with professor
+Jo\"elle Biondi and assistant professor Philippe Collard as Ph-D directors (Mage
+Team). Manuel Clergue, a Ph-D student studying genetic algorithms and
+evolutionary neural networks in our laboratory, was the first user and
+beta-tester of this software. He also developed the multi-agents module
+included in example 3. I am grateful to all these people for their assistance
+and some precious advices during the development of the software. Moreover, I
+would like to congratulate the designers of the {\em Khepera} robot: Edo
+Franzi, Andr\'e Guignard and  Francesco Mondada (K-Team SA, Preverenges, CH) for
+their brilliant realization.
+
+\bibliography{BIB/biblio}
+
+\newpage
+\noindent
+{\Huge \bf Appendix}
+
+\appendix
+
+\section{Library of functions \label{functions_lib}}
+
+\subsection{Data structures}
+
+You need to know three C structures to drive {\em Khepera} robot which are
+defined in {\tt robot.h} file in {\tt SIM/SRC/} directory:
+
+\begin{verbatim}
+    struct Motor
+    {
+      double    X,Y,Alpha;
+      short int Value;         /* motor speed between -10 and +10 */
+    };
+
+    struct IRSensor
+    {
+      double    X,Y,Alpha;
+      short int DistanceValue;  /* typically between 0 and 1023 */
+      short int LightValue;     /* typically between 0 and 500  */
+    };
+
+    struct Robot
+    {
+      char                  Name[16];
+      double                X,Y,Alpha; /* X and Y (millimeter), Alpha (rad) */
+      double                Diameter;
+      u_char                State;
+      struct Motor          Motor[2];  /* use RIGHT & LEFT instead of 0 & 1 */
+      struct IRSensor       IRSensor[8]; /* see simulated robot on figure 1 */
+    };
+\end{verbatim}
+
+\subsection{Fill-in functions}
+
+These functions needs to be fulfilled in order to attach actions to the
+buttons of the graphical interface.
+
+\begin{verbatim}
+
+  void NewRobot(struct Robot *robot)
+    This function is called when the "NEW ROBOT" buttons is pressed.
+
+  void LoadRobot(struct Robot *robot,FILE *file)
+    This function allows the user to write some data in the robot file, using
+    the C functions fprintf(file,pattern,data). It is called when the "LOAD
+    ROBOT" button is pressed.
+
+  void SaveRobot(struct Robot *robot,FILE *file)
+    This function allows to retrieve the data saved by the LoadRobot function
+    using the C function fscanf(file,pattern,data). It is called when the "SAVE
+    ROBOT" button is pressed. Both functions need to be updated in the same way
+    (they must load and save exactly the same datas in the same order).
+
+  void RunRobotStart(struct Robot *robot)
+    This function is called once when the "RUN ROBOT" button is pressed.
+
+  boolean StepRobot(struct Robot *robot)
+    This function is called as long as the "RUN ROBOT" button is down.
+
+  void FastStepRobot(struct Robot *robot)
+    This function is called by FastRunRobot().
+
+  void RunRobotStop(struct Robot *robot)
+    This function is called when the "RUN ROBOT" button is released.
+
+  void ResetRobot(struct Robot *robot)
+    This function is call when the "RESET ROBOT" button is pressed.
+
+  void UserCommand(struct Robot *robot,char *text)
+    This function is called when the "COMMAND" button is pressed. The text
+    parameter passed to it is the string that the user typed on the keyboard.
+    It is a powerful way to do anything you want (set parameters, start various
+    algorithms, etc.).
+
+  void DrawUserInfo(struct Robot *robot,char info,char page)
+    This function is called each time the program needs to redraw the display
+    of the window. It must contain all the drawings and texts for the user info
+    box. 
+
+  void UserInit(struct Robot *robot)
+    This function is called at the beginning of the program. It can be used to
+    make some initializations.
+
+  void UserClose(struct Robot *robot)
+    This function is called at the end of the program. It allows to close some
+    file eventually open during UserInit() or to free some memory.
+
+\end{verbatim}
+
+\subsection{Graphical functions \label{graphics_functions}}
+
+These functions allow to draw text and graphics in the user info box. The
+coordinates (0,0) indicates the upper left corner of the box and the
+coordinates (500,400) indicates the lower right corner of the box.
+
+\begin{verbatim}
+  void Color(char color)
+    Sets the color of the pen. Available colors are:
+    BLACK, DIM_GREY, GREY_69, GREY, LIGHT_GREY, WHITE, BLUE, BLUE_CYAN, CYAN,
+    CYAN_GREEN, GREEN, GREEN_YELLOW, YELLOW, YELLOW_RED, RED, MAGENTA, 
+    LIME_GREEN, BROWN, MAROON, GOLD, AQUAMARINE, FIREBRICK, GOLDENROD,
+    BLUE_VIOLET, CADET_BLUE, CORAL, CORNFLOWER_BLUE, DARK_GREEN,
+    DARK_OLIVE_GREEN, PEACH_PUFF, PAPAYA_WHIP, BISQUE, AZURE, LAVENDER,
+    MISTY_ROSE, MEDIUM_BLUE, NAVY_BLUE, PALE_TURQUOISE and SEA_GREEN.
+
+  void FillRectangle(int x,int y,int width,int height)
+    Draws a filled rectangle with the upper left corner at (x,y).
+
+  void DrawLine(int x1, int y1, int x2, int y2)
+    Draws a line between (x1,y1) and (x2,y2).
+
+  void DrawPoint(int x,int y)
+    Draw a point at (x,y).
+
+  void DrawRectangle(int x,int y,int width,int height)
+    Draws an empty rectangle with the upper left corner at (x,y).
+
+  void FillArc(x,y,width,height,angle1,angle2)
+    Draws a filled arc with the upper left corner at (x,y) between
+    (angle1 / 64) and (angle2 / 64) in degrees.
+
+  void DrawArc(x,y,width,height,angle1,angle2)
+    Draws an empty arc with the upper left corner at (x,y) between
+    (angle1 / 64) and (angle2 / 64) in degrees.
+
+  void DrawText(int x,int y,char *text);
+    Draw text at (x,y)
+
+  void UndrawText(int x, int y,char *text);
+    Undraw text at (x,y)
+
+  void WriteComment(char *text)
+    Write a comment at the comment line.
+
+  void EraseComment()
+    Erase the comment on the comment line.
+
+  void DrawRobot(struct Robot *robot)
+    Redraw the simulated robot in its environment.
+
+  void ShowUserInfo(int info,int page);
+    Display a page of the user info box.
+
+  u_char GetUserInfo()
+    Returns the current user info number (ranging from 1 to 4).
+
+  u_char GetUserInfoPage()
+    Returns the current page number of user info (ranging from 0 to 255).
+
+\end{verbatim}
+
+\subsection{Other useful functions}
+
+These functions should be called by the UserCommand() function or
+sub-functions.
+
+\begin{verbatim}
+  boolean StopCommand()
+    returns TRUE is the "COMMAND" button is released.
+
+  void FastRunRobot(struct Robot *robot)
+    runs the simulated robot without displaying it (faster).
+
+  boolean RunRobot(struct Robot *robot)
+    Runs the simulated robot. Returns FALSE if the robot is stopped.
+\end{verbatim}
+
+\newpage
+
+\section{Directory structure \label{dir-structure}}
+\psfig{file=EPS/directory.eps,width=15.0cm}
+
+\newpage
+
+\section{Khepera Serial Commands \label{khep_serial}}
+
+\begin{verbatim}
+A  Configure (not implemented in Khepera Simulator)
+
+B  Read software version (not implemented in Khepera Simulator)
+
+D  Set speed
+Format of the command:  D, speed_motor_left, speed_motor_right<\n>
+Format of the response: d<\n>
+Effect:                 Set the speed of the two motors. The unit is the
+                        pulse/10 ms that correspond to 8 millimeters per
+                        second on the real robot.
+
+E  Read speed
+Format of the command:  E</n>
+Format of the response: e, speed_motor_left, speed_motor_right<\n>
+Effect:                 Read the instantaneous speed of the two motors. The
+                        unit is the pulse/10 ms that correspond to 8
+                        millimeters per second on the real robot.
+
+G  Set position (not implemented in Khepera Simulator)
+
+H  Read position (not implemented in Khepera Simulator)
+
+N  Read proximity sensors
+Format of the command:  N</n>
+Format of the response: n, val_sens_left_90,val_sens_left_45,val_sens_left_10,
+                        val_sens_right_10,val_sens_right_45,val_sens_right_90,
+                        val_sens_back_right,val_sens_back_left<\n>
+Effect:                 Read the 10 bit values of the 8 proximity sensors, from
+                        the front sensor situated at the left of the robot,
+                        turning clockwise to the back-left sensor.
+
+O  Read ambient light sensors
+Format of the command:  O</n>
+Format of the response: o, val_sens_left_90,val_sens_left_45,val_sens_left_10,
+                        val_sens_right_10,val_sens_right_45,val_sens_right_90,
+                        val_sens_back_right,val_sens_back_left<\n>
+Effect:                 Read the 10 bit values of the 8 ambient light sensors,
+                        from the front sensor situated at the left of the
+                        robot, turning clockwise to the back-left sensor.
+\end{verbatim}
+
+\newpage
+
+\section{multirobots.h \label{multi_h}}
+{\small
+\begin{verbatim}
+/*****************************************************************************/
+/* File:        multirobots.h (Khepera Simulator)                            */
+/* Author:      Manuel CLERGUE <clerguem@alto.unice.fr>                      */
+/* Date:        Thu Jan 16 14:39:05 1996                                     */
+/* Description: Extension of Khepera Simulator                               */
+/*              for multi-agents simulation                                  */
+/* Copyright (c) 1995                                                        */
+/* Olivier MICHEL                                                            */
+/* MAGE team, i3S laboratory,                                                */
+/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+/*                                                                           */
+/* Copyright (c) 1996                                                        */
+/* Manuel CLERGUE                                                            */
+/* MAGE team, i3S laboratory,                                                */
+/* CNRS, University of Nice - Sophia Antipolis, FRANCE                       */
+/*                                                                           */
+/* Permission is hereby granted to copy this package for free distribution.  */
+/* The author's name and this copyright notice must be included in any copy. */
+/* Commercial use is forbidden.                                              */
+/*****************************************************************************/
+
+#ifndef MULTIROBOTS_H
+#define MULTIROBOTS_H
+
+#define D_MAX         50.0   /* max. dist. between 2 robots for mutual perc. */
+#define IR_MAX        1023   /* max. value of IR captors */
+
+/* useful external functions */
+extern void    DrawLittleRobot(struct Robot *sr,struct Robot *r);
+extern void    ChooseRandomPosition(struct World *world,double *x,double *y,
+                                       double *alpha);
+extern u_short IRSensorDistanceValue(struct World *world,short int x,short int y,
+                                        double alpha);
+extern u_short IRSensorLightValue(struct World *world,short int x,short int y,
+                                     double alpha);
+
+
+/* The MultiRobots structure manage the use of several robots */
+/* Some services are provided with this structure */
+/* It is highly recommended to use them (or to create others) */
+/* instead of using those of the Robot structure */
+
+struct MultiRobots
+{
+  struct Robot **robots;  /* Array of pointers to Robot */
+  short int     current;  /* Current Robot being treated -- use this carefully */
+  short int     number;   /* Number of Robots in the structure */
+};
+
+/* CreateMultiRobots create and initialyze the structure with number Robots */
+MultiRobots *CreateMultiRobots(long int number);
+
+/* Free the structure and the Robots */
+void FreeMultiRobots( MultiRobots *multirobots);
+
+/* Calculate the influence of the group on the current Robot's captor (xc,yc,alpha) */
+/* Used in MultiInitSensors */ 
+short int MutualInfluence(short int xc,short int yc,double alpha,
+                            short int value,MultiRobots *multirobots);
+
+/* Calculate the value of IR-Distance captors of the Robots in the structure */
+/* Used in MultiRobotRunFast */
+void MultiInitSensors(Context *context,MultiRobots *multirobots);
+
+/* This is the most useful service. This is THE one you have to use */
+/*  in standart situations */
+/* There is two version (Fast and Normal) */
+/* The fast one (without the display of robots on the screen) use 
+/*     FastStepMultiRobots(MultiRobots *multirobots)*/
+/* The other one use StepMultiRobots(MultiRobots *multirobots) */
+/* You have to implement these functions in the same way that you have to do it
+/* for one robot */ 
+void MultiRobotRunFast(Context *context,MultiRobots *multirobots);
+void MultiRobotRun(Context *context,MultiRobots *multirobots);
+
+/* nothing important */
+double DistanceBetRobots(Robot *rob1,Robot rob2);
+
+/* This service allow you to place the robots at random place in the world */
+void PlaceRobots(Context *context,MultiRobots *multirobots);
+
+/* The functions you have to implement */
+extern boolean FastStepMultiRobots(struct MultiRobots *multi);
+extern boolean StepMultiRobots(struct MultiRobots *multi);
+#endif
+\end{verbatim}}
+
+\newpage
+
+\end{document}

@@ -2,14 +2,19 @@
 //  Course:                 Nature Inspired Computing                       //
 //  Lecturer:               Prof. Dr.-Ing. habil. Ralf Salomon              //
 //  Author:                 B.Sc. Fenja Freitag                             //
-//  Name:                   fork.c                                          //
-//  Description:            testing different methods of fork()             //
-//  Version:                0.1                                             //
+//  Name:                   fork_and_pipe.c                                 //
+//  Description:            testing different methods of fork() and pipe()  //
+//  Version:                0.3                                             //
 //////////////////////////////////////////////////////////////////////////////
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
+
+#define buffsize 64
+
 
 int main(int argc, char**argv){
     if (argc != 2){
@@ -25,6 +30,8 @@ int main(int argc, char**argv){
     int n_of_childs;
     int pid;
     int pipefd[2];
+    int wstatus;
+    char message[buffsize];
 
     switch(module){
         case 0:
@@ -40,11 +47,10 @@ int main(int argc, char**argv){
             printf("Type in number of childs: ");
             scanf("%d", &n_of_childs);
 
-            while(n_of_childs){
+            while(n_of_childs-- > 0){
                 pid = fork();
                 if(pid == 0)
                     break;
-                n_of_childs--;
             }
 
             if(pid == 0)
@@ -61,10 +67,14 @@ int main(int argc, char**argv){
                 exit(3);
             }
             if(fork() == 0){
-                printf("Reading (Child) :\n");
+                printf("Reading (Child) : ");
+                fgets(message, buffsize, stdin);
+                write(pipefd[1], message, buffsize);
             }
             else{
-                printf("Writing (Parent):\n");
+                wait(&wstatus);
+                read(pipefd[0], message, buffsize);
+                printf("Writing (Parent): %s\n", message);
             }
             break;
 
@@ -73,5 +83,4 @@ int main(int argc, char**argv){
             printf("Nothing is here ...\n");
             break; 
     }
-
 }

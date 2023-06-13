@@ -1,0 +1,17 @@
+echo -n "Installing example 4 in SIM directory"
+cp -r USER ../..
+echo -n "."
+cp makefile ../..
+echo -n "."
+rm -r -f ../../OBJ/user.o
+echo -n "."
+rm -r -f ../../sim ../../serial
+echo -n "."
+echo " done."
+echo
+echo "To run example 4, type:"
+echo
+echo " > cd ../.."
+echo " > make sim serial"
+echo " > sim -p&"
+echo " > serial"
