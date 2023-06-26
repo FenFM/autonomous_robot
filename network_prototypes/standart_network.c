@@ -4,7 +4,7 @@
 //  Author:                 B.Sc. Fenja Freitag                             //
 //  Name:                   stndart_network.c                               //
 //  Description:            simple neuronal net test                        //
-//  Version:                0.2                                             //
+//  Version:                0.3                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -20,7 +20,7 @@
 #define N_INPUT_LAYER  6
 #define N_HIDDEN_LAYER 4
 #define N_OUTPUT_LAYER 2
-#define N_OF_CHILDS      100
+#define N_OF_CHILDS       50
 #define N_OF_GENERATIONS 200
 
 
@@ -39,6 +39,7 @@ typedef struct network{
     int n_input;
     int n_hidden;
     int n_output;
+    struct network *pntr;
 } NETWORK;
 
 
@@ -58,8 +59,8 @@ double gauss(){
 }
 
 
-double calc_output(double netinput, double sigma){
-    return sigma / (1 + exp(netinput));
+double calc_output(double netinput, double weight){
+    return weight / (1 + exp(netinput));
 }
 
 /*
@@ -113,18 +114,18 @@ void calc_network(NETWORK *network, double *data){
 }
 
 
-void set_start_values(NETWORK network){
-    for(int i=0; i<network.n_input; i++){
-        network.input_layer[i].weight  = 1;
-        network.input_layer[i].sigma   = SIG_START;
+void set_start_values(NETWORK *network){
+    for(int i=0; i<network->n_input; i++){
+        network->input_layer[i].weight  = 1;
+        network->input_layer[i].sigma   = SIG_START;
     }
-    for(int j=0; j<network.n_hidden; j++){
-        network.hidden_layer[j].weight = 1;
-        network.hidden_layer[j].sigma  = SIG_START;
+    for(int j=0; j<network->n_hidden; j++){
+        network->hidden_layer[j].weight = 1;
+        network->hidden_layer[j].sigma  = SIG_START;
     }
-    for(int k=0; k<network.n_output; k++){
-        network.output_layer[k].weight = 1;
-        network.output_layer[k].sigma  = SIG_START;
+    for(int k=0; k<network->n_output; k++){
+        network->output_layer[k].weight = 1;
+        network->output_layer[k].sigma  = SIG_START;
     }
 }
 
@@ -152,6 +153,8 @@ double calc_one_generation(NETWORK *network, double *in_data, double *out_data, 
     int     best_fitness;
 
     for(int child=0; child<n_child; child++){
+        child_network[child].pntr = &child_network[child];
+        
         // mutate every child
         for(int i=0; i<network->n_input;  i++){
             child_network[child].input_layer[i].weight  = network->input_layer[i].weight  + network->input_layer[i].sigma  * gauss();
@@ -163,12 +166,14 @@ double calc_one_generation(NETWORK *network, double *in_data, double *out_data, 
             child_network[child].output_layer[i].weight = network->output_layer[i].weight + network->output_layer[i].sigma * gauss();
         }
 
+        printf("%d\n", child);
         // calculate child network
-        calc_network(&child_network[child], in_data);
+        calc_network(child_network[child].pntr, in_data);
 
+        printf("%d\n", child);
         // get the fitness of the child network
         fitness[child] = calc_fitness(child_network[child], out_data);
-        printf("f(%d) = %f\n", child, fitness[child]);
+        // printf("f(%d) = %f\n", child, fitness[child]);
     }
 
     // get the index (child) of the best fitness
@@ -189,6 +194,7 @@ int main(int argc, char**argv){
     network.n_input  = N_INPUT_LAYER ;
     network.n_hidden = N_HIDDEN_LAYER;
     network.n_output = N_OUTPUT_LAYER;
+    network.pntr     = &network;
     double fitness;
 
     // input data
@@ -196,10 +202,10 @@ int main(int argc, char**argv){
     double out_data[2] = {0, 100};
 
     // set the layer values to a start value
-    set_start_values(network);
+    set_start_values(network.pntr);
 
     for(int gen=0; gen<N_OF_GENERATIONS; gen++){
-        fitness = calc_one_generation(&network, in_data, out_data, N_OF_CHILDS);
+        fitness = calc_one_generation(network.pntr, in_data, out_data, N_OF_CHILDS);
         printf("Fitness = %lf\n", fitness);
     }
     // printf("\nHERE\n");
