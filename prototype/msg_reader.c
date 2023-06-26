@@ -18,6 +18,7 @@
 typedef struct msg_buffer{
     long msg_type;
     char msg_text[100];
+    int  msg_info;
 } MSG_BUFFER;
 
 
@@ -32,7 +33,7 @@ int main(int argc, char**argv){
 
     while(1){
         msgrcv(msgid, &message, sizeof(message), 1, 0);
-        printf("Data Recieved is: %s\n", message.msg_text);
+        printf("Data Recieved is: %s #%d\n", message.msg_text, message.msg_info);
     }
     msgctl(msgid, IPC_RMID, NULL);
     return 0;

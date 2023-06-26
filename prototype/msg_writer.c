@@ -19,6 +19,7 @@
 typedef struct msg_buffer{
     long msg_type;
     char msg_text[100];
+    int  msg_info;
 } MSG_BUFFER;
 
 
@@ -26,20 +27,20 @@ int main(int argc, char**argv){
     
     key_t key;
     int msgid;
-    int counter = 0;
     MSG_BUFFER message;
-    char msg[100] = "Hallo Welt";
+    char *msg = "Hallo Welt";
 
     key = ftok("progfile", 65);
     msgid = msgget(key, 0666 | IPC_CREAT);
     message.msg_type = 1;
+    message.msg_info = 0;
+    strcpy(message.msg_text, msg);
 
     printf("Writing Data: ");
     while(1){
-        strcpy(message.msg_text, msg);
         msgsnd(msgid, &message, sizeof(message), 0);
-        printf("Data send is : %s\n", message.msg_text, counter);
-        counter ++;
+        printf("Data send is : %d\n", message.msg_info);
+        message.msg_info ++;
         sleep(1);
     }
 
