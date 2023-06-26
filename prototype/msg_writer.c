@@ -4,7 +4,7 @@
 //  Author:                 B.Sc. Fenja Freitag                             //
 //  Name:                   msg_writer.c                                    //
 //  Description:            writing to a message                            //
-//  Version:                0.1                                             //
+//  Version:                1.0                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 

@@ -4,7 +4,7 @@
 //  Author:                 B.Sc. Fenja Freitag                             //
 //  Name:                   msg_reader.c                                    //
 //  Description:            reading from a message                          //
-//  Version:                0.1                                             //
+//  Version:                1.0                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 
