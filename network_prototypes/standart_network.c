@@ -4,7 +4,7 @@
 //  Author:                 B.Sc. Fenja Freitag                             //
 //  Name:                   stndart_network.c                               //
 //  Description:            simple neuronal net test                        //
-//  Version:                0.4                                             //
+//  Version:                0.5                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -20,6 +20,7 @@
 #define N_INPUT_LAYER  6
 #define N_HIDDEN_LAYER 4
 #define N_OUTPUT_LAYER 2
+#define N_OF_DATA_SETS 2
 #define N_OF_CHILDS       50
 #define N_OF_GENERATIONS 200
 
@@ -63,10 +64,10 @@ double calc_output(double netinput, double weight){
 }
 
 
-void calc_network(NETWORK *network, double *data){    
+void calc_network(NETWORK *network, double *in_data){    
     // input layer
     for(int i=0; i<network->n_input; i++){
-        network->input_layer[i].netinput = data[i];
+        network->input_layer[i].netinput = in_data[i];
         network->input_layer[i].output   = calc_output(network->input_layer[i].netinput, network->input_layer[i].weight);
     }
 
@@ -85,6 +86,19 @@ void calc_network(NETWORK *network, double *data){
             network->output_layer[i].netinput += network->hidden_layer[j].output;
         network->output_layer[i].output = calc_output(network->output_layer[i].netinput, network->output_layer[i].weight);
     }
+}
+
+
+void mutate_network(NETWORK *network){
+    for(int i=0; i<network->n_input;  i++){
+        network->input_layer[i].weight  += network->input_layer[i].sigma  * gauss();
+    }
+    for(int i=0; i<network->n_hidden; i++){
+        network->hidden_layer[i].weight += network->hidden_layer[i].sigma * gauss();
+    }
+    for(int i=0; i<network->n_output; i++){
+        network->output_layer[i].weight += network->output_layer[i].sigma * gauss();
+    }    
 }
 
 
@@ -109,7 +123,7 @@ double calc_fitness(NETWORK network, double *out_data){
     for(int i=0; i<network.n_output; i++){
         fitness += my_square(out_data[i] - network.output_layer[i].output);
     }
-    return 0.5 * fitness;
+    return fitness;
 }
 
 
@@ -120,31 +134,26 @@ int get_best_fitness(double *fitness, int n_child){
     return compare;
 }
 
-// Error in here!
-double calc_one_generation(NETWORK *network, double *in_data, double *out_data, int n_child){
+
+double calc_one_generation(NETWORK *network, double *in_data, double *out_data, int n_data, int n_child){
     NETWORK child_network[n_child];
     double  fitness[n_child];
     int     best_fitness;
 
-    for(int child=0; child<n_child; child++){
-        // printf("%d\n", child);        
-        // mutate every child
-        for(int i=0; i<network->n_input;  i++){
-            child_network[child].input_layer[i].weight  = network->input_layer[i].weight  + network->input_layer[i].sigma  * gauss();
-        }
-        for(int i=0; i<network->n_hidden; i++){
-            child_network[child].hidden_layer[i].weight = network->hidden_layer[i].weight + network->hidden_layer[i].sigma * gauss();
-        }
-        for(int i=0; i<network->n_output; i++){
-            child_network[child].output_layer[i].weight = network->output_layer[i].weight + network->output_layer[i].sigma * gauss();
-        }
+    for(int child=0; child<n_child; child++){        
+        // copy main network values to child network
+        child_network[child] = *network;
+        
+        // mutate child network
+        mutate_network(&child_network[child]);
 
-        // calculate child network
-        calc_network(&child_network[child], in_data);
-
-        // get the fitness of the child network
-        fitness[child] = calc_fitness(child_network[child], out_data);
-        printf("f(%d) = %f\n", child, fitness[child]);
+        // calculate child network and get part of the fitness
+        fitness[child] = 0;
+        for(int set=0; set<n_data; set++){
+            calc_network(&child_network[child], in_data+(set*6));
+            fitness[child] += calc_fitness(child_network[child], out_data+(set*2));
+        }
+        fitness[child] *= 0.5;
     }
 
     // get the index (child) of the best fitness
@@ -161,6 +170,9 @@ double calc_one_generation(NETWORK *network, double *in_data, double *out_data, 
 
 int main(int argc, char**argv){
 
+    time_t t;
+    srand48((unsigned) time(&t));
+
     NETWORK network;
     network.n_input  = N_INPUT_LAYER ;
     network.n_hidden = N_HIDDEN_LAYER;
@@ -168,14 +180,15 @@ int main(int argc, char**argv){
     double fitness;
 
     // input data
-    double in_data [6] = {10, 20, 30, 40, 50, 60};
-    double out_data[2] = {0, 100};
+    double in_data [N_OF_DATA_SETS][6] = {{0, 0, 0, 0, 0, 0}, {10, 20, 30, 40, 50, 60}};
+    double out_data[N_OF_DATA_SETS][2] = {{100, 100}, {0, 100}};
 
     // set the layer values to a start value
     set_start_values(&network);
 
+    // let the network learn
     for(int gen=0; gen<N_OF_GENERATIONS; gen++){
-        fitness = calc_one_generation(&network, in_data, out_data, N_OF_CHILDS);
+        fitness = calc_one_generation(&network, in_data, out_data, N_OF_DATA_SETS, N_OF_CHILDS);
         printf("Fitness = %lf\n", fitness);
     }
     // printf("\nHERE\n");
