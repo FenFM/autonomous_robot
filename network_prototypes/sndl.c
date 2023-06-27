@@ -2,9 +2,9 @@
 //  Course:                 Nature Inspired Computing                       //
 //  Lecturer:               Prof. Dr.-Ing. habil. Ralf Salomon              //
 //  Author:                 B.Sc. Fenja Freitag                             //
-//  Name:                   standart_network.c                              //
+//  Name:                   standart_network_with_double_hidden_layer.c     //
 //  Description:            simple neuronal net test                        //
-//  Version:                0.5                                             //
+//  Version:                0.2                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -18,7 +18,8 @@
 #define PI 3.141
 #define SIG_START 1
 #define N_INPUT_LAYER  6
-#define N_HIDDEN_LAYER 4
+#define N_HIDDEN_LAYER_1 8
+#define N_HIDDEN_LAYER_2 4
 #define N_OUTPUT_LAYER 2
 #define N_OF_DATA_SETS 2
 #define N_OF_CHILDS       50
@@ -28,17 +29,20 @@
 typedef struct unit{
     double netinput;
     double output;
+    double activation;
     double weight;
     double sigma;
 } UNIT;
 
 
 typedef struct network{
-    UNIT input_layer [N_INPUT_LAYER] ;
-    UNIT hidden_layer[N_HIDDEN_LAYER];
-    UNIT output_layer[N_OUTPUT_LAYER];
+    UNIT input_layer   [N_INPUT_LAYER] ;
+    UNIT hidden_layer_1[N_HIDDEN_LAYER_1];
+    UNIT hidden_layer_2[N_HIDDEN_LAYER_2];
+    UNIT output_layer  [N_OUTPUT_LAYER];
     int n_input;
-    int n_hidden;
+    int n_hidden_1;
+    int n_hidden_2;
     int n_output;
 } NETWORK;
 
@@ -53,8 +57,8 @@ double gauss(){
 }
 
 
-double calc_output(double netinput, double weight){
-    return weight / (1 + exp(netinput));
+double calc_output(UNIT unit){
+    return unit.weight / (1 + exp(unit.netinput - unit.activation));
 }
 
 
@@ -62,36 +66,51 @@ void calc_network(NETWORK *network, double *in_data){
     // input layer
     for(int i=0; i<network->n_input; i++){
         network->input_layer[i].netinput = in_data[i];
-        network->input_layer[i].output   = calc_output(network->input_layer[i].netinput, network->input_layer[i].weight);
+        network->input_layer[i].output   = calc_output(network->input_layer[i]);
     }
 
-    // hidden layer
-    for(int i=0; i<network->n_hidden; i++){
-        network->hidden_layer[i].netinput = 0;
+    // hidden layer one
+    for(int i=0; i<network->n_hidden_1; i++){
+        network->hidden_layer_1[i].netinput = 0;
         for(int j=0; j<network->n_input; j++)
-            network->hidden_layer[i].netinput += network->input_layer[j].output;
-        network->hidden_layer[i].output = calc_output(network->hidden_layer[i].netinput, network->hidden_layer[i].weight);
+            network->hidden_layer_1[i].netinput += network->input_layer[j].output;
+        network->hidden_layer_1[i].output = calc_output(network->hidden_layer_1[i]);
+    }
+
+    // hidden layer two
+    for(int i=0; i<network->n_hidden_2; i++){
+        network->hidden_layer_2[i].netinput = 0;
+        for(int j=0; j<network->n_hidden_1; j++)
+            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
+        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
     }
 
     // output layer
     for(int i=0; i<network->n_output; i++){
         network->output_layer[i].netinput = 0;
-        for(int j=0; j<network->n_hidden; j++)
-            network->output_layer[i].netinput += network->hidden_layer[j].output;
-        network->output_layer[i].output = calc_output(network->output_layer[i].netinput, network->output_layer[i].weight);
+        for(int j=0; j<network->n_hidden_2; j++)
+            network->output_layer[i].netinput += network->hidden_layer_2[j].output;
+        network->output_layer[i].output = calc_output(network->output_layer[i]);
     }
 }
 
 
 void mutate_network(NETWORK *network){
     for(int i=0; i<network->n_input;  i++){
-        network->input_layer[i].weight  += network->input_layer[i].sigma  * gauss();
+        network->input_layer[i].weight      += network->input_layer[i].sigma  * gauss();
+        network->input_layer[i].activation  += network->input_layer[i].sigma  * gauss();
     }
-    for(int i=0; i<network->n_hidden; i++){
-        network->hidden_layer[i].weight += network->hidden_layer[i].sigma * gauss();
+    for(int i=0; i<network->n_hidden_1; i++){
+        network->hidden_layer_1[i].weight     += network->hidden_layer_1[i].sigma * gauss();
+        network->hidden_layer_1[i].activation += network->hidden_layer_1[i].sigma * gauss();
+    }
+    for(int i=0; i<network->n_hidden_2; i++){
+        network->hidden_layer_2[i].weight     += network->hidden_layer_2[i].sigma * gauss();
+        network->hidden_layer_2[i].activation += network->hidden_layer_2[i].sigma * gauss();
     }
     for(int i=0; i<network->n_output; i++){
-        network->output_layer[i].weight += network->output_layer[i].sigma * gauss();
+        network->output_layer[i].weight     += network->output_layer[i].sigma * gauss();
+        network->output_layer[i].activation += network->output_layer[i].sigma * gauss();
     }    
 }
 
@@ -99,14 +118,22 @@ void mutate_network(NETWORK *network){
 void set_start_values(NETWORK *network){
     for(int i=0; i<network->n_input; i++){
         network->input_layer[i].weight  = 1;
+        network->input_layer[i].activation  = 1;
         network->input_layer[i].sigma   = SIG_START;
     }
-    for(int j=0; j<network->n_hidden; j++){
-        network->hidden_layer[j].weight = 1;
-        network->hidden_layer[j].sigma  = SIG_START;
+    for(int j=0; j<network->n_hidden_1; j++){
+        network->hidden_layer_1[j].weight = 1;
+        network->hidden_layer_1[j].activation = 1;
+        network->hidden_layer_1[j].sigma  = SIG_START;
+    }
+    for(int j=0; j<network->n_hidden_2; j++){
+        network->hidden_layer_2[j].weight = 1;
+        network->hidden_layer_2[j].activation = 1;
+        network->hidden_layer_2[j].sigma  = SIG_START;
     }
     for(int k=0; k<network->n_output; k++){
         network->output_layer[k].weight = 1;
+        network->output_layer[k].activation = 1;
         network->output_layer[k].sigma  = SIG_START;
     }
 }
@@ -134,7 +161,7 @@ double calc_one_generation(NETWORK *network, double *in_data, double *out_data, 
     double  fitness[n_child];
     int     best_fitness;
 
-    for(int child=0; child<n_child; child++){        
+    for(int child=0; child<n_child; child++){
         // copy main network values to child network
         child_network[child] = *network;
         
@@ -168,14 +195,15 @@ int main(int argc, char**argv){
     srand48((unsigned) time(&t));
 
     NETWORK network;
-    network.n_input  = N_INPUT_LAYER ;
-    network.n_hidden = N_HIDDEN_LAYER;
-    network.n_output = N_OUTPUT_LAYER;
+    network.n_input    = N_INPUT_LAYER;
+    network.n_hidden_1 = N_HIDDEN_LAYER_1;
+    network.n_hidden_2 = N_HIDDEN_LAYER_2;
+    network.n_output   = N_OUTPUT_LAYER;
     double fitness;
 
     // input data
-    double in_data [N_OF_DATA_SETS][6] = {{0, 0, 0, 0, 0, 0}, {10, 20, 30, 40, 50, 60}};
-    double out_data[N_OF_DATA_SETS][2] = {{100, 100}, {0, 100}};
+    double in_data [N_OF_DATA_SETS][6] = {{0, 0, 0, 80, 100, 90}, {0, 0, 0, 0, 0, 0}};
+    double out_data[N_OF_DATA_SETS][2] = {{0, 100}, {100, 100}};
 
     // set the layer values to a start value
     set_start_values(&network);
@@ -183,8 +211,8 @@ int main(int argc, char**argv){
     // let the network learn
     for(int gen=0; gen<N_OF_GENERATIONS; gen++){
         fitness = calc_one_generation(&network, in_data, out_data, N_OF_DATA_SETS, N_OF_CHILDS);
-        printf("Fitness = %lf\n", fitness);
     }
+    printf("Fitness = %lf\n", fitness);
     // printf("\nHERE\n");
     return 0;
 }
