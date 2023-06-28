@@ -2,9 +2,9 @@
 //  Course:                 Nature Inspired Computing                       //
 //  Lecturer:               Prof. Dr.-Ing. habil. Ralf Salomon              //
 //  Author:                 B.Sc. Fenja Freitag                             //
-//  Name:                   standart_network_with_double_hidden_layer.c     //
+//  Name:                   splitted_network.c                              //
 //  Description:            simple neuronal net test                        //
-//  Version:                0.2                                             //
+//  Version:                0.1                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -18,8 +18,8 @@
 #define PI 3.141
 #define SIG_START 1
 #define N_INPUT_LAYER  6
-#define N_HIDDEN_LAYER_1 8
-#define N_HIDDEN_LAYER_2 4
+#define N_HIDDEN_LAYER_1 8                  // must be devidable by 4
+#define N_HIDDEN_LAYER_2 N_HIDDEN_LAYER_1
 #define N_OUTPUT_LAYER 2
 #define N_OF_DATA_SETS 3
 #define N_OF_CHILDS       50
@@ -70,28 +70,70 @@ void calc_network(NETWORK *network, double *in_data){
     }
 
     // hidden layer one
-    for(int i=0; i<network->n_hidden_1; i++){
+    for(int i=0; i<(network->n_hidden_1/2); i++){
         network->hidden_layer_1[i].netinput = 0;
-        for(int j=0; j<network->n_input; j++)
+        for(int j=0; j<(network->n_input/2); j++)
+            network->hidden_layer_1[i].netinput += network->input_layer[j].output;
+        network->hidden_layer_1[i].output = calc_output(network->hidden_layer_1[i]);
+    }
+    for(int i=(network->n_hidden_1/2); i<network->n_hidden_1; i++){
+        network->hidden_layer_1[i].netinput = 0;
+        for(int j=(network->n_input/2); j<network->n_input; j++)
             network->hidden_layer_1[i].netinput += network->input_layer[j].output;
         network->hidden_layer_1[i].output = calc_output(network->hidden_layer_1[i]);
     }
 
     // hidden layer two
-    for(int i=0; i<network->n_hidden_2; i++){
+    for(int i=0; i<(network->n_hidden_2/4); i++){
         network->hidden_layer_2[i].netinput = 0;
-        for(int j=0; j<network->n_hidden_1; j++)
+        for(int j=0; j<(network->n_hidden_1/2); j++)
+            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
+        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
+    }
+    for(int i=(network->n_hidden_2/4); i<(network->n_hidden_2/2); i++){
+        network->hidden_layer_2[i].netinput = 0;
+        for(int j=0; j<(network->n_hidden_1/2); j++)
+            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
+        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
+    }
+    for(int i=(network->n_hidden_2/2); i<(network->n_hidden_2*3/4); i++){
+        network->hidden_layer_2[i].netinput = 0;
+        for(int j=(network->n_hidden_1/2); j<network->n_hidden_1; j++)
+            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
+        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
+    }
+    for(int i=(network->n_hidden_2*3/4); i<network->n_hidden_2; i++){
+        network->hidden_layer_2[i].netinput = 0;
+        for(int j=(network->n_hidden_1/2); j<network->n_hidden_1; j++)
             network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
         network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
     }
 
     // output layer
+    /*
     for(int i=0; i<network->n_output; i++){
         network->output_layer[i].netinput = 0;
         for(int j=0; j<network->n_hidden_2; j++)
             network->output_layer[i].netinput += network->hidden_layer_2[j].output;
         network->output_layer[i].output = calc_output(network->output_layer[i]);
     }
+    */
+
+    network->output_layer[0].netinput = 0;
+    network->output_layer[1].netinput = 0;
+
+    network->output_layer[0].netinput += network->hidden_layer_2[0].output;
+    network->output_layer[0].netinput += network->hidden_layer_2[1].output;
+    network->output_layer[0].netinput += network->hidden_layer_2[4].output;
+    network->output_layer[0].netinput += network->hidden_layer_2[5].output;
+
+    network->output_layer[1].netinput += network->hidden_layer_2[2].output;
+    network->output_layer[1].netinput += network->hidden_layer_2[3].output;
+    network->output_layer[1].netinput += network->hidden_layer_2[6].output;
+    network->output_layer[1].netinput += network->hidden_layer_2[7].output;
+
+    network->output_layer[0].output = calc_output(network->output_layer[0]);
+    network->output_layer[1].output = calc_output(network->output_layer[1]);
 }
 
 
