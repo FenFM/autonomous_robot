@@ -6,6 +6,7 @@
         "timeb.h": "c",
         "wait.h": "c",
         "msg.h": "c",
-        "user_info.h": "c"
+        "user_info.h": "c",
+        "shm.h": "c"
     }
 }
