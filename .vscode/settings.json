@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "include.h": "c",
+        "ipc.h": "c",
+        "timeb.h": "c",
+        "wait.h": "c",
+        "msg.h": "c",
+        "user_info.h": "c"
     }
 }
