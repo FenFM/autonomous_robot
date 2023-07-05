@@ -18,6 +18,26 @@
 #include "user_info.h"
 #include "user.h"
 
+
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/types.h>
+#include <sys/timeb.h> 
+
+
+// Initializing the shared memeoy /////
+typedef struct memspace{
+    long msg_type;
+    short int IR_Distance[6];
+    short int Motor_Value[2];
+} MemSpace;
+
+MemSpace robot_values, *robot_pointer;
+
+int shmID;
+key_t key;
+///////////////////////////////////////
+
 double waiting=0.01;
 
 static int steps;
@@ -28,9 +48,7 @@ double weights[ 7 ] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 6 };
 
 int msg_waiter = 0;
 
-key_t key_1, key_2;
-int msgid_1, msgid_2;
-MSG_BUFFER message_in, message_out;
+
 
 void UserInit(struct Robot *robot)
 {
@@ -38,19 +56,26 @@ void UserInit(struct Robot *robot)
    old_x = robot->X; old_y = robot->Y;
    ShowUserInfo(1,1);
 
-   key_1 = ftok("progfile", 65);
-   msgid_1 = msgget(key_1, 0666 | IPC_CREAT);
+   // creating and opening the shared memory ////
+   key = 42069;
 
-   key_2 = ftok("progfile", 66);
-   msgid_2 = msgget(key_2, 0666 | IPC_CREAT);
-   
-   message_out.msg_type = 1;
+   if ((shmID = shmget(key, 2*sizeof(MemSpace), IPC_CREAT | 0666)) == -1){
+      perror("shmget");
+      exit(1);
+   }
+
+   if ((robot_pointer = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
+      perror("shmat");
+      exit(1);
+   }
+   //////////////////////////////////////////////
 }
 
 void UserClose(struct Robot *robot)
 {
-//   msgctl(msgid_1, IPC_RMID, NULL);
-//   msgctl(msgid_2, IPC_RMID, NULL);
+   // closing the shared memory /////////////////
+   (MemSpace *) shmdt(robot_pointer);
+   //////////////////////////////////////////////
 }
 
 void NewRobot(struct Robot *robot)
@@ -146,24 +171,13 @@ boolean StepRobot(struct Robot *robot)
   }
 
 
-  // MY STUFF /////////////////////////////////////////////////////////////////
-
-   //printf("IR Value: %d\n", robot->IRSensor[0].DistanceValue);
-   if(msg_waiter++ >= 10){
-      for(int cntr = 0; cntr < 6; cntr++){
-         message_out.IR_Distance[cntr] = robot->IRSensor[cntr].DistanceValue;
-      }
-      msgsnd(msgid_1, &message_out, sizeof(message_out), 0);
-      msg_waiter = 0;
+   // MY STUFF /////////////////////////////////////////////////////////////////
+   for(int i=0; i<6; i++){
+      robot_values.IR_Distance[i] = robot->IRSensor[i].DistanceValue;
    }
 
- 
-  //msgrcv(msgid_2, &message_in, sizeof(message_in), 1, 0);
-  //robot->Motor[0].Value = message_in.Motor_Value[0];
-  //robot->Motor[1].Value = message_in.Motor_Value[1];
-
-
-  // END MY STUFF /////////////////////////////////////////////////////////////
+   memmove(robot_pointer, &robot_values, sizeof(MemSpace));
+   // END MY STUFF /////////////////////////////////////////////////////////////
 
   slowmode();
   return(TRUE);

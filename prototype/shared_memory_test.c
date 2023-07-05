@@ -30,7 +30,6 @@ int main(int argc, char**argv){
 
     int shmID;
     key_t key;
-    char *shm;
 
     key = 1312;
 
@@ -51,7 +50,7 @@ int main(int argc, char**argv){
         memSpace.data = 11;
         memSpace.more_data = 22.2;
         // copy the Information from memSpace to memPNTR
-        memmove(memPNTR, &memSpace, sizeof(SHARED_MEMORY));  
+        memmove(memPNTR, &memSpace, sizeof(SHARED_MEMORY));
     }
 
     else{

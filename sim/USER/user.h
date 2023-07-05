@@ -13,14 +13,3 @@
 /* The author's name and this copyright notice must be included in any copy. */
 /* Commercial use is forbidden.                                              */
 /*****************************************************************************/
-
-#include <sys/timeb.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-
-
-typedef struct msg_buffer{
-    long msg_type;
-    short int IR_Distance[6];
-    short int Motor_Value[2];
-} MSG_BUFFER;
