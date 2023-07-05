@@ -68,6 +68,9 @@ void UserInit(struct Robot *robot)
       perror("shmat");
       exit(1);
    }
+
+   robot_pointer->Motor_Value[0] = 6;
+   robot_pointer->Motor_Value[1] = 6;
    //////////////////////////////////////////////
 }
 
@@ -172,9 +175,14 @@ boolean StepRobot(struct Robot *robot)
 
 
    // MY STUFF /////////////////////////////////////////////////////////////////
+   memmove(&robot_values, robot_pointer, sizeof(MemSpace));
+
    for(int i=0; i<6; i++){
       robot_values.IR_Distance[i] = robot->IRSensor[i].DistanceValue;
    }
+
+   //robot->Motor[0].Value = robot_values.Motor_Value[0];
+   //robot->Motor[1].Value = robot_values.Motor_Value[1];
 
    memmove(robot_pointer, &robot_values, sizeof(MemSpace));
    // END MY STUFF /////////////////////////////////////////////////////////////

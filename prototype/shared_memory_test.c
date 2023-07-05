@@ -49,11 +49,19 @@ int main(int argc, char**argv){
         
         memSpace.data = 11;
         memSpace.more_data = 22.2;
+
         // copy the Information from memSpace to memPNTR
         memmove(memPNTR, &memSpace, sizeof(SHARED_MEMORY));
+
+        /* Alternatively:
+            memPNTR->data = 11;
+            memPNTR->more_data = 22.2; 
+        */
     }
 
     else{
+        sleep(0.2);
+
         // acess shared memory space
         if ((shmID = shmget(key, 2*sizeof(memSpace), 0666)) == -1){
             perror("shmget 2");

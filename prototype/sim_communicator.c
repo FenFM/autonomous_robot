@@ -32,6 +32,9 @@ int main(int argc, char**argv){
     int shmID;
     key_t key = 42069;
 
+    int distance_threshold[6] = {200, 400, 600, 600, 400, 200};
+
+
    if ((shmID = shmget(key, 2*sizeof(MemSpace), 0666)) == -1){
       perror("shmget");
       exit(1);
@@ -44,8 +47,16 @@ int main(int argc, char**argv){
 
 
     while(1){
-        printf("IR Value 1 = %d\n", robot_pointer->IR_Distance[1]);
-        sleep(1);
+        // get the values from the shared memory
+        memmove(&robot_values, robot_pointer, sizeof(MemSpace));
+
+        // Read IR Values
+        printf("IR Value 1 = %d\n", robot_values.IR_Distance[1]);
+
+        // copy the values to the shared memory
+        memmove(robot_pointer, &robot_values, sizeof(MemSpace));
+
+        sleep(0.1);
     }
 
     return 0;
