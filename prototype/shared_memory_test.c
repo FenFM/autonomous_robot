@@ -25,8 +25,7 @@ typedef struct sharedMemory{
 
 int main(int argc, char**argv){
 
-    SHARED_MEMORY memSpace;
-    SHARED_MEMORY *memPNTR;
+    SHARED_MEMORY memSpace, *sharedMem;
 
     int shmID;
     key_t key;
@@ -36,13 +35,13 @@ int main(int argc, char**argv){
     // create a parent and a child process
     if(fork() == 0){
         // create shared memory space and save the corresponding id the smhID
-        if ((shmID = shmget(key, 2*sizeof(memSpace), IPC_CREAT | 0666)) == -1){
+        if ((shmID = shmget(key, 2*sizeof(SHARED_MEMORY), IPC_CREAT | 0666)) == -1){
             perror("shmget 1");
             exit(1);
         }
 
         // attach memory space to memPNTR
-        if ((memPNTR = (SHARED_MEMORY *) shmat(shmID, NULL, 0)) == (SHARED_MEMORY *) -1){
+        if ((sharedMem = (SHARED_MEMORY *) shmat(shmID, NULL, 0)) == (SHARED_MEMORY *) -1){
             perror("shmat 1");
             exit(1);
         }
@@ -51,11 +50,11 @@ int main(int argc, char**argv){
         memSpace.more_data = 22.2;
 
         // copy the Information from memSpace to memPNTR
-        memmove(memPNTR, &memSpace, sizeof(SHARED_MEMORY));
+        memmove(sharedMem, &memSpace, sizeof(SHARED_MEMORY));
 
         /* Alternatively:
-            memPNTR->data = 11;
-            memPNTR->more_data = 22.2; 
+            sharedMem->data = 11;
+            sharedMem->more_data = 22.2; 
         */
     }
 
@@ -63,17 +62,17 @@ int main(int argc, char**argv){
         sleep(0.2);
 
         // acess shared memory space
-        if ((shmID = shmget(key, 2*sizeof(memSpace), 0666)) == -1){
+        if ((shmID = shmget(key, 2*sizeof(SHARED_MEMORY), 0666)) == -1){
             perror("shmget 2");
             exit(1);
         }
 
         // attach memory space to memPNTR
-        if ((memPNTR = (SHARED_MEMORY *) shmat(shmID, NULL, 0)) == (SHARED_MEMORY *) -1){
+        if ((sharedMem = (SHARED_MEMORY *) shmat(shmID, NULL, 0)) == (SHARED_MEMORY *) -1){
             perror("shmat 2");
             exit(1);
         }
-        printf("%d\n%lf\n", memPNTR->data, memPNTR->more_data);
+        printf("%d\n%lf\n", sharedMem->data, sharedMem->more_data);
     }
 
     return 0;

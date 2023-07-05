@@ -27,12 +27,12 @@
 
 // Initializing the shared memeoy /////
 typedef struct memspace{
-    long msg_type;
-    short int IR_Distance[6];
-    short int Motor_Value[2];
+   short int work_flag;
+   short int IR_Distance[6];
+   short int Motor_Value[2];
 } MemSpace;
 
-MemSpace robot_values, *robot_pointer;
+MemSpace robot_values, *shared_values;
 
 int shmID;
 key_t key;
@@ -64,20 +64,21 @@ void UserInit(struct Robot *robot)
       exit(1);
    }
 
-   if ((robot_pointer = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
+   if ((shared_values = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
       perror("shmat");
       exit(1);
    }
 
-   robot_pointer->Motor_Value[0] = 6;
-   robot_pointer->Motor_Value[1] = 6;
+   shared_values->work_flag = 0;
+   shared_values->Motor_Value[0] = 6;
+   shared_values->Motor_Value[1] = 6;
    //////////////////////////////////////////////
 }
 
 void UserClose(struct Robot *robot)
 {
    // closing the shared memory /////////////////
-   (MemSpace *) shmdt(robot_pointer);
+   // (MemSpace *) shmdt(robot_values.p);
    //////////////////////////////////////////////
 }
 
@@ -175,16 +176,25 @@ boolean StepRobot(struct Robot *robot)
 
 
    // MY STUFF /////////////////////////////////////////////////////////////////
-   memmove(&robot_values, robot_pointer, sizeof(MemSpace));
+   /*
+   if(shared_values->work_flag == 0){
+      shared_values->work_flag = 1;
 
-   for(int i=0; i<6; i++){
-      robot_values.IR_Distance[i] = robot->IRSensor[i].DistanceValue;
+      // get the values from the shared memory
+      memmove(&robot_values, shared_values, sizeof(MemSpace));
+
+      robot_values.work_flag = 0;
+
+      for(int i=0; i<6; i++){
+         robot_values.IR_Distance[i] = robot->IRSensor[i].DistanceValue;
+      }
+
+      //robot->Motor[0].Value = robot_values.Motor_Value[0];
+      //robot->Motor[1].Value = robot_values.Motor_Value[1];
+
+      memmove(shared_values, &robot_values, sizeof(MemSpace));
    }
-
-   //robot->Motor[0].Value = robot_values.Motor_Value[0];
-   //robot->Motor[1].Value = robot_values.Motor_Value[1];
-
-   memmove(robot_pointer, &robot_values, sizeof(MemSpace));
+   */
    // END MY STUFF /////////////////////////////////////////////////////////////
 
   slowmode();

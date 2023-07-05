@@ -19,7 +19,7 @@
 
 
 typedef struct memspace{
-    long msg_type;
+    short int work_flag;
     short int IR_Distance[6];
     short int Motor_Value[2];
 } MemSpace;
@@ -27,12 +27,10 @@ typedef struct memspace{
 
 int main(int argc, char**argv){
 
-    MemSpace robot_values, *robot_pointer;
+    MemSpace robot_values, *sharedMem;
 
     int shmID;
     key_t key = 42069;
-
-    int distance_threshold[6] = {200, 400, 600, 600, 400, 200};
 
 
    if ((shmID = shmget(key, 2*sizeof(MemSpace), 0666)) == -1){
@@ -40,23 +38,29 @@ int main(int argc, char**argv){
       exit(1);
    }
 
-   if ((robot_pointer = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
+   if ((sharedMem = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
       perror("shmat");
       exit(1);
    }
 
 
     while(1){
-        // get the values from the shared memory
-        memmove(&robot_values, robot_pointer, sizeof(MemSpace));
+        if(sharedMem->work_flag == 0){
+            sharedMem->work_flag = 1;
 
-        // Read IR Values
-        printf("IR Value 1 = %d\n", robot_values.IR_Distance[1]);
+            // get the values from the shared memory
+            memmove(&robot_values, sharedMem, sizeof(MemSpace));
 
-        // copy the values to the shared memory
-        memmove(robot_pointer, &robot_values, sizeof(MemSpace));
+            robot_values.work_flag = 0;
 
-        sleep(0.1);
+            // Read IR Values
+            printf("IR Value 1 = %d\n", robot_values.IR_Distance[1]);
+
+            // copy the values to the shared memory
+            memmove(sharedMem, &robot_values, sizeof(MemSpace));
+
+            sleep(1);
+        }
     }
 
     return 0;
