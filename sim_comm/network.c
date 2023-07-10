@@ -2,12 +2,12 @@
 //  Course:                 Nature Inspired Computing                       //
 //  Lecturer:               Prof. Dr.-Ing. habil. Ralf Salomon              //
 //  Author:                 B.Sc. Fenja Freitag                             //
-//  Name:                   splitted_network.c                              //
-//  Description:            simple neuronal net test                        //
-//  Version:                0.1                                             //
+//  Name:                   network.c                                       //
+//  Description:            network for the communicator                    //
+//  Version:                1.0                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "network.h"
+#include "linker.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -15,38 +15,6 @@
 #include <math.h>
 #include <time.h>
 
-/*
-#define PI 3.141
-#define SIG_START 1
-#define N_INPUT_LAYER  6
-#define N_HIDDEN_LAYER_1 8                  // must be devidable by 4
-#define N_HIDDEN_LAYER_2 N_HIDDEN_LAYER_1
-#define N_OUTPUT_LAYER 2
-#define N_OF_DATA_SETS 3
-#define N_OF_CHILDS       50
-#define N_OF_GENERATIONS 200
-
-
-typedef struct unit{
-    double netinput;
-    double output;
-    double activation;
-    double weight;
-    double sigma;
-} UNIT;
-
-
-typedef struct network{
-    UNIT input_layer   [N_INPUT_LAYER] ;
-    UNIT hidden_layer_1[N_HIDDEN_LAYER_1];
-    UNIT hidden_layer_2[N_HIDDEN_LAYER_2];
-    UNIT output_layer  [N_OUTPUT_LAYER];
-    int n_input;
-    int n_hidden_1;
-    int n_hidden_2;
-    int n_output;
-} NETWORK;
-*/
 
 double my_square(double input){
     return input*input;
@@ -228,36 +196,3 @@ double calc_one_generation(NETWORK *network, double *in_data, double *out_data, 
 
     return fitness[best_fitness];
 }
-
-
-// Main //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-int main(int argc, char**argv){
-
-    time_t t;
-    srand48((unsigned) time(&t));
-
-    NETWORK network;
-    network.n_input    = N_INPUT_LAYER;
-    network.n_hidden_1 = N_HIDDEN_LAYER_1;
-    network.n_hidden_2 = N_HIDDEN_LAYER_2;
-    network.n_output   = N_OUTPUT_LAYER;
-    double fitness;
-
-    // input data
-    double in_data [N_OF_DATA_SETS][6] = {{0, 0, 0, 80, 100, 90}, {0, 0, 0, 0, 0, 0}, {20, 80, 30, 10, 0, 0}};
-    double out_data[N_OF_DATA_SETS][2] = {{0, 100}, {100, 100}, {100, 0}};
-
-    // set the layer values to a start value
-    set_start_values(&network);
-
-    // let the network learn
-    for(int gen=0; gen<N_OF_GENERATIONS; gen++){
-        fitness = calc_one_generation(&network, in_data, out_data, N_OF_DATA_SETS, N_OF_CHILDS);
-    }
-    printf("Fitness = %lf\n", fitness);
-    // printf("\nHERE\n");
-    return 0;
-}
-*/
-// Main End //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

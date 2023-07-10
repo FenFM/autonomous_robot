@@ -18,7 +18,6 @@
 #include "user_info.h"
 #include "user.h"
 
-
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/types.h>
@@ -27,12 +26,12 @@
 
 // Initializing the shared memeoy /////
 typedef struct memspace{
-   short int work_flag;
+    short int comm_flag;
    short int IR_Distance[6];
    short int Motor_Value[2];
 } MemSpace;
 
-MemSpace robot_values, *shared_values;
+MemSpace robot_values, *sharedMem;
 
 int shmID;
 key_t key;
@@ -64,14 +63,14 @@ void UserInit(struct Robot *robot)
       exit(1);
    }
 
-   if ((shared_values = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
+   if ((sharedMem = (MemSpace *) shmat(shmID, NULL, 0)) == (MemSpace *) -1){
       perror("shmat");
       exit(1);
    }
 
-   shared_values->work_flag = 0;
-   shared_values->Motor_Value[0] = 6;
-   shared_values->Motor_Value[1] = 6;
+   sharedMem->comm_flag = 0;
+   sharedMem->Motor_Value[0] = 6;
+   sharedMem->Motor_Value[1] = 6;
    //////////////////////////////////////////////
 }
 
@@ -152,11 +151,11 @@ boolean StepRobot(struct Robot *robot)
   for( i = 0, v = 0; i < 6; i++ )
      v += robot->IRSensor[ i ].DistanceValue * weights[ i ];
   v /= 1024.0;
-  robot->Motor[ LEFT ].Value = v + weights[ 6 ];
+  // robot->Motor[ LEFT ].Value = v + weights[ 6 ];
   for( i = 0, v = 0; i < 6; i++ )
      v += robot->IRSensor[ i ].DistanceValue * weights[ 5 - i ];
   v /= 1024.0;
-  robot->Motor[ RIGHT ].Value = v + weights[ 6 ];
+  // robot->Motor[ RIGHT ].Value = v + weights[ 6 ];
 
   len += sqrt( (robot->X - old_x) * (robot->X - old_x) + 
   	       (robot->Y - old_y) * (robot->Y - old_y) );
@@ -176,25 +175,15 @@ boolean StepRobot(struct Robot *robot)
 
 
    // MY STUFF /////////////////////////////////////////////////////////////////
-   /*
-   if(shared_values->work_flag == 0){
-      shared_values->work_flag = 1;
+      while(sharedMem->comm_flag == 1){sleep(0.0001);}
+         for(int i=0; i<6; i++)
+            sharedMem->IR_Distance[i] = robot->IRSensor[i].DistanceValue;
+            
+         sharedMem->comm_flag = 1;
 
-      // get the values from the shared memory
-      memmove(&robot_values, shared_values, sizeof(MemSpace));
-
-      robot_values.work_flag = 0;
-
-      for(int i=0; i<6; i++){
-         robot_values.IR_Distance[i] = robot->IRSensor[i].DistanceValue;
-      }
-
-      //robot->Motor[0].Value = robot_values.Motor_Value[0];
-      //robot->Motor[1].Value = robot_values.Motor_Value[1];
-
-      memmove(shared_values, &robot_values, sizeof(MemSpace));
-   }
-   */
+      while(sharedMem->comm_flag == 1){sleep(0.0001);}
+         robot->Motor[LEFT].Value  = sharedMem->Motor_Value[0];
+         robot->Motor[RIGHT].Value = sharedMem->Motor_Value[1];
    // END MY STUFF /////////////////////////////////////////////////////////////
 
   slowmode();
