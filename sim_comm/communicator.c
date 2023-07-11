@@ -8,7 +8,7 @@
 //  Version:                1.0                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "linker.h"
+#include "network.h"
 
 #include <stdio.h>
 #include <stdlib.h>
