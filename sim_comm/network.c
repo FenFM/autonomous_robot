@@ -9,12 +9,6 @@
 
 #include "network.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-
 
 double my_square(double input){
     return input*input;

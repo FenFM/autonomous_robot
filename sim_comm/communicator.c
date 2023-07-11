@@ -8,23 +8,15 @@
 //  Version:                1.0                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "network.h"
+#include "rbs_network.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/types.h>
 
-/*
 typedef struct memspace{
-    short int work_flag;
+    short int comm_flag;
     short int IR_Distance[6];
     short int Motor_Value[2];
 } MemSpace;
-*/
+
 
 int main(int argc, char**argv){
 
@@ -48,21 +40,11 @@ int main(int argc, char**argv){
       exit(1);
    }
 
-    double fitness;
     NETWORK network;
-    network.n_input    = N_INPUT_LAYER;
-    network.n_hidden_1 = N_HIDDEN_LAYER_1;
-    network.n_hidden_2 = N_HIDDEN_LAYER_2;
-    network.n_output   = N_OUTPUT_LAYER;
+    network.n_input  = N_INPUT_LAYER;
+    network.n_hidden = N_HIDDEN_LAYER;
+    network.n_output = N_OUTPUT_LAYER;
     set_start_values(&network);
-
-    double in_data [N_OF_DATA_SETS][6] = {{0, 0, 0, 0, 0, 0}, {0, 1000, 1000, 1000, 1000, 0}};
-    double out_data[N_OF_DATA_SETS][2] = {{6, 6}, {-6, -6}};
-
-    for(int gen=0; gen<N_OF_GENERATIONS; gen++){
-        fitness = calc_one_generation(&network, in_data, out_data, N_OF_DATA_SETS, N_OF_CHILDS);
-    }
-    printf("Fitness = %lf\n", fitness);
 
 
     while(1){

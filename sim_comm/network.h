@@ -1,3 +1,14 @@
+#include <math.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/types.h>
+
+
 #define PI 3.141
 #define SIG_START 1
 #define N_INPUT_LAYER  6
@@ -28,13 +39,6 @@ typedef struct network{
     int n_hidden_2;
     int n_output;
 } NETWORK;
-
-
-typedef struct memspace{
-    short int comm_flag;
-    short int IR_Distance[6];
-    short int Motor_Value[2];
-} MemSpace;
 
 
 double my_square(double input);

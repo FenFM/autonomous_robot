@@ -26,7 +26,7 @@
 
 // Initializing the shared memeoy /////
 typedef struct memspace{
-    short int comm_flag;
+   short int comm_flag;
    short int IR_Distance[6];
    short int Motor_Value[2];
 } MemSpace;
@@ -151,11 +151,11 @@ boolean StepRobot(struct Robot *robot)
   for( i = 0, v = 0; i < 6; i++ )
      v += robot->IRSensor[ i ].DistanceValue * weights[ i ];
   v /= 1024.0;
-  // robot->Motor[ LEFT ].Value = v + weights[ 6 ];
+//   robot->Motor[ LEFT ].Value = v + weights[ 6 ];
   for( i = 0, v = 0; i < 6; i++ )
      v += robot->IRSensor[ i ].DistanceValue * weights[ 5 - i ];
   v /= 1024.0;
-  // robot->Motor[ RIGHT ].Value = v + weights[ 6 ];
+//   robot->Motor[ RIGHT ].Value = v + weights[ 6 ];
 
   len += sqrt( (robot->X - old_x) * (robot->X - old_x) + 
   	       (robot->Y - old_y) * (robot->Y - old_y) );

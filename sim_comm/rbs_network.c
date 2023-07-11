@@ -7,47 +7,7 @@
 //  Version:                0.5                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-
-
-#define PI 3.141
-#define N_INPUT_LAYER  6        // don't change
-#define N_HIDDEN_LAYER 16       // must be devidable by 4
-#define N_OUTPUT_LAYER 2        // don't change
-
-
-typedef struct unit_i{
-    double netinput;
-    double output;
-    double weight;
-} UNIT_I;
-
-typedef struct unit_h{
-    double netinput;
-    double output;
-    double activation;
-    double omega;
-    double sigma;
-} UNIT_H;
-
-typedef struct unit_o{
-    double upper_input;
-    double lower_input;
-    double output;
-} UNIT_O;
-
-typedef struct network{
-    UNIT_I input_layer [N_INPUT_LAYER];
-    UNIT_H hidden_layer[N_HIDDEN_LAYER];
-    UNIT_O output_layer[N_OUTPUT_LAYER];
-    int n_input;
-    int n_hidden;
-    int n_output;
-} NETWORK;
+#include"rbs_network.h"
 
 
 double my_square(double input){
@@ -121,29 +81,3 @@ void calc_network(NETWORK *network, double *in_data){
         network->output_layer[0].output = network->output_layer[0].upper_input / network->output_layer[0].lower_input;
         network->output_layer[1].output = network->output_layer[1].upper_input / network->output_layer[1].lower_input;
 }
-
-
-// Main ////////////////////////////////////////////////////////////////////////////
-
-int main(int argc, char**argv){
-    
-    NETWORK network;
-    network.n_input  = N_INPUT_LAYER;
-    network.n_hidden = N_HIDDEN_LAYER;
-    network.n_output = N_OUTPUT_LAYER;
-
-    set_start_values(&network);
-
-    // defining the input-data: the input values of the infrared-sensors
-    double data_feed[6] = {1, 1, 1, 1, 1, 100};
-
-
-    calc_network(&network, data_feed);
-
-    printf("Left Motor  = %lf\n", network.output_layer[0].output);
-    printf("Right Motor = %lf\n", network.output_layer[1].output);
-
-    return 0;
-}
-
-// Main ////////////////////////////////////////////////////////////////////////////
