@@ -4,7 +4,7 @@
 //  Author:                 B.Sc. Fenja Freitag                             //
 //  Name:                   rbs_network.c                                   //
 //  Description:            simple rbs neuronal net test                    //
-//  Version:                0.5                                             //
+//  Version:                0.6                                             //
 //////////////////////////////////////////////////////////////////////////////
 
 #include"rbs_network.h"
@@ -26,13 +26,16 @@ double calc_output(UNIT_H unit){
 
 
 void set_start_values(NETWORK *network){
-    network->slope  = SLOPE_START;
+    network->n_input  = N_INPUT_LAYER;
+    network->n_hidden = N_HIDDEN_LAYER;
+    network->n_output = N_OUTPUT_LAYER;
+    network->slope    = SLOPE_START;
     for(int i=0; i<network->n_input; i++)
         network->input_layer[i].weight = 1;
     for(int i=0; i<network->n_hidden; i++){
-        network->hidden_layer[i].activation = 6;
-        network->hidden_layer[i].omega = gauss();
-        network->hidden_layer[i].sigma = gauss();
+        network->hidden_layer[i].activation = 4;
+        network->hidden_layer[i].omega = 1;
+        network->hidden_layer[i].sigma = 1;
     }
 }
 
@@ -90,23 +93,44 @@ void calc_network(NETWORK *network, double *in_data){
 
 
 void mutate_network(NETWORK *network){
+    if(gauss() <= 0.33)
+        network->slope *= 0.75;
+    else if(gauss() <= 0.66)
+        network->slope *= 1.33;
+
     for(int i=0; i<network->n_input; i++)
-        network->input_layer[i].weight += network->slope * gauss();
+        network->input_layer[i].weight      += network->slope * gauss();
     for(int i=0; i<network->n_hidden; i++){
         network->hidden_layer[i].activation += network->slope * gauss();
-        network->hidden_layer[i].omega += network->slope * gauss();
-        network->hidden_layer[i].sigma += network->slope * gauss();
+        network->hidden_layer[i].omega      += network->slope * gauss();
+        network->hidden_layer[i].sigma      += network->slope * gauss();
     }
 }
 
 
-/*
-typedef struct network{
-    UNIT_I input_layer [N_INPUT_LAYER];
-    UNIT_H hidden_layer[N_HIDDEN_LAYER];
-    UNIT_O output_layer[N_OUTPUT_LAYER];
-    int n_input;
-    int n_hidden;
-    int n_output;
-} NETWORK;
-*/
+void generation_step_forward(NETWORK *network, int *child, int max_child){
+    NETWORK parent_network;
+    int best_fitness;
+
+    if(max_child == ++(*child)){        
+        *child = 0;
+
+        best_fitness = get_best_fitness(&network[0], max_child);
+        parent_network = network[best_fitness];
+
+        for(int i=0; i<max_child; i++){
+            network[i] = parent_network;
+            mutate_network(&network[i]);
+        }
+
+        printf("\nf(%d) = %lf\n", best_fitness, parent_network.fitness);
+    }
+}
+
+
+int get_best_fitness(NETWORK *network, int max_child){
+    int compare = 0;
+    for(int i=1; i<max_child; i++)
+        compare = (network[compare].fitness > network[i].fitness)? compare : i;
+    return compare;
+}

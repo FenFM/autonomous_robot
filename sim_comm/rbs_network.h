@@ -13,7 +13,8 @@
 #define N_INPUT_LAYER  6        // don't change
 #define N_HIDDEN_LAYER 16       // must be devidable by 4
 #define N_OUTPUT_LAYER 2        // don't change
-#define SLOPE_START 0.1           // start value for sigma (for training)
+#define SLOPE_START 0.1         // start value for sigma (for training)
+#define MAX_CHILD 10            // number of childs per generation
 
 
 typedef struct unit_i{
@@ -40,6 +41,7 @@ typedef struct network{
     UNIT_I input_layer [N_INPUT_LAYER];
     UNIT_H hidden_layer[N_HIDDEN_LAYER];
     UNIT_O output_layer[N_OUTPUT_LAYER];
+    double fitness;
     double slope;
     int n_input;
     int n_hidden;
@@ -53,3 +55,5 @@ double calc_output(UNIT_H unit);
 void set_start_values(NETWORK *network);
 void calc_network(NETWORK *network, double *in_data);
 void mutate_network(NETWORK *network);
+void generation_step_forward(NETWORK *network, int *child, int max_child);
+int get_best_fitness(NETWORK *network, int max_child);
