@@ -13,13 +13,14 @@
 
 typedef struct memspace{
     short int comm_flag;
+    short int train_flag;
     short int IR_Distance[6];
     short int Motor_Value[2];
 } MemSpace;
 
 
 int main(int argc, char**argv){
-
+    // initialize srand for randomizing childs
     time_t t;
     srand48((unsigned) time(&t));
 
@@ -30,7 +31,7 @@ int main(int argc, char**argv){
     key_t key = 42069;
 
 
-   if ((shmID = shmget(key, 2*sizeof(MemSpace), 0666)) == -1){
+   if ((shmID = shmget(key, sizeof(MemSpace), 0666)) == -1){
       perror("shmget");
       exit(1);
    }
@@ -49,6 +50,11 @@ int main(int argc, char**argv){
 
     while(1){
         while(sharedMem->comm_flag == 0){sleep(0.0001);}
+            if(sharedMem->train_flag){
+                sharedMem->train_flag = 0;
+                mutate_network(&network);
+            }
+
             calc_network(&network, (double *) sharedMem->IR_Distance);
             
             sharedMem->Motor_Value[0] = network.output_layer[0].output;

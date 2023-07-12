@@ -15,18 +15,24 @@ double my_square(double input){
 }
 
 
+double gauss(){
+    return sqrt(-2 * log(drand48())) * cos(2*PI*drand48());
+}
+
+
 double calc_output(UNIT_H unit){
     return exp( -(my_square(unit.omega-unit.netinput) ) / unit.sigma );
 }
 
 
 void set_start_values(NETWORK *network){
+    network->slope  = SLOPE_START;
     for(int i=0; i<network->n_input; i++)
         network->input_layer[i].weight = 1;
     for(int i=0; i<network->n_hidden; i++){
-        network->hidden_layer[i].activation = i;
-        network->hidden_layer[i].omega = i;
-        network->hidden_layer[i].sigma = i;
+        network->hidden_layer[i].activation = 6;
+        network->hidden_layer[i].omega = gauss();
+        network->hidden_layer[i].sigma = gauss();
     }
 }
 
@@ -81,3 +87,26 @@ void calc_network(NETWORK *network, double *in_data){
         network->output_layer[0].output = network->output_layer[0].upper_input / network->output_layer[0].lower_input;
         network->output_layer[1].output = network->output_layer[1].upper_input / network->output_layer[1].lower_input;
 }
+
+
+void mutate_network(NETWORK *network){
+    for(int i=0; i<network->n_input; i++)
+        network->input_layer[i].weight += network->slope * gauss();
+    for(int i=0; i<network->n_hidden; i++){
+        network->hidden_layer[i].activation += network->slope * gauss();
+        network->hidden_layer[i].omega += network->slope * gauss();
+        network->hidden_layer[i].sigma += network->slope * gauss();
+    }
+}
+
+
+/*
+typedef struct network{
+    UNIT_I input_layer [N_INPUT_LAYER];
+    UNIT_H hidden_layer[N_HIDDEN_LAYER];
+    UNIT_O output_layer[N_OUTPUT_LAYER];
+    int n_input;
+    int n_hidden;
+    int n_output;
+} NETWORK;
+*/

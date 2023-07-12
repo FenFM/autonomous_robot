@@ -27,6 +27,7 @@
 // Initializing the shared memeoy /////
 typedef struct memspace{
    short int comm_flag;
+   short int train_flag;
    short int IR_Distance[6];
    short int Motor_Value[2];
 } MemSpace;
@@ -58,7 +59,7 @@ void UserInit(struct Robot *robot)
    // creating and opening the shared memory ////
    key = 42069;
 
-   if ((shmID = shmget(key, 2*sizeof(MemSpace), IPC_CREAT | 0666)) == -1){
+   if ((shmID = shmget(key, sizeof(MemSpace), IPC_CREAT | 0666)) == -1){
       perror("shmget");
       exit(1);
    }
@@ -68,7 +69,8 @@ void UserInit(struct Robot *robot)
       exit(1);
    }
 
-   sharedMem->comm_flag = 0;
+   sharedMem->comm_flag  = 0;
+   sharedMem->train_flag = 0;
    sharedMem->Motor_Value[0] = 6;
    sharedMem->Motor_Value[1] = 6;
    //////////////////////////////////////////////
@@ -77,7 +79,7 @@ void UserInit(struct Robot *robot)
 void UserClose(struct Robot *robot)
 {
    // closing the shared memory /////////////////
-   // (MemSpace *) shmdt(robot_values.p);
+   (MemSpace *) shmdt(sharedMem);
    //////////////////////////////////////////////
 }
 
@@ -148,15 +150,16 @@ boolean StepRobot(struct Robot *robot)
   double v, sqrt();
   char text[ 100 ];
 
+/*
   for( i = 0, v = 0; i < 6; i++ )
      v += robot->IRSensor[ i ].DistanceValue * weights[ i ];
   v /= 1024.0;
-//   robot->Motor[ LEFT ].Value = v + weights[ 6 ];
+   robot->Motor[ LEFT ].Value = v + weights[ 6 ];
   for( i = 0, v = 0; i < 6; i++ )
      v += robot->IRSensor[ i ].DistanceValue * weights[ 5 - i ];
   v /= 1024.0;
-//   robot->Motor[ RIGHT ].Value = v + weights[ 6 ];
-
+   robot->Motor[ RIGHT ].Value = v + weights[ 6 ];
+*/
   len += sqrt( (robot->X - old_x) * (robot->X - old_x) + 
   	       (robot->Y - old_y) * (robot->Y - old_y) );
   old_x = robot->X; old_y = robot->Y;
@@ -174,14 +177,23 @@ boolean StepRobot(struct Robot *robot)
   }
 
 
-   // MY STUFF /////////////////////////////////////////////////////////////////
+   // MY STUFF /////////////////////////////////////////////////////////////////          
       while(sharedMem->comm_flag == 1){sleep(0.0001);}
+         // check if robot crashed and reset if necessary
+         for(int i=0; i<6; i++)
+            if(robot->IRSensor[i].DistanceValue >= 1000){
+               ResetRobot(robot);
+               sharedMem->train_flag = 1;
+               break;
+         }
+         // copy the IR-Values to the shared memory
          for(int i=0; i<6; i++)
             sharedMem->IR_Distance[i] = robot->IRSensor[i].DistanceValue;
             
          sharedMem->comm_flag = 1;
 
       while(sharedMem->comm_flag == 1){sleep(0.0001);}
+         // get Motor values from the shared memory
          robot->Motor[LEFT].Value  = sharedMem->Motor_Value[0];
          robot->Motor[RIGHT].Value = sharedMem->Motor_Value[1];
    // END MY STUFF /////////////////////////////////////////////////////////////
@@ -196,6 +208,8 @@ void FastStepRobot(struct Robot *robot)
 
 void ResetRobot(struct Robot *robot)
 {
+      robot->X = 500;
+      robot->Y = 500;
 }
 
 void UserCommand(struct Robot *robot,char *text)
