@@ -13,7 +13,7 @@
 #define N_INPUT_LAYER  6        // don't change
 #define N_HIDDEN_LAYER 16       // must be devidable by 4
 #define N_OUTPUT_LAYER 2        // don't change
-#define SLOPE_START 0.1         // start value for sigma (for training)
+#define SLOPE_START 0.5         // start value for sigma (for training)
 #define MAX_CHILD 10            // number of childs per generation
 
 

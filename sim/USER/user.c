@@ -199,7 +199,6 @@ boolean StepRobot(struct Robot *robot)
          sharedMem->distance.len += sqrt( my_square(robot->X - sharedMem->distance.old_x) + my_square(robot->Y - sharedMem->distance.old_y) );
          sharedMem->distance.old_x = robot->X;
          sharedMem->distance.old_y = robot->Y;
-         printf("%lf\n", sharedMem->distance.len);
 
          // check if robot crashed and reset if necessary
          for(int i=0; i<6; i++)
@@ -216,8 +215,8 @@ boolean StepRobot(struct Robot *robot)
 
       while(sharedMem->comm_flag == 1){sleep(0.0001);}
          // get Motor values from the shared memory
-         robot->Motor[LEFT].Value  = 1 + sharedMem->Motor_Value[0];
-         robot->Motor[RIGHT].Value = 1 + sharedMem->Motor_Value[1];
+         robot->Motor[LEFT].Value  = 4 + sharedMem->Motor_Value[0];
+         robot->Motor[RIGHT].Value = 4 + sharedMem->Motor_Value[1];
    // END MY STUFF /////////////////////////////////////////////////////////////
 
   slowmode();
