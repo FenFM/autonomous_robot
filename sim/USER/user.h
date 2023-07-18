@@ -13,3 +13,5 @@
 /* The author's name and this copyright notice must be included in any copy. */
 /* Commercial use is forbidden.                                              */
 /*****************************************************************************/
+
+double my_square(double in);

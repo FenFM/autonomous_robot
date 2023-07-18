@@ -15,8 +15,8 @@
 #define N_HIDDEN_LAYER_2 N_HIDDEN_LAYER_1
 #define N_OUTPUT_LAYER 2
 #define N_OF_DATA_SETS 2
-#define SLOPE_START 2           // start value for sigma (for training)
-#define MAX_CHILD 10            // number of childs per generation
+#define SLOPE_START 1                       // start value for sigma (for training)
+#define MAX_CHILD 10                        // number of childs per generation
 
 
 typedef struct unit{

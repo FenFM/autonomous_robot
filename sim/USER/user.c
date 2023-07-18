@@ -194,12 +194,11 @@ boolean StepRobot(struct Robot *robot)
          sharedMem->distance.len += sqrt( my_square(robot->X - sharedMem->distance.old_x) + my_square(robot->Y - sharedMem->distance.old_y) );
          sharedMem->distance.old_x = robot->X;
          sharedMem->distance.old_y = robot->Y;
-
          
 
          // check if robot crashed and reset if necessary
          for(int i=0; i<6; i++)
-            if(robot->IRSensor[i].DistanceValue >= 1000){
+            if(robot->IRSensor[i].DistanceValue >= 1023){
                ResetRobot(robot);
                sharedMem->train_flag = 1;
                break;
