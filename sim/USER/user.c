@@ -188,17 +188,14 @@ boolean StepRobot(struct Robot *robot)
   }
 
 
-  double my_square(double in){
-   return in*in;
-}
-
-
    // MY STUFF /////////////////////////////////////////////////////////////////          
       while(sharedMem->comm_flag == 1){sleep(0.0001);}
          // get the current len by calculating the x-y difference
          sharedMem->distance.len += sqrt( my_square(robot->X - sharedMem->distance.old_x) + my_square(robot->Y - sharedMem->distance.old_y) );
          sharedMem->distance.old_x = robot->X;
          sharedMem->distance.old_y = robot->Y;
+
+         
 
          // check if robot crashed and reset if necessary
          for(int i=0; i<6; i++)
@@ -222,6 +219,12 @@ boolean StepRobot(struct Robot *robot)
   slowmode();
   return(TRUE);
 }
+
+
+double my_square(double in){
+   return in*in;
+}
+
 
 void FastStepRobot(struct Robot *robot)
 {

@@ -2,13 +2,13 @@
 //  Course:                 Nature Inspired Computing                       //
 //  Lecturer:               Prof. Dr.-Ing. habil. Ralf Salomon              //
 //  Author:                 B.Sc. Fenja Freitag                             //
-//  Name:                   sim_communicator.c                              //
+//  Name:                   comm.c                                          //
 //  Description:            communicationg with simulation via shared       //
 //                          memory                                          //
 //  Version:                0.6                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "rbs_network.h"
+#include "network.h"
 
 
 typedef struct my_len{
