@@ -11,11 +11,11 @@
 
 #define PI 3.141
 #define N_INPUT_LAYER  6
-#define N_HIDDEN_LAYER_1 8                  // must be devidable by 4
+#define N_HIDDEN_LAYER_1 16                 // must be devidable by 4
 #define N_HIDDEN_LAYER_2 N_HIDDEN_LAYER_1
 #define N_OUTPUT_LAYER 2
 #define N_OF_DATA_SETS 2
-#define SLOPE_START 1                       // start value for sigma (for training)
+#define SLOPE_START 2                       // start value for sigma (for training)
 #define MAX_CHILD 10                        // number of childs per generation
 
 
@@ -41,6 +41,18 @@ typedef struct network{
 } NETWORK;
 
 
+typedef struct moving_values{
+    short int arr_cntr;
+    short int avarage_cntr;
+    short int turn_value [256];
+    short int l_motor_arr[256]; 
+    short int r_motor_arr[256];
+    double turn_value_avarage;
+    double l_motor_avarage;
+    double r_motor_avarage;
+} MOV_VAL;
+
+
 double my_square(double input);
 double gauss();
 double calc_output(UNIT unit);
@@ -50,3 +62,5 @@ void generation_step_forward(NETWORK *network, int *child, int max_child);
 void set_start_values(NETWORK *network);
 double calc_fitness(NETWORK network, double *out_data);
 int get_best_fitness(NETWORK *network, int max_child);
+void value_unit(NETWORK *network, MOV_VAL *motor);
+void set_mov_val(MOV_VAL *motor);

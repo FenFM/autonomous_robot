@@ -73,38 +73,31 @@ void calc_network(NETWORK *network, double *in_data){
     }
 
     // output layer
-    /*
-    for(int i=0; i<network->n_output; i++){
-        network->output_layer[i].netinput = 0;
-        for(int j=0; j<network->n_hidden_2; j++)
-            network->output_layer[i].netinput += network->hidden_layer_2[j].output;
-        network->output_layer[i].output = calc_output(network->output_layer[i]);
-    }
-    */
-
     network->output_layer[0].netinput = 0;
+    for(int i=0; i<network->n_hidden_2/4; i++)
+        network->output_layer[0].netinput += network->hidden_layer_2[i].output;
+
+    for(int i=network->n_hidden_2/2; i<network->n_hidden_2*3/4; i++)
+        network->output_layer[0].netinput += network->hidden_layer_2[i].output;
+
+
     network->output_layer[1].netinput = 0;
+    for(int i=network->n_hidden_2/4; i<network->n_hidden_2/2; i++)
+        network->output_layer[1].netinput += network->hidden_layer_2[i].output;
 
-    network->output_layer[0].netinput += network->hidden_layer_2[0].output;
-    network->output_layer[0].netinput += network->hidden_layer_2[1].output;
-    network->output_layer[0].netinput += network->hidden_layer_2[4].output;
-    network->output_layer[0].netinput += network->hidden_layer_2[5].output;
-
-    network->output_layer[1].netinput += network->hidden_layer_2[2].output;
-    network->output_layer[1].netinput += network->hidden_layer_2[3].output;
-    network->output_layer[1].netinput += network->hidden_layer_2[6].output;
-    network->output_layer[1].netinput += network->hidden_layer_2[7].output;
+    for(int i=network->n_hidden_2*3/4; i<network->n_hidden_2; i++)
+        network->output_layer[1].netinput += network->hidden_layer_2[i].output;
 
     network->output_layer[0].output = calc_output(network->output_layer[0]);
-    network->output_layer[1].output = calc_output(network->output_layer[1]);
+    network->output_layer[1].output = calc_output(network->output_layer[1]);    
 }
 
 
 void mutate_network(NETWORK *network){
     if(gauss() <= 0.33)
-        network->slope *= 0.75;
+        network->slope *= 0.9;
     else if(gauss() <= 0.66)
-        network->slope *= 1.33;
+        network->slope *= 1.1;
 
     for(int i=0; i<network->n_input;  i++){
         network->input_layer[i].weight      += network->slope  * gauss();
@@ -185,4 +178,46 @@ int get_best_fitness(NETWORK *network, int max_child){
     for(int i=1; i<max_child; i++)
         compare = (network[compare].fitness > network[i].fitness)? compare : i;
     return compare;
+}
+
+
+void value_unit(NETWORK *network, MOV_VAL *motor){
+    // write the current motor value in the motor_array
+    motor->l_motor_arr[motor->arr_cntr] = (short int) network->output_layer[0].output;
+    motor->r_motor_arr[motor->arr_cntr] = (short int) network->output_layer[1].output;
+
+    // calculate the avarage motor values
+    motor->l_motor_avarage = 0;
+    motor->r_motor_avarage = 0;
+    for(int i=0; i<255; i++){
+        motor->l_motor_avarage += motor->l_motor_arr[i];
+        motor->r_motor_avarage += motor->r_motor_arr[i];
+    }
+    motor->l_motor_avarage /= motor->avarage_cntr;
+    motor->r_motor_avarage /= motor->avarage_cntr;
+
+    // the turn value detects if the robot is turning left, right or not
+    motor->turn_value[motor->arr_cntr] = (motor->l_motor_avarage - motor->r_motor_avarage) / (motor->l_motor_avarage + motor->r_motor_avarage);
+    motor->turn_value_avarage = 0;
+    for(int i=0; i<255; i++)
+        motor->turn_value_avarage += motor->turn_value[i];
+    motor->turn_value_avarage /= motor->avarage_cntr;
+
+    
+    motor->arr_cntr     += (motor->arr_cntr     == 255)? -255 : 1;
+    motor->avarage_cntr += (motor->avarage_cntr == 256)?    0 : 1;
+}
+
+
+void set_mov_val(MOV_VAL *motor){
+    motor->arr_cntr     = 0;
+    motor->avarage_cntr = 1;
+    motor->l_motor_avarage = 0; 
+    motor->r_motor_avarage = 0;
+    motor->turn_value_avarage = 0;
+    for(int i=0; i<255; i++){
+        motor->turn_value[i]  = 0;
+        motor->l_motor_arr[i] = 0;
+        motor->r_motor_arr[i] = 0;
+    }
 }
