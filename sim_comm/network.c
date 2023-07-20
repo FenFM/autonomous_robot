@@ -195,6 +195,8 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
     }
     motor->l_motor_avarage /= motor->avarage_cntr;
     motor->r_motor_avarage /= motor->avarage_cntr;
+    motor->comb_avarage = (short int) (motor->l_motor_avarage + motor->r_motor_avarage) / 2;
+    printf("LM = %lf\nRM = %lf\nAV = %d\n", motor->l_motor_avarage, motor->r_motor_avarage, motor->comb_avarage);
 
     // the turn value detects if the robot is turning left, right or not
     motor->turn_value[motor->arr_cntr] = (motor->l_motor_avarage - motor->r_motor_avarage) / (motor->l_motor_avarage + motor->r_motor_avarage);
@@ -203,10 +205,24 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
         motor->turn_value_avarage += motor->turn_value[i];
     motor->turn_value_avarage /= motor->avarage_cntr;
 
+    if(check_netinput(*network, 100)){
+        network->output_layer[0].output = motor->comb_avarage;
+        network->output_layer[1].output = motor->comb_avarage;
+        //network->output_layer[0].output = network->output_layer[1].output;
+    }
     
     motor->arr_cntr     += (motor->arr_cntr     == 255)? -255 : 1;
     motor->avarage_cntr += (motor->avarage_cntr == 256)?    0 : 1;
 }
+
+
+short int check_netinput(NETWORK network, short int val){
+    for(int i=0; i<6; i++)
+        if(network.input_layer[i].netinput > val)
+            return 0;
+    
+    return 1;
+} 
 
 
 void set_mov_val(MOV_VAL *motor){

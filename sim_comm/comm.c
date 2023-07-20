@@ -84,8 +84,7 @@ int main(int argc, char**argv){
             sharedMem->Motor_Value[0] = (short int) network[current_child].output_layer[0].output;
             sharedMem->Motor_Value[1] = (short int) network[current_child].output_layer[1].output;
 
-            sharedMem->distance.len -= abs(motor.turn_value_avarage) * 1.4;
-
+            //sharedMem->distance.len -= abs(motor.turn_value_avarage) * 1.4;
             
             sharedMem->comm_flag = 0;
     }

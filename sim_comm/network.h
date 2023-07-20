@@ -50,6 +50,7 @@ typedef struct moving_values{
     double turn_value_avarage;
     double l_motor_avarage;
     double r_motor_avarage;
+    short int comb_avarage;
 } MOV_VAL;
 
 
@@ -63,4 +64,5 @@ void set_start_values(NETWORK *network);
 double calc_fitness(NETWORK network, double *out_data);
 int get_best_fitness(NETWORK *network, int max_child);
 void value_unit(NETWORK *network, MOV_VAL *motor);
+short int check_netinput(NETWORK network, short int val);
 void set_mov_val(MOV_VAL *motor);
