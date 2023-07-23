@@ -9,5 +9,3 @@ splitted_network.o:	network.c
 
 clean:
 	rm -f *.o comm
-
-####
