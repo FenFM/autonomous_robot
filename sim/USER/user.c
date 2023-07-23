@@ -204,15 +204,18 @@ boolean StepRobot(struct Robot *robot)
                break;
          }
          // copy the IR-Values and len to the shared memory
-         for(int i=0; i<6; i++)
+         for(int i=0; i<6; i++){
             sharedMem->IR_Distance[i] = robot->IRSensor[i].DistanceValue;
+            // printf("IR(%d) = %d\n", i, robot->IRSensor[i].DistanceValue); // DEBUG
+         }
+         // printf("\n"); //DEBUG
 
          sharedMem->comm_flag = 1;
 
       while(sharedMem->comm_flag == 1){sleep(0.0001);}
          // get Motor values from the shared memory
-         robot->Motor[LEFT].Value  = 4 + sharedMem->Motor_Value[0];
-         robot->Motor[RIGHT].Value = 4 + sharedMem->Motor_Value[1];
+         robot->Motor[LEFT].Value  = sharedMem->Motor_Value[0];
+         robot->Motor[RIGHT].Value = sharedMem->Motor_Value[1];
    // END MY STUFF /////////////////////////////////////////////////////////////
 
   slowmode();

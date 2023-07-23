@@ -2,12 +2,12 @@
 //  Course:                 Nature Inspired Computing                       //
 //  Lecturer:               Prof. Dr.-Ing. habil. Ralf Salomon              //
 //  Author:                 B.Sc. Fenja Freitag                             //
-//  Name:                   network.c                                       //
+//  Name:                   simple_network.c                                //
 //  Description:            network for the communicator                    //
-//  Version:                1.0                                             //
+//  Version:                0.1                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "network.h"
+#include "simple_network.h"
 
 
 double my_square(double input){
@@ -28,69 +28,22 @@ double calc_output(UNIT unit){
 
 void calc_network(NETWORK *network, double *in_data){    
     // input layer
-    for(int i=0; i<network->n_input; i++){
+    for(int i=0; i<network->n_input/2; i++){
         network->input_layer[i].netinput = in_data[i];
         network->input_layer[i].output   = calc_output(network->input_layer[i]);
     }
-
-    // hidden layer one
-    for(int i=0; i<(network->n_hidden_1/2); i++){
-        network->hidden_layer_1[i].netinput = 0;
-        for(int j=0; j<(network->n_input/2); j++)
-            network->hidden_layer_1[i].netinput += network->input_layer[j].output;
-        network->hidden_layer_1[i].output = calc_output(network->hidden_layer_1[i]);
-    }
-    for(int i=(network->n_hidden_1/2); i<network->n_hidden_1; i++){
-        network->hidden_layer_1[i].netinput = 0;
-        for(int j=(network->n_input/2); j<network->n_input; j++)
-            network->hidden_layer_1[i].netinput += network->input_layer[j].output;
-        network->hidden_layer_1[i].output = calc_output(network->hidden_layer_1[i]);
-    }
-
-    // hidden layer two
-    for(int i=0; i<(network->n_hidden_2/4); i++){
-        network->hidden_layer_2[i].netinput = 0;
-        for(int j=0; j<(network->n_hidden_1/2); j++)
-            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
-        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
-    }
-    for(int i=(network->n_hidden_2/4); i<(network->n_hidden_2/2); i++){
-        network->hidden_layer_2[i].netinput = 0;
-        for(int j=0; j<(network->n_hidden_1/2); j++)
-            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
-        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
-    }
-    for(int i=(network->n_hidden_2/2); i<(network->n_hidden_2*3/4); i++){
-        network->hidden_layer_2[i].netinput = 0;
-        for(int j=(network->n_hidden_1/2); j<network->n_hidden_1; j++)
-            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
-        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
-    }
-    for(int i=(network->n_hidden_2*3/4); i<network->n_hidden_2; i++){
-        network->hidden_layer_2[i].netinput = 0;
-        for(int j=(network->n_hidden_1/2); j<network->n_hidden_1; j++)
-            network->hidden_layer_2[i].netinput += network->hidden_layer_1[j].output;
-        network->hidden_layer_2[i].output = calc_output(network->hidden_layer_2[i]);
+    for(int i=network->n_input/2; i<network->n_input; i++){
+        network->input_layer[i].netinput = in_data[i-network->n_input/2];
+        network->input_layer[i].output   = calc_output(network->input_layer[i-network->n_input/2]);
     }
 
     // output layer
     network->output_layer[0].netinput = 0;
-    for(int i=0; i<network->n_hidden_2/4; i++)
-        network->output_layer[0].netinput += network->hidden_layer_2[i].output;
-
-    for(int i=network->n_hidden_2/2; i<network->n_hidden_2*3/4; i++)
-        network->output_layer[0].netinput += network->hidden_layer_2[i].output;
-
-
     network->output_layer[1].netinput = 0;
-    for(int i=network->n_hidden_2/4; i<network->n_hidden_2/2; i++)
-        network->output_layer[1].netinput += network->hidden_layer_2[i].output;
-
-    for(int i=network->n_hidden_2*3/4; i<network->n_hidden_2; i++)
-        network->output_layer[1].netinput += network->hidden_layer_2[i].output;
-
-    network->output_layer[0].output = calc_output(network->output_layer[0]);
-    network->output_layer[1].output = calc_output(network->output_layer[1]);    
+    for(int i=0; i<network->n_input/2; i++){
+        network->output_layer[0].netinput += network->input_layer[i].output;
+        network->output_layer[1].netinput += network->input_layer[i+network->n_input].output;
+    }
 }
 
 
@@ -103,14 +56,6 @@ void mutate_network(NETWORK *network){
     for(int i=0; i<network->n_input;  i++){
         network->input_layer[i].weight      += network->slope  * gauss();
         network->input_layer[i].activation  += network->slope  * gauss();
-    }
-    for(int i=0; i<network->n_hidden_1; i++){
-        network->hidden_layer_1[i].weight     += network->slope * gauss();
-        network->hidden_layer_1[i].activation += network->slope * gauss();
-    }
-    for(int i=0; i<network->n_hidden_2; i++){
-        network->hidden_layer_2[i].weight     += network->slope * gauss();
-        network->hidden_layer_2[i].activation += network->slope * gauss();
     }
     for(int i=0; i<network->n_output; i++){
         network->output_layer[i].weight     += network->slope * gauss();
@@ -141,38 +86,19 @@ void generation_step_forward(NETWORK *network, int *child, int max_child){
 
 void set_start_values(NETWORK *network){
     network->n_input    = N_INPUT_LAYER;
-    network->n_hidden_1 = N_HIDDEN_LAYER_1;
-    network->n_hidden_2 = N_HIDDEN_LAYER_2;
     network->n_output   = N_OUTPUT_LAYER;
     network->slope      = SLOPE_START;
 
-    int inc = 10;
+    int inc = 1000;
 
     for(int i=0; i<network->n_input; i++){
         network->input_layer[i].weight  = inc * gauss();
         network->input_layer[i].activation  = inc * gauss();
     }
-    for(int j=0; j<network->n_hidden_1; j++){
-        network->hidden_layer_1[j].weight = inc * gauss();
-        network->hidden_layer_1[j].activation = inc * gauss();
-    }
-    for(int j=0; j<network->n_hidden_2; j++){
-        network->hidden_layer_2[j].weight = inc * gauss();
-        network->hidden_layer_2[j].activation = inc * gauss();
-    }
     for(int k=0; k<network->n_output; k++){
         network->output_layer[k].weight = inc * gauss();
         network->output_layer[k].activation = inc * gauss();
     }
-}
-
-
-double calc_fitness(NETWORK network, double *out_data){
-    double fitness = 0;
-    for(int i=0; i<network.n_output; i++){
-        fitness += my_square(out_data[i] - network.output_layer[i].output);
-    }
-    return fitness;
 }
 
 
@@ -207,6 +133,7 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
         motor->turn_value_avarage += motor->turn_value[i];
     motor->turn_value_avarage /= motor->avarage_cntr;
 
+    /*
     // make sure the motor does not oversteer or understeer
     if((network->output_layer[0].output > 10.0) && (network->output_layer[1].output > 10.0)){
         network->output_layer[0].output = 10.0;
@@ -217,7 +144,9 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
         network->output_layer[0].output = 0.0;
         network->output_layer[1].output = 0.0;
     }
+    */
 
+    // let the robot drive only forward when nothing is in his way
     if(check_netinput(*network, 50)){
         network->output_layer[0].output = motor->comb_avarage;
         network->output_layer[1].output = motor->comb_avarage;

@@ -10,41 +10,26 @@
 
 
 #define PI 3.141
-#define N_INPUT_LAYER  6        // don't change
-#define N_HIDDEN_LAYER 16       // must be devidable by 4
-#define N_OUTPUT_LAYER 2        // don't change
-#define SLOPE_START 0.5         // start value for sigma (for training)
-#define MAX_CHILD 10            // number of childs per generation
+#define N_INPUT_LAYER  16
+#define N_OUTPUT_LAYER 2
+#define SLOPE_START 10                      // start value for sigma (for training)
+#define MAX_CHILD 10                        // number of childs per generation
 
 
-typedef struct unit_i{
-    double netinput;
-    double output;
-    double weight; 
-} UNIT_I;
-
-typedef struct unit_h{
+typedef struct unit{
     double netinput;
     double output;
     double activation;
-    double omega;
-    double sigma;
-} UNIT_H;
+    double weight;
+} UNIT;
 
-typedef struct unit_o{
-    double upper_input;
-    double lower_input;
-    double output;
-} UNIT_O;
 
 typedef struct network{
-    UNIT_I input_layer [N_INPUT_LAYER];
-    UNIT_H hidden_layer[N_HIDDEN_LAYER];
-    UNIT_O output_layer[N_OUTPUT_LAYER];
-    double fitness;
-    double slope;
+    UNIT input_layer  [N_INPUT_LAYER] ;
+    UNIT output_layer [N_OUTPUT_LAYER];
+    double fitness;   
+    double slope; 
     int n_input;
-    int n_hidden;
     int n_output;
 } NETWORK;
 
@@ -64,11 +49,11 @@ typedef struct moving_values{
 
 double my_square(double input);
 double gauss();
-double calc_output(UNIT_H unit);
-void set_start_values(NETWORK *network);
+double calc_output(UNIT unit);
 void calc_network(NETWORK *network, double *in_data);
 void mutate_network(NETWORK *network);
 void generation_step_forward(NETWORK *network, int *child, int max_child);
+void set_start_values(NETWORK *network);
 int get_best_fitness(NETWORK *network, int max_child);
 void value_unit(NETWORK *network, MOV_VAL *motor);
 short int check_netinput(NETWORK network, short int val);

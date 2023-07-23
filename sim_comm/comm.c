@@ -8,7 +8,9 @@
 //  Version:                0.7                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "network.h"
+//#include "network.h"
+//#include "rbs_network.h"
+#include "simple_network.h"
 
 
 typedef struct my_len{
@@ -77,12 +79,11 @@ int main(int argc, char**argv){
                 set_mov_val(&motor);
             }
 
-
             calc_network(&network[current_child], (double *) sharedMem->IR_Distance);
-            value_unit(&network[current_child], &motor);
+            // value_unit(&network[current_child], &motor);
             
-            sharedMem->Motor_Value[0] = (short int) network[current_child].output_layer[0].output;
-            sharedMem->Motor_Value[1] = (short int) network[current_child].output_layer[1].output;
+            sharedMem->Motor_Value[0] = 4 + (short int) network[current_child].output_layer[0].output;
+            sharedMem->Motor_Value[1] = 4 + (short int) network[current_child].output_layer[1].output;
 
             //sharedMem->distance.len -= abs(motor.turn_value_avarage) * 1.4;
             
@@ -91,6 +92,3 @@ int main(int argc, char**argv){
 
     return 0;
 }
-
-
-

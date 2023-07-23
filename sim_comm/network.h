@@ -15,7 +15,7 @@
 #define N_HIDDEN_LAYER_2 N_HIDDEN_LAYER_1
 #define N_OUTPUT_LAYER 2
 #define N_OF_DATA_SETS 2
-#define SLOPE_START 2                       // start value for sigma (for training)
+#define SLOPE_START 5                       // start value for sigma (for training)
 #define MAX_CHILD 10                        // number of childs per generation
 
 
@@ -50,7 +50,7 @@ typedef struct moving_values{
     double turn_value_avarage;
     double l_motor_avarage;
     double r_motor_avarage;
-    short int comb_avarage;
+    double comb_avarage;
 } MOV_VAL;
 
 
