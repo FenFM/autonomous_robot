@@ -40,10 +40,10 @@ void set_start_values(NETWORK *network){
 }
 
 
-void calc_network(NETWORK *network, double *in_data){
+void calc_network(NETWORK *network, int *in_data){
         // input layer
         for(int i=0; i<network->n_input; i++){
-            network->input_layer[i].netinput = in_data[i];
+            network->input_layer[i].netinput = (double)in_data[i];
             network->input_layer[i].output   = network->input_layer[i].netinput * network->input_layer[i].weight;
         }
 
@@ -191,4 +191,54 @@ void set_mov_val(MOV_VAL *motor){
         motor->l_motor_arr[i] = 0;
         motor->r_motor_arr[i] = 0;
     }
+}
+
+
+void pre_train(NETWORK *network, int *data_set_in, int *data_set_out, int data_len){
+    
+    NETWORK child_network[30];
+    double  fitness[30];
+    int     best_fitness;
+    int     max_child = 30;
+
+    for(int gen=0; gen<50; gen++){
+        for(int child=0; child<max_child; child++){
+            // copy main network values to child network
+            child_network[child] = *network;
+            
+            // mutate child network
+            mutate_network(&child_network[child]);
+
+            // calculate child network and get part of the fitness
+            fitness[child] = 0;
+            for(int set=0; set<max_child; set++){
+                calc_network(&child_network[child], data_len+(set*6));
+                fitness[child] += calc_fitness(child_network[child], data_len+(set*2));
+            }
+            fitness[child] *= 0.5;
+        }
+
+        // get the index (child) of the best fitness
+        best_fitness = get_other_best_fitness(fitness, max_child);
+
+        // overwrite the network with the child network with best parameters
+        *network = child_network[best_fitness];
+    }
+}
+
+
+int get_other_best_fitness(double *fitness, int n_child){
+    int compare = 0;
+    for(int i=1; i<n_child; i++)
+        compare = (fitness[compare] < fitness[i])? compare : i;
+    return compare;
+}
+
+
+double calc_fitness(NETWORK network, double *out_data){
+    double fitness = 0;
+    for(int i=0; i<network.n_output; i++){
+        fitness += my_square(out_data[i] - network.output_layer[i].output);
+    }
+    return fitness;
 }

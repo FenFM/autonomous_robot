@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //#include "network.h"
-//#include "rbs_network.h"
-#include "simple_network.h"
+#include "rbs_network.h"
+//#include "simple_network.h"
 
 
 typedef struct my_len{
@@ -22,7 +22,7 @@ typedef struct my_len{
 typedef struct memspace{
     short int comm_flag;
     short int train_flag;
-    short int IR_Distance[6];
+    int IR_Distance[8];
     short int Motor_Value[2];
     MY_LEN distance;
 } MemSpace;
@@ -38,7 +38,7 @@ int main(int argc, char**argv){
     MemSpace robot_values, *sharedMem;
 
     int shmID;
-    key_t key = 42071;
+    key_t key = 42068;
 
 
    if ((shmID = shmget(key, sizeof(MemSpace), 0666)) == -1){
@@ -60,6 +60,12 @@ int main(int argc, char**argv){
         mutate_network(&network[i]);
     }
 
+    // pre-train the network
+    int  in_data_set[3][6] = {{0,0,0,0,0,0}, {500, 500, 500, 500, 0, 0}, {0, 0, 500, 500, 500, 500}};
+    int out_data_set[3][2] = {{4, 4}, {8, 2}, {2, 8}};
+
+    pre_train(&network[current_child], in_data_set, out_data_set, 3);
+
 
     // initialize motor_array to save the last 255 motor values
     MOV_VAL motor;
@@ -79,11 +85,12 @@ int main(int argc, char**argv){
                 set_mov_val(&motor);
             }
 
-            calc_network(&network[current_child], (double *) sharedMem->IR_Distance);
-            // value_unit(&network[current_child], &motor);
-            
-            sharedMem->Motor_Value[0] = 4 + (short int) network[current_child].output_layer[0].output;
-            sharedMem->Motor_Value[1] = 4 + (short int) network[current_child].output_layer[1].output;
+            calc_network(&network[current_child], sharedMem->IR_Distance);
+            //print_network(network[current_child]);
+            value_unit(&network[current_child], &motor);
+
+            sharedMem->Motor_Value[0] = 2 + (short int) network[current_child].output_layer[0].output;
+            sharedMem->Motor_Value[1] = 2 + (short int) network[current_child].output_layer[1].output;
 
             //sharedMem->distance.len -= abs(motor.turn_value_avarage) * 1.4;
             

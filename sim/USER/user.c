@@ -35,7 +35,7 @@ typedef struct my_len{
 typedef struct memspace{
    short int comm_flag;
    short int train_flag;
-   short int IR_Distance[6];
+   int IR_Distance[8];
    short int Motor_Value[2];
    MY_LEN distance;
 } MemSpace;
@@ -65,7 +65,7 @@ void UserInit(struct Robot *robot)
    ShowUserInfo(1,1);
 
    // creating and opening the shared memory ////
-   key = 42071;
+   key = 42068;
 
    if ((shmID = shmget(key, sizeof(MemSpace), IPC_CREAT | 0666)) == -1){
       perror("shmget");
@@ -202,13 +202,18 @@ boolean StepRobot(struct Robot *robot)
                ResetRobot(robot);
                sharedMem->train_flag = 1;
                break;
-         }
+            }
+         for(int i=6; i<8; i++)
+            if(robot->IRSensor[i].DistanceValue >= 500){
+               ResetRobot(robot);
+               sharedMem->train_flag = 1;
+               break;
+            }
+
          // copy the IR-Values and len to the shared memory
-         for(int i=0; i<6; i++){
-            sharedMem->IR_Distance[i] = robot->IRSensor[i].DistanceValue;
-            // printf("IR(%d) = %d\n", i, robot->IRSensor[i].DistanceValue); // DEBUG
+         for(int i=0; i<8; i++){
+               sharedMem->IR_Distance[i] = robot->IRSensor[i].DistanceValue;
          }
-         // printf("\n"); //DEBUG
 
          sharedMem->comm_flag = 1;
 

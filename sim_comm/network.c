@@ -26,10 +26,10 @@ double calc_output(UNIT unit){
 }
 
 
-void calc_network(NETWORK *network, double *in_data){    
+void calc_network(NETWORK *network, int *in_data){    
     // input layer
     for(int i=0; i<network->n_input; i++){
-        network->input_layer[i].netinput = in_data[i];
+        network->input_layer[i].netinput = (double) in_data[i];
         network->input_layer[i].output   = calc_output(network->input_layer[i]);
     }
 
@@ -167,15 +167,6 @@ void set_start_values(NETWORK *network){
 }
 
 
-double calc_fitness(NETWORK network, double *out_data){
-    double fitness = 0;
-    for(int i=0; i<network.n_output; i++){
-        fitness += my_square(out_data[i] - network.output_layer[i].output);
-    }
-    return fitness;
-}
-
-
 int get_best_fitness(NETWORK *network, int max_child){
     int compare = 0;
     for(int i=1; i<max_child; i++)
@@ -213,7 +204,7 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
         network->output_layer[1].output = 10.0;
     }
 
-    if((network->output_layer[0].output <= - 1.0) && (network->output_layer[1].output <= - 1.0)){
+    if((network->output_layer[0].output <= - 2.0) && (network->output_layer[1].output <= - 2.0)){
         network->output_layer[0].output = 0.0;
         network->output_layer[1].output = 0.0;
     }
@@ -249,4 +240,16 @@ void set_mov_val(MOV_VAL *motor){
         motor->l_motor_arr[i] = 0;
         motor->r_motor_arr[i] = 0;
     }
+}
+
+
+void print_network(NETWORK network){
+    printf("\n");
+    for(int i=0; i<network.n_input; i++){
+        printf("Input %2d: A = %2.3lf , W = %2.3lf , I = %2.3lf , O = %2.3lf\n", i, network.input_layer[i].activation, network.input_layer[i].weight, network.input_layer[i].netinput, network.input_layer[i].output);
+    }
+    for(int i=0; i<network.n_output; i++){
+        printf("Input %2d: A = %2.3lf , W = %2.3lf , I = %2.3lf , O = %2.3lf\n", i, network.output_layer[i].activation, network.output_layer[i].weight, network.output_layer[i].netinput, network.output_layer[i].output);
+    }
+    printf("\n");
 }
