@@ -22,19 +22,20 @@ double gauss(){
 
 double calc_output(UNIT unit){
     // return unit.weight / (1 + exp(unit.activation - unit.netinput));
-    return unit.weight * tanh(unit.netinput - unit.activation);
+    // return unit.weight * tanh(unit.netinput - unit.activation);
     // return unit.weight * (unit.netinput - unit.activation);
+    return unit.weight * unit.netinput;
 }
 
 
 void calc_network(NETWORK *network, int *in_data){    
     // input layer
     for(int i=0; i<network->n_input/2; i++){
-        network->input_layer[i].netinput = (double) in_data[i];
+        network->input_layer[i].netinput = (double) in_data[i] / 1000;
         network->input_layer[i].output   = calc_output(network->input_layer[i]);
     }
     for(int i=network->n_input/2; i<network->n_input; i++){
-        network->input_layer[i].netinput = (double) in_data[i-network->n_input/2];
+        network->input_layer[i].netinput = (double) in_data[i-network->n_input/2] / 1000;
         network->input_layer[i].output   = calc_output(network->input_layer[i-network->n_input/2]);
     }
 
@@ -95,12 +96,12 @@ void set_start_values(NETWORK *network){
     int inc = 1;
 
     for(int i=0; i<network->n_input; i++){
-        network->input_layer[i].weight  = 1;
-        network->input_layer[i].activation  = 0;
+        network->input_layer[i].weight  = inc * gauss();
+        network->input_layer[i].activation  = inc * gauss();
     }
     for(int k=0; k<network->n_output; k++){
-        network->output_layer[k].weight = 1;
-        network->output_layer[k].activation = 0;
+        network->output_layer[k].weight = inc * gauss();
+        network->output_layer[k].activation = inc * gauss();
     }
 }
 
@@ -113,7 +114,7 @@ int get_best_fitness(NETWORK *network, int max_child){
 }
 
 
-void value_unit(NETWORK *network, MOV_VAL *motor){
+void value_unit(NETWORK *network, MOV_VAL *motor, int *in_data){
     // write the current motor value in the motor_array
     motor->l_motor_arr[motor->arr_cntr] = (short int) network->output_layer[0].output;
     motor->r_motor_arr[motor->arr_cntr] = (short int) network->output_layer[1].output;
@@ -136,35 +137,51 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
         motor->turn_value_avarage += motor->turn_value[i];
     motor->turn_value_avarage /= motor->avarage_cntr;
 
+
     // let the robot drive only forward when nothing is in his way
-    if(check_netinput(*network, 50)){
+    if(check_netinput(in_data, 10)){
         network->output_layer[0].output = motor->comb_avarage;
         network->output_layer[1].output = motor->comb_avarage;
     }
 
     // make sure the motor does not oversteer or understeer
-    if((network->output_layer[0].output > 10.0) && (network->output_layer[1].output > 10.0)){
-        network->output_layer[0].output = 10.0;
-        network->output_layer[1].output = 10.0;
-    }
+    if(network->output_layer[0].output > 8.0)
+        network->output_layer[0].output = 8.0;
+    if(network->output_layer[1].output > 8.0)
+        network->output_layer[1].output = 8.0;    
 
-    if((network->output_layer[0].output <= - 1.0) && (network->output_layer[1].output <= - 1.0)){
+    if((network->output_layer[0].output <= - 2.0) && (network->output_layer[1].output <= - 2.0)){
         network->output_layer[0].output = 0.0;
         network->output_layer[1].output = 0.0;
     }
+
+
+    // influence the network directly
+    /*
+    if((motor->turn_value[motor->arr_cntr] == 0) && (network->output_layer[0].output == network->output_layer[1].output)){
+        for(int i=0; i<network->n_input; i++){
+            if(in_data[i] > 20){
+                network->input_layer[i].weight += 1;
+                network->input_layer[network->n_input-i].weight -= 1;
+            }
+        }
+  
+      
+    }
+    */
+
 
     motor->arr_cntr     += (motor->arr_cntr     == 255)? -255 : 1;
     motor->avarage_cntr += (motor->avarage_cntr == 256)?    0 : 1;
 }
 
 
-short int check_netinput(NETWORK network, short int val){
-    for(int i=0; i<6; i++){
-        if(network.input_layer[i].netinput > val)
-            return 0;
-        else
-            return 1;
-    }
+short int check_netinput(int *in_data, short int val){
+    short int ret = 1; 
+    for(int i=0; i<6; i++)
+        if(in_data[i] > val)
+            ret = 0;
+    return ret;
 } 
 
 
