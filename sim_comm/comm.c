@@ -8,9 +8,9 @@
 //  Version:                0.7                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-//#include "network.h"
+#include "network.h"
 //#include "rbs_network.h"
-#include "simple_network.h"
+//#include "simple_network.h"
 
 
 typedef struct my_len{
@@ -59,14 +59,6 @@ int main(int argc, char**argv){
         set_start_values(&network[i]);
         mutate_network(&network[i]);
     }
-
-    // pre-train the network
-    /*
-    int  in_data_set[3][6] = {{0,0,0,0,0,0}, {500, 500, 500, 500, 0, 0}, {0, 0, 500, 500, 500, 500}};
-    int out_data_set[3][2] = {{4, 4}, {8, 2}, {2, 8}};
-
-    pre_train(&network[current_child], in_data_set, out_data_set, 3);
-    */
 
     // initialize motor_array to save the last 255 motor values
     MOV_VAL motor;

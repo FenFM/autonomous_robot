@@ -23,8 +23,8 @@ double gauss(){
 double calc_output(UNIT unit){
     // return unit.weight / (1 + exp(unit.activation - unit.netinput));
     // return unit.weight * tanh(unit.netinput - unit.activation);
-    // return unit.weight * (unit.netinput - unit.activation);
-    return unit.weight * unit.netinput;
+    return unit.weight * (unit.netinput - unit.activation);
+    //return unit.weight * unit.netinput;
 }
 
 
@@ -150,26 +150,15 @@ void value_unit(NETWORK *network, MOV_VAL *motor, int *in_data){
     if(network->output_layer[1].output > 8.0)
         network->output_layer[1].output = 8.0;    
 
+    if(network->output_layer[1].output < -4.0)
+        network->output_layer[1].output = -4.0;  
+    if(network->output_layer[0].output < -4.0)
+        network->output_layer[0].output = -4.0;    
+    
     if((network->output_layer[0].output <= - 2.0) && (network->output_layer[1].output <= - 2.0)){
         network->output_layer[0].output = 0.0;
         network->output_layer[1].output = 0.0;
     }
-
-
-    // influence the network directly
-    /*
-    if((motor->turn_value[motor->arr_cntr] == 0) && (network->output_layer[0].output == network->output_layer[1].output)){
-        for(int i=0; i<network->n_input; i++){
-            if(in_data[i] > 20){
-                network->input_layer[i].weight += 1;
-                network->input_layer[network->n_input-i].weight -= 1;
-            }
-        }
-  
-      
-    }
-    */
-
 
     motor->arr_cntr     += (motor->arr_cntr     == 255)? -255 : 1;
     motor->avarage_cntr += (motor->avarage_cntr == 256)?    0 : 1;

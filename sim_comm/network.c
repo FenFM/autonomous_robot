@@ -175,7 +175,7 @@ int get_best_fitness(NETWORK *network, int max_child){
 }
 
 
-void value_unit(NETWORK *network, MOV_VAL *motor){
+void value_unit(NETWORK *network, MOV_VAL *motor, int *in_data){
     // write the current motor value in the motor_array
     motor->l_motor_arr[motor->arr_cntr] = (short int) network->output_layer[0].output;
     motor->r_motor_arr[motor->arr_cntr] = (short int) network->output_layer[1].output;
@@ -198,20 +198,27 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
         motor->turn_value_avarage += motor->turn_value[i];
     motor->turn_value_avarage /= motor->avarage_cntr;
 
-    // make sure the motor does not oversteer or understeer
-    if((network->output_layer[0].output > 10.0) && (network->output_layer[1].output > 10.0)){
-        network->output_layer[0].output = 10.0;
-        network->output_layer[1].output = 10.0;
+
+    // let the robot drive only forward when nothing is in his way
+    if(check_netinput(in_data, 50)){
+        network->output_layer[0].output = motor->comb_avarage;
+        network->output_layer[1].output = motor->comb_avarage;
     }
 
+    // make sure the motor does not oversteer or understeer
+    if(network->output_layer[0].output > 8.0)
+        network->output_layer[0].output = 8.0;
+    if(network->output_layer[1].output > 8.0)
+        network->output_layer[1].output = 8.0;    
+
+    if(network->output_layer[1].output < -4.0)
+        network->output_layer[1].output = -4.0;  
+    if(network->output_layer[0].output < -4.0)
+        network->output_layer[0].output = -4.0;    
+    
     if((network->output_layer[0].output <= - 2.0) && (network->output_layer[1].output <= - 2.0)){
         network->output_layer[0].output = 0.0;
         network->output_layer[1].output = 0.0;
-    }
-
-    if(check_netinput(*network, 50)){
-        network->output_layer[0].output = motor->comb_avarage;
-        network->output_layer[1].output = motor->comb_avarage;
     }
 
     motor->arr_cntr     += (motor->arr_cntr     == 255)? -255 : 1;
@@ -219,13 +226,12 @@ void value_unit(NETWORK *network, MOV_VAL *motor){
 }
 
 
-short int check_netinput(NETWORK network, short int val){
-    for(int i=0; i<6; i++){
-        if(network.input_layer[i].netinput > val)
-            return 0;
-        else
-            return 1;
-    }
+short int check_netinput(int *in_data, short int val){
+    short int ret = 1; 
+    for(int i=0; i<6; i++)
+        if(in_data[i] > val)
+            ret = 0;
+    return ret;
 } 
 
 
